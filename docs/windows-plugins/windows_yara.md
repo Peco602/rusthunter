@@ -19,6 +19,7 @@ Path: *launcher/ansible/roles/windows/files*
 
 ## Return Values
 Array of strings:
+
 - *"ExampleRule C:\Path\file1.txt*
 - *"ExampleRule C:\Path\file2.txt*
 
