@@ -10,7 +10,7 @@
 # RustHunter
 
 <br>
-<img src="https://rusthunter.readthedocs.io/en/latest/images/logo.png" align="center" width="500px" alt="RustHunter Logo">
+<img src="https://rusthunter.readthedocs.io/en/latest/images/logo.png" align="center" width="400px" alt="RustHunter Logo">
 <br><br>
 	
 <div align="left">
