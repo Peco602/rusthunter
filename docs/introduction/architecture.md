@@ -1,6 +1,6 @@
 <h1>Architecture</h1>
 
-RustHunter is able to take a **snapshot** of a complex network environment. It can be installed on a Windows or Linus machine (**master node**) and leverages an Ansible docker to upload and execute a **collector** artifact on multiple machines (**target nodes**) to collect data. An **inventory** and a **config file** are respectively responsible for the selection of the target nodes and the configuration of the collector. Snapshots can then be compared to identify eventual changes in the environment, such as users, administrators, autoruns or listening ports.
+RustHunter is able to take a **snapshot** of a complex network environment. It can be installed on a Windows or Linus machine (**Master Node**) and leverages an Ansible docker to upload and execute a **collector** artifact on multiple machines (**Target Nodes**) to collect data. An **inventory** and a **config file** are respectively responsible for the selection of the target nodes and the configuration of the collector. Snapshots can then be compared to identify eventual changes in the environment, such as users, administrators, autoruns or listening ports.
 
 <img src="architecture.png" style="display: block; margin-left: auto; margin-right: auto; width: 100%;" alt="RustHunter Architecture">
 
