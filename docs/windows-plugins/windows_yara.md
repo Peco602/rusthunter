@@ -7,7 +7,7 @@ This plugin executes a customizable Yara rule scan over the file system of a Win
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
 | enabled | true/false | true | Plugin activation status |
-| scan_path | Windows path | c:\ | Plugin activation status |
+| scan_path | Windows path | c:\ | Yara scanning path |
 
 ## Associated Files
 Path: *launcher/ansible/roles/windows/files*
