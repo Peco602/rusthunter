@@ -1,0 +1,33 @@
+site_name: 'RustHunter'
+site_url: https://rusthunter.readthedocs.io/
+docs_dir: docs
+
+nav:
+  - 'Introduction':
+    - 'What is RustHunter?' : 'index.md'
+    - 'Architecture': 'introduction/architecture.md'
+  - 'Quickstart':
+    - 'Windows': 'quickstart/windows.md'
+    - 'Linux': 'quickstart/linux.md'
+  - 'Windows Plugins':
+    - 'windows_users': 'windows-plugins/windows_users.md'
+    - 'windows_administrators': 'windows-plugins/windows_administrators.md'
+    - 'windows_tcp_listen': 'windows-plugins/windows_tcp_listen.md'
+    - 'windows_udp_listen': 'windows-plugins/windows_udp_listen.md'
+    - 'windows_autoruns': 'windows-plugins/windows_autoruns.md'
+    - 'windows_yara': 'windows-plugins/windows_yara.md'
+  - 'Linux Plugins':
+    - 'linux_users': 'linux-plugins/linux_users.md'
+    - 'linux_tcp_listen': 'linux-plugins/linux_tcp_listen.md'
+  - 'References':
+    - 'Contributing': 'references/contributing.md'
+    - 'Credits': 'references/credits.md'
+
+theme: 
+  name: 'material'
+  logo: 'images/logo_small.png'
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      use_pygments: true
+  - pymdownx.superfences

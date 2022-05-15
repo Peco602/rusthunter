@@ -1,0 +1,26 @@
+[
+    {
+        "Name":  "Administrator",
+        "Enabled":  false
+    },
+    {
+        "Name":  "DefaultAccount",
+        "Enabled":  false
+    },
+    {
+        "Name":  "giovanni",
+        "Enabled":  true
+    },
+    {
+        "Name":  "Guest",
+        "Enabled":  false
+    },
+    {
+        "Name":  "User",
+        "Enabled":  true
+    },
+    {
+        "Name":  "WDAGUtilityAccount",
+        "Enabled":  false
+    }
+]

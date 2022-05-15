@@ -1,0 +1,32 @@
+- name: Creating remote path
+  win_file:
+    path: "{{ remote_path }}"
+    state: directory
+
+- name: Uploading binaries
+  win_copy:
+    src: "{{ item }}"
+    dest: "{{ remote_path }}"
+  with_fileglob: "files/*"
+
+- name: Collecting data
+  win_command: "{{ remote_path }}{{ rusthunter_executable }} {{ rusthunter_run_subcommand }}"
+  register: shell_result
+  args:
+    chdir: "{{ remote_path }}"
+
+- name: Data output
+  when: debug
+  debug:
+    var: shell_result.stdout_lines
+
+- name: Retrieving data
+  fetch:
+    src: "{{ remote_path }}snapshot.json"
+    dest: "{{ snapshots_path }}snapshot-{{ inventory_hostname }}.json"
+    flat: yes
+
+- name: Removing remote path
+  win_file:
+    path: "{{ remote_path }}"
+    state: absent

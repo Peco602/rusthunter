@@ -1,0 +1,2 @@
+ExampleRule .\file1.txt
+ExampleRule .\file2.txt

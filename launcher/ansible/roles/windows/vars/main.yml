@@ -1,0 +1,5 @@
+debug: false
+remote_path: c:\Windows\Temp\rusthunter\
+rusthunter_executable: rusthunter.exe
+rusthunter_run_subcommand: run
+snapshots_path: /snapshots/

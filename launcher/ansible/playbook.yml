@@ -1,0 +1,13 @@
+-
+  name: Run RustHunter on Linux machines
+  gather_facts: no
+  hosts: linux
+  roles:
+    - linux
+
+-
+  name: Run RustHunter on Windows machines
+  gather_facts: no
+  hosts: windows
+  roles:
+    - windows

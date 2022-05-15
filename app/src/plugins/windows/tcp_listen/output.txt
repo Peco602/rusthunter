@@ -1,0 +1,137 @@
+[
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  135,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  445,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  5357,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  5985,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  5986,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  7680,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  47001,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  49664,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  49665,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  49666,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  49667,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  49668,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  49669,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  49670,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  49671,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "0.0.0.0",
+        "LocalPort":  135,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "0.0.0.0",
+        "LocalPort":  5040,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "0.0.0.0",
+        "LocalPort":  49664,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "0.0.0.0",
+        "LocalPort":  49665,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "0.0.0.0",
+        "LocalPort":  49666,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "0.0.0.0",
+        "LocalPort":  49667,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "0.0.0.0",
+        "LocalPort":  49668,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "0.0.0.0",
+        "LocalPort":  49669,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "0.0.0.0",
+        "LocalPort":  49670,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "0.0.0.0",
+        "LocalPort":  49671,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "10.27.128.9",
+        "LocalPort":  139,
+        "ProcessName":  null
+    },
+    {
+        "LocalAddress":  "172.21.128.1",
+        "LocalPort":  139,
+        "ProcessName":  null
+    }
+]

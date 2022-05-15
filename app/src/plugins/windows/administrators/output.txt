@@ -1,0 +1,14 @@
+[
+    {
+        "Name":  "WINDEV2110EVAL\\Administrator",
+        "ObjectClass":  "User"
+    },
+    {
+        "Name":  "WINDEV2110EVAL\\giovanni",
+        "ObjectClass":  "User"
+    },
+    {
+        "Name":  "WINDEV2110EVAL\\User",
+        "ObjectClass":  "User"
+    }
+]

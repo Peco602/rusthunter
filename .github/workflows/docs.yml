@@ -1,0 +1,19 @@
+name: Docs
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install MkDocs
+      run: sudo pip install -r docs/requirements.txt
+      
+    - name: Build
+      run: mkdocs build

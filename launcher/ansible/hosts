@@ -1,0 +1,11 @@
+localhost ansible_connection=local
+192.168.7.157 ansible_connection=ssh ansible_user=peco ansible_ssh_password=password
+192.168.7.23 ansible_connection=winrm ansible_port=5985 ansible_winrm_transport=ntlm ansible_user=peco ansible_password=password
+10.27.128.9 ansible_connection=winrm ansible_port=5985 ansible_winrm_transport=ntlm ansible_user=giovanni ansible_password=Password123.
+10.27.128.10 ansible_connection=ssh ansible_user=user ansible_ssh_password=user ansible_become_pass=user
+
+[linux]
+10.27.128.10
+
+[windows]
+10.27.128.9
