@@ -10,6 +10,7 @@ This plugin provides a list of the available users on a Linux machine.
 
 ## Return Values
 Array of strings:
+
 - *user1*
 - *user2*
 

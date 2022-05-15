@@ -45,6 +45,3 @@ This is a non-profit project which received neither funding nor sponsorship.
 # Disclaimer
 
 The provided contents and tools are for awareness and research purposes only. Our target audience is composed of those interested in learning about Ethical Hacking, Security, Penetration Testing and Red Teaming. We are not responsible for any inappropriate or illegal usage of both proposed material and discussed topics.
-
-## 
-https://github.com/Jake-Shadle/xwin
