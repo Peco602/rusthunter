@@ -29,6 +29,8 @@ Param(
 
 ###########################################################
 # VARIABLES
+${EXECUTABLE_NAME}="rusthunter.exe"
+
 ${BUILDER_IMAGE_NAME}="rusthunter/builder"
 ${BUILDER_IMAGE_PATH}=".\builder"
 
@@ -130,12 +132,12 @@ function Build-LauncherImage {
 }
 
 function Install-RustHunter {
-    if ( !(Test-Path ${LINUX_BINARIES_PATH}\${EXECUTABLE_NAME}) ){
+    if ( !(Test-Path ${WINDOWS_BINARIES_PATH}\${EXECUTABLE_NAME}) ){
         Write-Host " [*] The tool has not been built yet" -ForegroundColor red        
         Exit 1
     } else {
         Write-Host " [+] Installing executable" -ForegroundColor green
-        cp ${LINUX_BINARIES_PATH}\${EXECUTABLE_NAME} ${INSTALLATION_PATH}
+        cp ${WINDOWS_BINARIES_PATH}\${EXECUTABLE_NAME} ${INSTALLATION_PATH}
     }
 
     Write-Host " [+] Successfully installed" -ForegroundColor green
