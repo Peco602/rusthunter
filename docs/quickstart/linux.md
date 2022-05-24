@@ -15,7 +15,7 @@ The following steps allow the deployment of RustHunter on a Linux master node.
 Clone the RustHunter repository directly from [`GitHub`](https://github.com/Peco602/rusthunter/):
 
 ```console
-user@master:~$ git clone https://github.com/Peco602/rusthunter
+user@master-node:~$ git clone https://github.com/Peco602/rusthunter
 
 ```
 
@@ -25,8 +25,8 @@ user@master:~$ git clone https://github.com/Peco602/rusthunter
 Install the RustHunter executable on your system. RustHunter can be completely managed on a Linux master node via the `rusthunter.sh` Bash script. 
 
 ```console
-user@master:~$ cd rusthunter
-user@master:~$ sudo ./rusthunter.sh install
+user@master-node:~$ cd rusthunter
+user@master-node:~$ sudo ./rusthunter.sh install
 
  ______          _   _   _             _            
  | ___ \        | | | | | |           | |           
@@ -145,7 +145,7 @@ Edit the `hosts` file to select the target nodes to be included in the snapshot.
 Take the snapshot based on the custom `host` and `config` files:
 
 ```console
-user@master:~$ sudo ./rusthunter.sh global -h ./hosts -c ./config
+user@master-node:~$ sudo ./rusthunter.sh global -h ./hosts -c ./config
 
  ______          _   _   _             _            
  | ___ \        | | | | | |           | |           
@@ -174,7 +174,7 @@ Merged snapshots file: snapshot-20220420_121525.json
 Compare two environmental snapshots to find differences:
 
 ```console
-user@master:~$ sudo ./rusthunter.sh compare -i ./snapshot-20220410_131824.json -c ./snapshot-20220420_121525.json
+user@master-node:~$ sudo ./rusthunter.sh compare -i ./snapshot-20220410_131824.json -c ./snapshot-20220420_121525.json
 
  ______          _   _   _             _            
  | ___ \        | | | | | |           | |           
