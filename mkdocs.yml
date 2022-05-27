@@ -19,6 +19,8 @@ nav:
   - 'Linux Plugins':
     - 'linux_users': 'linux-plugins/linux_users.md'
     - 'linux_tcp_listen': 'linux-plugins/linux_tcp_listen.md'
+  - 'Development':
+    - 'Simple Linux Plugin': 'development/simple_linux_plugin.md'
   - 'References':
     - 'Contributing': 'references/contributing.md'
     - 'Credits': 'references/credits.md'
