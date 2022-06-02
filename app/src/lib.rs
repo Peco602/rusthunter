@@ -52,8 +52,22 @@ pub fn execute(options: &Options) -> Result<(), String> {
 
     match options.mode {
         Mode::List => list(&plugins),
-        Mode::Run => run(&plugins, &options.config, &options.binary_directory, &options.verbose),
-        Mode::Merge => merge(&options.merging_directory, &options.verbose),
-        Mode::Compare => compare(&options.initial_file, &options.current_file),
+        Mode::Run => run(
+            &plugins, 
+            &options.config, 
+            &options.binary_directory, 
+            &options.verbose
+        ),
+        Mode::Merge => merge(
+            &options.merging_directory, 
+            &options.verbose
+        ),
+        Mode::Compare => compare(
+            &options.initial_file, 
+            &options.current_file,
+            &options.stats,
+            &options.selected_host,
+            &options.selected_plugin
+        ),
     }
 }

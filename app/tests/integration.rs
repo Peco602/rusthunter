@@ -13,7 +13,10 @@ fn test_list() {
         binary_directory: String::new(),
         merging_directory: String::new(),
         initial_file: String::new(),
-        current_file: String::new()
+        current_file: String::new(),
+        stats: false,
+        selected_host: String::new(),
+        selected_plugin: String::new()
     };
 
     if let Err(e) = execute(&options) {
@@ -31,7 +34,10 @@ fn test_run() {
         binary_directory: String::new(),
         merging_directory: String::new(),
         initial_file: String::new(),
-        current_file: String::new()
+        current_file: String::new(),
+        stats: false,
+        selected_host: String::new(),
+        selected_plugin: String::new()
     };
 
     if let Err(e) = execute(&options) {
@@ -49,7 +55,10 @@ fn test_merge() {
         binary_directory: String::new(),
         merging_directory: String::from("tests/merging_directory"),
         initial_file: String::new(),
-        current_file: String::new()
+        current_file: String::new(),
+        stats: false,
+        selected_host: String::new(),
+        selected_plugin: String::new()
     };
 
     if let Err(e) = execute(&options) {
@@ -59,7 +68,7 @@ fn test_merge() {
 }
 
 #[test]
-fn test_compare() {
+fn test_compare_full() {
     let options = Options {
         mode: Mode::Compare,
         verbose: true,
@@ -67,7 +76,10 @@ fn test_compare() {
         binary_directory: String::new(),
         merging_directory: String::new(),
         initial_file: String::from("tests/compare_directory/initial_snapshot.json"),
-        current_file: String::from("tests/compare_directory/current_snapshot.json")
+        current_file: String::from("tests/compare_directory/current_snapshot.json"),
+        stats: false,
+        selected_host: String::new(),
+        selected_plugin: String::new()
     };
 
     if let Err(e) = execute(&options) {
