@@ -23,3 +23,6 @@ jobs:
       
     - name: Integration Tests
       run: sudo ./rusthunter.sh test -i
+
+    - name: Validation Tests
+      run: sudo ./rusthunter.sh test -v
