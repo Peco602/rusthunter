@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-use crate::Config;
+use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
 pub struct WindowsAdministrators {}
@@ -11,7 +11,7 @@ impl Plugin for WindowsAdministrators {
     }
 
     fn description(&self) -> &str {
-        &"List of administrators"
+        &"Local administrators"
     }
 
     fn os(&self) -> OS {
@@ -19,7 +19,7 @@ impl Plugin for WindowsAdministrators {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "Get-LocalGroupMember -Group Administrators | Sort-Object -Property Name | select Name,ObjectClass | ConvertTo-Json";
+        let command = "Get-LocalGroupMember -Group Administrators | Select-Object Name,ObjectClass | Sort-Object -Property Name | ConvertTo-Json";
         match self.windows_powershell_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
@@ -44,7 +44,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn windows_administrators() {
+    fn test_windows_administrators() {
         let data = json!([
             {
                 "Name":  "WINDEV2110EVAL\\Administrator",

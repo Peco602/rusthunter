@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-use crate::Config;
+use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
 pub struct WindowsUsers {}
@@ -11,7 +11,7 @@ impl Plugin for WindowsUsers {
     }
 
     fn description(&self) -> &str {
-        &"List of users"
+        &"Local users"
     }
 
     fn os(&self) -> OS {
@@ -19,7 +19,7 @@ impl Plugin for WindowsUsers {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "Get-LocalUser | Sort-Object -Property Name | select Name,Enabled | ConvertTo-Json";
+        let command = "Get-LocalUser | Select-Object Name,Enabled | Sort-Object -Property Name | ConvertTo-Json";
         match self.windows_powershell_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
@@ -44,7 +44,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn windows_users() {
+    fn test_windows_users() {
         let data = json!([
             {
                 "Name":  "Administrator",

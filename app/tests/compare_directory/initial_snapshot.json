@@ -1,0 +1,734 @@
+{
+  "HOST1": {
+    "windows_administrators": [
+      {
+        "Name": "HOST1\\Administrator",
+        "ObjectClass": "User"
+      },
+      {
+        "Name": "HOST1\\Peco602",
+        "ObjectClass": "User"
+      },
+      {
+        "Name": "HOST1\\User",
+        "ObjectClass": "User"
+      }
+    ],
+    "windows_tcp_listen": [
+      {
+        "LocalAddress": "::",
+        "LocalPort": 135,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 445,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 5357,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 5985,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 5986,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 7680,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 47001,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49664,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49665,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49666,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49667,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49668,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49669,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49673,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49674,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 135,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 5040,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49664,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49665,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49666,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49667,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49668,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49669,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49673,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49674,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "10.27.128.38",
+        "LocalPort": 139,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "172.30.16.1",
+        "LocalPort": 139,
+        "ProcessName": null
+      }
+    ],
+    "windows_udp_listen": [
+      {
+        "LocalAddress": "::",
+        "LocalPort": 123,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 500,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 3702,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 4500,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 5353,
+        "ProcessName": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 5355,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49192,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49810,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 51049,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::1",
+        "LocalPort": 1900,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::1",
+        "LocalPort": 62219,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 53,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 123,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 500,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 3702,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 4500,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 5050,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 5353,
+        "ProcessName": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 5355,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49191,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 51047,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 51048,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "10.27.128.38",
+        "LocalPort": 137,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "10.27.128.38",
+        "LocalPort": 138,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "10.27.128.38",
+        "LocalPort": 1900,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "10.27.128.38",
+        "LocalPort": 62221,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "127.0.0.1",
+        "LocalPort": 1900,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "127.0.0.1",
+        "LocalPort": 62222,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "127.0.0.1",
+        "LocalPort": 65248,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "172.30.16.1",
+        "LocalPort": 137,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "172.30.16.1",
+        "LocalPort": 138,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "172.30.16.1",
+        "LocalPort": 1900,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "172.30.16.1",
+        "LocalPort": 62223,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "fe80::5c81:900f:33a2:dc22%19",
+        "LocalPort": 1900,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "fe80::5c81:900f:33a2:dc22%19",
+        "LocalPort": 62220,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "fe80::89d6:45d4:d70e:b4ce%6",
+        "LocalPort": 1900,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "fe80::89d6:45d4:d70e:b4ce%6",
+        "LocalPort": 62218,
+        "ProcessName": null
+      }
+    ],
+    "windows_users": [
+      {
+        "Enabled": false,
+        "Name": "Administrator"
+      },
+      {
+        "Enabled": false,
+        "Name": "DefaultAccount"
+      },
+      {
+        "Enabled": true,
+        "Name": "Peco602"
+      },
+      {
+        "Enabled": false,
+        "Name": "Guest"
+      },
+      {
+        "Enabled": true,
+        "Name": "User"
+      },
+      {
+        "Enabled": false,
+        "Name": "WDAGUtilityAccount"
+      }
+    ]
+  },
+  "HOST2": {
+    "windows_administrators": [
+      {
+        "Name": "HOST2\\Administrator",
+        "ObjectClass": "User"
+      },
+      {
+        "Name": "HOST2\\Peco602",
+        "ObjectClass": "User"
+      },
+      {
+        "Name": "HOST2\\User",
+        "ObjectClass": "User"
+      }
+    ],
+    "windows_tcp_listen": [
+      {
+        "LocalAddress": "::",
+        "LocalPort": 135,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 445,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 5357,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 5985,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 5986,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 7680,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 47001,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49664,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49665,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49666,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49667,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49668,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49669,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49673,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49674,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 135,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 5040,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49664,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49665,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49666,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49667,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49668,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49669,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49673,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49674,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "10.27.128.38",
+        "LocalPort": 139,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "172.30.16.1",
+        "LocalPort": 139,
+        "ProcessName": null
+      }
+    ],
+    "windows_udp_listen": [
+      {
+        "LocalAddress": "::",
+        "LocalPort": 123,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 500,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 3702,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 4500,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 5353,
+        "ProcessName": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 5355,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49192,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 49810,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::",
+        "LocalPort": 51049,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::1",
+        "LocalPort": 1900,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "::1",
+        "LocalPort": 62219,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 53,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 123,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 500,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 3702,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 4500,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 5050,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 5353,
+        "ProcessName": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 5355,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 49191,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 51047,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 51048,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "10.27.128.38",
+        "LocalPort": 137,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "10.27.128.38",
+        "LocalPort": 138,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "10.27.128.38",
+        "LocalPort": 1900,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "10.27.128.38",
+        "LocalPort": 62221,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "127.0.0.1",
+        "LocalPort": 1900,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "127.0.0.1",
+        "LocalPort": 62222,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "127.0.0.1",
+        "LocalPort": 65248,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "172.30.16.1",
+        "LocalPort": 137,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "172.30.16.1",
+        "LocalPort": 138,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "172.30.16.1",
+        "LocalPort": 1900,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "172.30.16.1",
+        "LocalPort": 62223,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "fe80::5c81:900f:33a2:dc22%19",
+        "LocalPort": 1900,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "fe80::5c81:900f:33a2:dc22%19",
+        "LocalPort": 62220,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "fe80::89d6:45d4:d70e:b4ce%6",
+        "LocalPort": 1900,
+        "ProcessName": null
+      },
+      {
+        "LocalAddress": "fe80::89d6:45d4:d70e:b4ce%6",
+        "LocalPort": 62218,
+        "ProcessName": null
+      }
+    ],
+    "windows_users": [
+      {
+        "Enabled": false,
+        "Name": "Administrator"
+      },
+      {
+        "Enabled": false,
+        "Name": "DefaultAccount"
+      },
+      {
+        "Enabled": true,
+        "Name": "Peco602"
+      },
+      {
+        "Enabled": false,
+        "Name": "Guest"
+      },
+      {
+        "Enabled": true,
+        "Name": "User"
+      },
+      {
+        "Enabled": false,
+        "Name": "WDAGUtilityAccount"
+      }
+    ]
+  }
+}

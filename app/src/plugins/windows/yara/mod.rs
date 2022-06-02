@@ -1,7 +1,7 @@
 // use serde_json::Map;
 use serde_json::{Value};
 
-use crate::Config;
+use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 use crate::validator::validate_windows_path;
 
@@ -63,7 +63,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn windows_yara() {
+    fn test_windows_yara() {
         let data = json!([
             "ExampleRule .\\file1.txt",
             "ExampleRule .\\file2.txt",

@@ -1,6 +1,6 @@
 use serde_json::{Value};
 
-use crate::Config;
+use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
 pub struct WindowsAutoruns {}
@@ -11,7 +11,7 @@ impl Plugin for WindowsAutoruns {
     }
 
     fn description(&self) -> &str {
-        &"List of autorun entries"
+        &"Autorun entries"
     }
 
     fn os(&self) -> OS {
@@ -69,7 +69,7 @@ impl Plugin for WindowsAutoruns {
             command.push_str("w");
         }
         // http://brianvanderplaats.com/2015/10/08/generating-json-from-csv-using-powershell/
-        command.push_str(" -c -h -s -nobanner 2> $null | ConvertFrom-Csv | ConvertTo-Json");
+        command.push_str(" -c -h -s -nobanner 2> $null | ConvertFrom-Csv | Select-Object Category,Enabled,Entry,\"Image Path\",\"Launch String\",MD5,SHA-1,Signer,Time | Sort-Object -Property Category,Entry | ConvertTo-Json");
 
         match self.windows_powershell_command(&command) {
             Ok(output) => self.process(&output),
@@ -95,7 +95,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn windows_autoruns() {
+    fn test_windows_autoruns() {
         let data = json!([
             {
                 "Time":  "3/10/2022 12:19 AM",

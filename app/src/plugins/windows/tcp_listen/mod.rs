@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-use crate::Config;
+use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
 pub struct WindowsTCPListen {}
@@ -11,7 +11,7 @@ impl Plugin for WindowsTCPListen {
     }
 
     fn description(&self) -> &str {
-        &"List of users"
+        &"TCP listening ports"
     }
 
     fn os(&self) -> OS {
@@ -19,7 +19,7 @@ impl Plugin for WindowsTCPListen {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "Get-NetTCPConnection -State Listen | Sort-Object -Property LocalAddress,LocalPort | Select-Object -Property LocalAddress,LocalPort,@{Name=\"ProcessName\";Expression={(Get-Process -Id $_.OwningProcess).Path}} | ConvertTo-Json";
+        let command = "Get-NetTCPConnection -State Listen | Select-Object -Property LocalAddress,LocalPort,@{Name=\"ProcessName\";Expression={(Get-Process -Id $_.OwningProcess).Path}} | Sort-Object -Property LocalAddress,LocalPort | ConvertTo-Json";
         match self.windows_powershell_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
@@ -44,7 +44,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn windows_tcp_listen() {
+    fn test_windows_tcp_listen() {
         let data = json!([
             {
                 "LocalAddress":  "::",

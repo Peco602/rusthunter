@@ -12,7 +12,7 @@ use std::process::Command;
 use std::{env};
 use serde_json::Value;
 
-use crate::Config;
+use crate::config::Config;
 
 pub trait Plugin {
     fn name(&self) -> &str;
@@ -134,7 +134,7 @@ pub fn os() -> OS {
             // openbsd
             // solaris
             // android
-            panic!("Unknown Operating System")
+            panic!("Unknown operating system")
         }
     }
 }

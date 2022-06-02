@@ -26,7 +26,7 @@ impl Options {
         let matches = Command::new("RustHunter")
                                 .version("1.0")
                                 .author("Giovanni Pecoraro <giovanni1.pecoraro@protonmail.com>")
-                                .about("Incident Response Tool")
+                                .about("Environmental baseline comparison tool")
                                 .arg(Arg::new("verbose")
                                                 .short('v')
                                                 .long("verbose")

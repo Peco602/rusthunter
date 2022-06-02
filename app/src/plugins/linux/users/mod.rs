@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-use crate::Config;
+use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
 pub struct LinuxUsers {}
@@ -11,7 +11,7 @@ impl Plugin for LinuxUsers {
     }
 
     fn description(&self) -> &str {
-        &"List of users"
+        &"Local users"
     }
 
     fn os(&self) -> OS {
@@ -44,7 +44,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn linux_users() {
+    fn test_linux_users() {
         let output = include_str!("output.txt");
         let linux_users = LinuxUsers::new();
         assert_eq!(json!(["_apt", "_rpc", "backup", "bin", "daemon", "games", "gnats", "irc", "landscape", "list", "lp", "mail", "man", "messagebus", "news", "nobody", "pollinate", "proxy", "root", "sshd", "statd", "sync", "sys", "syslog", "systemd-network", "systemd-resolve", "systemd-timesync", "tcpdump", "tss", "user", "uucp", "uuidd", "www-data"]), linux_users.process(output).unwrap());

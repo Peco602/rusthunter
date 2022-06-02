@@ -14,26 +14,26 @@ enabled = true
 enabled = true
 
 [windows_autoruns]
-enabled                   = true
-boot_execute              = true
-appinit_dlls              = true
-explorer_addons           = true
-sidebar_gadgets           = true
-image_hijacks             = true
-internet_explorer_addons  = true
-known_dlls                = true
-logon_startups            = true
-wmi_entries               = true
-winsock_protocol          = true
-codecs                    = true
-printer_monitor_dlls      = true
-lsa_security_providers    = true
-autostart_services        = true
-scheduled_tasks           = true
-winlogon_entries          = true
+enabled                   = false
+boot_execute              = false
+appinit_dlls              = false
+explorer_addons           = false
+sidebar_gadgets           = false
+image_hijacks             = false
+internet_explorer_addons  = false
+known_dlls                = false
+logon_startups            = false
+wmi_entries               = false
+winsock_protocol          = false
+codecs                    = false
+printer_monitor_dlls      = false
+lsa_security_providers    = false
+autostart_services        = false
+scheduled_tasks           = false
+winlogon_entries          = false
 
 [windows_yara]
-enabled   = true
+enabled   = false
 scan_path = c:\users
 
 [windows_tcp_listen]

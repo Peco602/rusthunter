@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-use crate::Config;
+use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
 pub struct LinuxTCPListen {}
@@ -11,7 +11,7 @@ impl Plugin for LinuxTCPListen {
     }
 
     fn description(&self) -> &str {
-        &"List of users"
+        &"TCP listening ports"
     }
 
     fn os(&self) -> OS {
@@ -44,7 +44,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn linux_tcp_listen() {
+    fn test_linux_tcp_listen() {
         let data = json!([
             {
                 "Process": "cupsd",
