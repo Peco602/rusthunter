@@ -2,7 +2,7 @@ use std::process;
 
 use rusthunter::options::{ Options, Mode };
 use rusthunter::execute;
-use rusthunter::utils::error;
+use rusthunter::utils::print_error;
 
 #[test]
 fn test_list() {
@@ -20,7 +20,7 @@ fn test_list() {
     };
 
     if let Err(e) = execute(&options) {
-        error(&format!("Application error: {}", e));
+        print_error(&format!("Application print_error: {}", e));
         process::exit(1);
     }
 }
@@ -41,7 +41,7 @@ fn test_run() {
     };
 
     if let Err(e) = execute(&options) {
-        error(&format!("Application error: {}", e));
+        print_error(&format!("Application print_error: {}", e));
         process::exit(1);
     }
 }
@@ -62,7 +62,7 @@ fn test_merge() {
     };
 
     if let Err(e) = execute(&options) {
-        error(&format!("Application error: {}", e));
+        print_error(&format!("Application print_error: {}", e));
         process::exit(1);
     }
 }
@@ -83,7 +83,7 @@ fn test_compare_full() {
     };
 
     if let Err(e) = execute(&options) {
-        error(&format!("Application error: {}", e));
+        print_error(&format!("Application print_error: {}", e));
         process::exit(1);
     }
 }

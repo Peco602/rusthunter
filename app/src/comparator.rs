@@ -2,6 +2,12 @@ use serde_json::Value;
 use diffy::{create_patch, PatchFormatter};
 use std::fs;
 
+use crate::utils::{
+    success,
+    warning,
+    error
+};
+
 
 pub fn compare(initial_file: &String, current_file: &String, stats: &bool, selected_host: &String, selected_plugin: &String) -> Result<(), String> {
     // Snapshot file reading
@@ -46,6 +52,7 @@ pub fn compare(initial_file: &String, current_file: &String, stats: &bool, selec
 fn show_statistics(initial_json: &Value, current_json: &Value) {
     let mut initial_value;
     let mut current_value;
+    let mut message: colored::ColoredString;
 
     println!("{: <32} {: <32} {: <10} {: <10}", "Host", "Plugin", "Initial", "Current");
     println!("{:=<100}","=");
@@ -55,40 +62,55 @@ fn show_statistics(initial_json: &Value, current_json: &Value) {
         // Inner loop over PLUGINS
         for (plugin_name, initial_plugin_data) in initial_host_data.as_object().unwrap() {
             initial_value = initial_plugin_data.as_array().unwrap().len();
-            current_value = match ((current_json[host_name])[plugin_name]).as_array() {
-                    Some(v) => v.len(),
-                    None => 0,
+            match ((current_json[host_name])[plugin_name]).as_array() {
+                    Some(v) => {
+                        current_value = v.len();
+                        if current_value == initial_value {
+                            message = success("Ok");
+                        } else {
+                            message = warning("Mismatch");
+                        }
+                    },
+                    None => {
+                        current_value = 0;
+                        message = error("Not found")
+                    },
                 };
-            println!("{: <32} {: <32} {: <10} {: <10}", host_name, plugin_name, initial_value, current_value);
+            println!("{: <32} {: <32} {: <10} {: <10} {: <20}", host_name, plugin_name, initial_value, current_value, message);
         }
+        println!("{:-<100}","-");
     }
 }
 
 fn show_differences(initial_json: &Value, current_json: &Value, selected_host: &str, selected_plugin: &str) -> Result<(), String> {
-    let mut initial_json_x: Value = initial_json.clone();
-    let mut current_json_x: Value = current_json.clone();
-
-    if selected_host != "" {
-        match (initial_json_x[selected_host]).as_object() {
-            Some(v) => initial_json_x = serde_json::Value::Object(v.clone()),
-            None => return Err(format!("Host {} not found in initial snaphost", selected_host)),
-        };
-        match (current_json_x[selected_host]).as_object() {
-            Some(v) => current_json_x = serde_json::Value::Object(v.clone()),
-            None => return Err(format!("Host {} not found in current snaphost", selected_host)),
-        };
-    }
+    let mut initial_json_x: &Value = initial_json;
+    let mut current_json_x: &Value = current_json;
     
+    if selected_host != "" {
+        if (initial_json_x[selected_host]).is_null() {
+            return Err(format!("Host {} not found in initial snaphost", selected_host));
+        } else {
+            initial_json_x = &initial_json_x[selected_host];
+        }
+        if (current_json_x[selected_host]).is_null() {
+            return Err(format!("Host {} not found in current snaphost", selected_host));
+        } else {
+            current_json_x = &current_json_x[selected_host];
+        }
+    }
+
     if selected_plugin != "" {
-        match (initial_json_x[selected_plugin]).as_array() {
-            Some(v) => initial_json_x = serde_json::Value::Array(v.clone()),
-            None => return Err(format!("Plugin {} not found for host {} in initial snaphost", selected_plugin, selected_host)),
-        };
-        match (current_json_x[selected_plugin]).as_array() {
-            Some(v) => current_json_x = serde_json::Value::Array(v.clone()),
-            None => return Err(format!("Plugin {} not found for host {} in current snaphost", selected_plugin, selected_host)),
-        };
-    } 
+        if (initial_json_x[selected_plugin]).is_null() {
+            return Err(format!("Plugin {} not found for host {} in initial snaphost", selected_plugin, selected_host));
+        } else {
+            initial_json_x = &initial_json_x[selected_plugin];
+        }
+        if (current_json_x[selected_plugin]).is_null() {
+            return Err(format!("Plugin {} not found for host {} in current snaphost", selected_plugin, selected_host));
+        } else {
+            current_json_x = &current_json_x[selected_plugin];
+        }
+    }
 
     let initial_data_x;
     match serde_json::to_string_pretty(&initial_json_x) {

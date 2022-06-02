@@ -1,21 +1,37 @@
-use colored::Colorize;
+use colored::{Colorize, ColoredString};
 
-pub fn info(message: &str) {
-    eprintln!("{}", format!("[*] {}", message).white())
+//
+pub fn info(message: &str) -> ColoredString {
+    format!("[*] {}", message).white()
 }
 
-pub fn success(message: &str) {
-    eprintln!("{}", format!("[+] {}", message).green().bold())
+pub fn print_info(message: &str) {
+    eprintln!("{}", info(message))
 }
 
-pub fn warning(message: &str) {
-    eprintln!("{}", format!("[!] {}", message).yellow().bold())
+pub fn success(message: &str) -> ColoredString {
+    format!("[+] {}", message).green().bold()
 }
 
-pub fn error(message: &str) {
-    eprintln!("{}", format!("[-] {}", message).red().bold())
+pub fn print_success(message: &str) {
+    eprintln!("{}", success(message))
 }
 
+pub fn warning(message: &str) -> ColoredString {
+    format!("[!] {}", message).yellow().bold()
+}
+
+pub fn print_warning(message: &str) {
+    eprintln!("{}", warning(message))
+}
+
+pub fn error(message: &str) -> ColoredString {
+    format!("[-] {}", message).red().bold()
+}
+
+pub fn print_error(message: &str) {
+    eprintln!("{}", error(message))
+}
 
 use std::{
     fs::File,

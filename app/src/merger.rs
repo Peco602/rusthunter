@@ -4,7 +4,7 @@ use chrono::prelude::*;
 use serde_json::{Value, Map};
 
 use crate::constants::{SNAPSHOT_FILENAME, SNAPSHOT_EXTENSION};
-use crate::utils::{info, success, output_json};
+use crate::utils::{print_info, print_success, output_json};
 
 pub fn merge(merging_directory: &String, verbose: &bool) -> Result<(), String> {
     //let merging_glob = merging_directory.clone() + &"/*.json".to_string(); 
@@ -19,7 +19,7 @@ pub fn merge(merging_directory: &String, verbose: &bool) -> Result<(), String> {
     for entry in files {
         match entry {
             Ok(path) => {
-                info(&format!("Reading file: {:?}", path.display()));
+                print_info(&format!("Reading file: {:?}", path.display()));
                 match fs::read_to_string(path) {
                     Ok(read_data) => {
                         match serde_json::from_str(&read_data) {
@@ -45,7 +45,7 @@ pub fn merge(merging_directory: &String, verbose: &bool) -> Result<(), String> {
 
     let local_time = Local::now().format("%Y%m%d_%H%M%S").to_string();
     let merged_snapshots_filename: String = format!("{}-{}.{}", SNAPSHOT_FILENAME, local_time, SNAPSHOT_EXTENSION);
-    success(&format!("Merged snapshots file: {}", merged_snapshots_filename));
+    print_success(&format!("Merged snapshots file: {}", merged_snapshots_filename));
     output_json(&merged_data, merged_snapshots_filename, verbose)
 
 }

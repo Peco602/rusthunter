@@ -1,6 +1,6 @@
 use crate::constants::*;
 use crate::config::Config;
-use crate::utils::{info, success, warning, output_json};
+use crate::utils::{print_info, print_success, print_warning, output_json};
 use crate::plugins::{Plugin, os};
 use serde_json::{Value, Map};
 
@@ -28,14 +28,14 @@ pub fn run(plugins: &Vec<&dyn Plugin>, config_file: &str, binary_directory: &str
                     .filter(|p| p.os() == os)
                     // Enabled plugins
                     .filter(|p| config.is_plugin_enabled(p.name())) {
-                        info(&format!("Executing {} plugin", p.name()));
+                        print_info(&format!("Executing {} plugin", p.name()));
                         match p.run(&config, binary_directory) {
                             Ok(value) =>  {
                                 plugins_data.insert(p.name().to_string(), value);
-                                success("Done");
+                                print_success("Done");
                             },
                             Err(e) => {
-                                warning(&format!("Failed: {}", e));
+                                print_warning(&format!("Failed: {}", e));
                             },
                         };
                     }
@@ -50,6 +50,6 @@ pub fn run(plugins: &Vec<&dyn Plugin>, config_file: &str, binary_directory: &str
 
     // // Data output
     let snapshot_filename: String = format!("{}.{}", SNAPSHOT_FILENAME, SNAPSHOT_EXTENSION);
-    success(&format!("Snapshot file created: {}", snapshot_filename));
+    print_success(&format!("Snapshot file created: {}", snapshot_filename));
     output_json(&host_data, snapshot_filename, verbose)
 }
