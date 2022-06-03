@@ -18,6 +18,15 @@ Param(
     $CurrentSnapshot = $null,
 
     [switch]
+    $ShowStatistics = $null,
+
+    [string]
+    $FilterHost = $null,
+
+    [string]
+    $FilterPlugin = $null,
+
+    [switch]
     $UnitTests = $null,
 
     [switch]
@@ -89,10 +98,13 @@ function ShowHelp {
     Write-Host "     -HostsFile          Hosts file"
     Write-Host "     -ConfigFile         Configuration file"
     Write-Host
-    Write-Host "usage: $0 compare -InitialSnapshot INITIAL_SNAPSHOT -CurrentSnapshot CURRENT_SNAPSHOT"
+    Write-Host "usage: $0 compare -InitialSnapshot INITIAL_SNAPSHOT -CurrentSnapshot CURRENT_SNAPSHOT -ShowStatistics -Host HOST -Plugin PLUGIN"
     Write-Host
     Write-Host "     -InitialSnapshot    Initial snapshot"
     Write-Host "     -CurrentSnapshot    Current snapshot"
+    Write-Host "     -ShowStatistics     Show summary statistics"
+    Write-Host "     -FilterHost         Filter host for comparison"
+    Write-Host "     -FilterPlugin       Filter plugin for comparison"
     Write-Host
     Write-Host "usage: $0 uninstall"
     Write-Host
@@ -171,6 +183,21 @@ function Get-LocalSnapshot {
     Remove-Item -Force -Recurse ${SNAPSHOT_PATH}
 }
 
+function Protect-Hosts {
+    if (! $HostsFile) {
+        Write-Host " [!] Please specify an hosts file" -ForegroundColor yellow
+        Exit 1
+    }
+
+    CheckDocker
+
+    Build-LauncherImage
+    $com = "edit"
+    Write-Host " [+] Collecting data" -ForegroundColor green
+    docker run --rm -v $PWD\${HostsFile}:/tmp/hosts -it ${LAUNCHER_IMAGE_NAME}:latest bash -c "cp /tmp/hosts /tmp/host.enc;env EDITOR=nano ansible-vault $com /tmp/host.enc; cp /tmp/host.enc /tmp/hosts"
+
+}
+
 function Get-GlobalSnapshot {
     CheckInstallation
 
@@ -179,7 +206,7 @@ function Get-GlobalSnapshot {
         Exit 1
     }
 
-    if (! $ConfigFile) {
+    if (! $HostsFile) {
         Write-Host " [!] Please specify an hosts file" -ForegroundColor yellow
         Exit 1
     }
@@ -217,6 +244,7 @@ function Compare-Snapshots {
         Write-Host " [!] Please specify a current snapshot file" -ForegroundColor yellow
         Exit 1
     }
+
 
     rusthunter.exe compare -i ${InitialSnapshot} -c ${CurrentSnapshot}
 }
@@ -318,6 +346,7 @@ switch ($Subcommand) {
     "install"   { Install-RustHunter }
     "list"      { Show-Plugins }
     "local"     { Get-LocalSnapshot }
+    "hosts"     { Protect-Hosts }
     "global"    { Get-GlobalSnapshot }
     "compare"   { Compare-Snapshots }
     "uninstall" { Uninstall-RustHunter }
