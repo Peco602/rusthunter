@@ -74,12 +74,14 @@ ${DEFAULT_HOSTS_FILE}="hosts"
 
 function ShowBanner {
     cls
-    Write-Host " ______          _   _   _             _              " -ForegroundColor blue
-    Write-Host " | ___ \        | | | | | |           | |             " -ForegroundColor blue
-    Write-Host " | |_/ /   _ ___| |_| |_| |_   _ _ __ | |_ ___ _ __   " -ForegroundColor blue
-    Write-Host " |    / | | / __| __|  _  | | | | '_ \| __/ _ \ '__|  " -ForegroundColor blue
-    Write-Host " | |\ \ |_| \__ \ |_| | | | |_| | | | | ||  __/ |     " -ForegroundColor blue
-    Write-Host " \_| \_\__,_|___/\__\_| |_/\__,_|_| |_|\__\___|_|     " -ForegroundColor blue
+    Write-Host "  /#######                        /##     /##   /##                       /##                          " -ForegroundColor Blue
+    Write-Host " | ##__  ##                      | ##    | ##  | ##                      | ##                          " -ForegroundColor Blue
+    Write-Host " | ##  \ ## /##   /##  /####### /######  | ##  | ## /##   /## /######$  /######    /######   /######   " -ForegroundColor Blue
+    Write-Host " | #######/| ##  | ## /##_____/|_  ##_/  | ########| ##  | ##| ##__  ##|_  ##_/   /##__  ## /##__  ##  " -ForegroundColor Blue
+    Write-Host " | ##__  ##| ##  | ##|  ######   | ##    | ##__  ##| ##  | ##| ##  \ ##  | ##    | ########| ##  \__/  " -ForegroundColor Blue
+    Write-Host " | ##  \ ##| ##  | ## \____  ##  | ## /##| ##  | ##| ##  | ##| ##  | ##  | ## /##| ##_____/| ##        " -ForegroundColor Blue
+    Write-Host " | ##  | ##|  ######/ /#######/  |  ####/| ##  | ##|  ######/| ##  | ##  |  ####/|  #######| ##        " -ForegroundColor Blue
+    Write-Host " |__/  |__/ \______/ |_______/    \___/  |__/  |__/ \______/ |__/  |__/   \___/   \_______/|__/        " -ForegroundColor Blue
     Write-Host ""
 }
 
@@ -96,14 +98,7 @@ function Show-Help {
     Write-Host "     compare           Compare two snapshots"
     Write-Host "     uninstall         Uninstall RustHunter from the system"
     Write-Host "     build             Build RustHunter from code (requires Docker)"
-    Write-Host "     test              Perform unit and integration tests (requires Docker)"
     Write-Host "     help              This help"
-    Write-Host
-    Write-Host "ARGS:"
-    Write-Host
-    Write-Host "usage: $0 install"
-    Write-Host
-    Write-Host "usage: $0 list"
     Write-Host
     Write-Host "usage: $0 hosts -HostsFile HOSTS_FILE -EncryptHosts -RekeyHosts -ViewHosts -EditHosts -DecryptHosts"
     Write-Host
@@ -131,21 +126,13 @@ function Show-Help {
     Write-Host "     -FilterHost         Filter host"
     Write-Host "     -FilterPlugin       Filter plugin"
     Write-Host
-    Write-Host "usage: $0 uninstall"
-    Write-Host
-    Write-Host "usage: $0 build"
-    Write-Host
-    Write-Host "usage: $0 test -UnitTests -IntegrationTests -ValidationTests"
-    Write-Host
-    Write-Host "     -UnitTests          Perform unit tests"
-    Write-Host "     -IntegrationTests   Perform integration tests"
-    Write-Host "     -ValidationTests    Perform validation tests"
-    Write-Host
 
 }
 
 function Show-Error($message) {
-    Write-Host " [-] ${message}" -ForegroundColor red      
+    Write-Host " [-] ${message}" -ForegroundColor red
+    Write-Host ""
+    Exit 1    
 }
 
 function Show-Warning($message) {
@@ -159,14 +146,12 @@ function Show-Info($message) {
 function Is-ExecutableInstalled {
     if ( !(Test-Path ${INSTALLATION_PATH}\rusthunter.exe) ) {
         Show-Error "The tool has not been installed yet"       
-        Exit 1
     }
 }
 
 function Is-DockerInstalled {
     if ( !$(docker --version 2> $null) ){
         Show-Error "Please install Docker Desktop for Windows"       
-        Exit 1
     }
 }
 
@@ -187,11 +172,12 @@ function Build-LauncherImage {
 function Install-RustHunter {
     if ( !(Test-Path ${WINDOWS_BINARIES_PATH}\${EXECUTABLE_NAME}) ){
         Show-Error "The tool has not been built yet"       
-        Exit 1
     } else {
         Show-Info "Installing executable"
         cp ${WINDOWS_BINARIES_PATH}\${EXECUTABLE_NAME} ${INSTALLATION_PATH}
     }
+
+    Build-LauncherImage
 
     Show-Info "Successfully installed"
 }
@@ -207,7 +193,6 @@ function Get-LocalSnapshot {
 
     if (!${ConfigFile}) {
         Show-Error "Please specify a config file"
-        Exit 1
     }
 
     Show-Info "Creating snapshots directory"
@@ -235,30 +220,25 @@ function Protect-Hosts {
 
     if (! ${HostsFile}) {
         Show-Error "Please specify an hosts file"
-        Exit 1
     }
 
     [array]$choices = @(${EncryptHosts}, ${RekeyHosts}, ${ViewHosts}, ${EditHosts}, ${DecryptHosts}) | Where-Object {$_ -ne $false}
 
     if ( ${choices}.count -eq 0 ) {
         Show-Error "Please specify an action on the hosts inventory file"
-        Exit 1
     }
     if ( ${choices}.count -gt 1) {
         Show-Error "Please specify only one action on the hosts inventory file"
-        Exit 1
     }
 
     $isFileEncrypted = Is-FileEncrypted ${HostsFile}
 
     if ( ${EncryptHosts} -and ${isFileEncrypted} ) {
         Show-Error "${HostsFile} is already encrypted"
-        Exit 1
     }
 
     if ( ( ${RekeyHosts} -or ${ViewHosts} -or ${EditHosts} -or ${DecryptHosts}) -and !${isFileEncrypted} ) {
         Show-Error "${HostsFile} is not encrypted"
-        Exit 1
     }
 
     if ( ${EncryptHosts} -and ${isFileEncrypted} ) {
@@ -290,12 +270,10 @@ function Get-GlobalSnapshot {
 
     if (! ${ConfigFile}) {
         Show-Error "Please specify a config file"
-        Exit 1
     }
 
     if (! ${HostsFile}) {
         Show-Error "Please specify an hosts file"
-        Exit 1
     }
 
     cp ${HostsFile} ${ANSIBLE_PATH}/${DEFAULT_HOSTS_FILE}
@@ -326,21 +304,18 @@ function Compare-Snapshots {
 
     if ( !${InitialSnapshot} ) {
         Show-Error "Please specify an initial snapshot file"
-        Exit 1
     } else {
         $args += " --initial ${InitialSnapshot}"
     }
 
     if ( !${CurrentSnapshot} ) {
         Show-Error "Please specify a current snapshot file"
-        Exit 1
     } else {
         $args += " --current ${CurrentSnapshot}"
     }
 
     if ( ${FilterPlugin} -and !${FilterHost}) {
         Show-Error "Please filter also by host"
-        Exit 1
     }
 
     if ( ${FilterHost} ) {
@@ -349,6 +324,10 @@ function Compare-Snapshots {
 
     if ( ${FilterPlugin} ) {
         $args += " --plugin ${FilterPlugin}"
+    }
+
+    if ( ${ShowStatistics} ) {
+        $args += " --stats"
     }
 
     rusthunter.exe compare $args
@@ -399,7 +378,6 @@ function Test-RustHunter {
 
     if ( !${UnitTests} -and !${IntegrationTests} -and !${ValidationTests} ) {
         Show-Error "No tests specified"
-        Exit 1
     }
 
     if ( ${UnitTests} ) {

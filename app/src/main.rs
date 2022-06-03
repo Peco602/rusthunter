@@ -12,7 +12,7 @@ fn main() {
     });
 
     if let Err(e) = execute(&options) {
-        print_error(&format!("Application print_error: {}", e));
+        print_error(&format!("Application error: {}", e));
         process::exit(1);
     }
 }
