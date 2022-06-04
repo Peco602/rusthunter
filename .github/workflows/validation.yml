@@ -3,7 +3,8 @@ name: Validation
 on:
   push:
     branches:
-      - ['main', 'dev']
+      - main
+      - dev
       
 jobs:
   build:

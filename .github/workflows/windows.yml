@@ -3,7 +3,8 @@ name: Windows
 on:
   push:
     branches:
-      - ['main', 'dev']
+      - main
+      - dev
 
 jobs:
   build:
