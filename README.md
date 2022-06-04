@@ -1,5 +1,5 @@
 ![Build](https://github.com/Peco602/rusthunter/actions/workflows/build.yml/badge.svg)
-![Tests](https://github.com/Peco602/rusthunter/actions/workflows/tests.yml/badge.svg)
+![Windows](https://github.com/Peco602/rusthunter/actions/workflows/windows.yml/badge.svg)
 ![Docs](https://github.com/Peco602/rusthunter/actions/workflows/docs.yml/badge.svg)
 
 <table align="center" border="0">
