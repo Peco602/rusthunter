@@ -3,8 +3,8 @@ name: Linux
 on:
   push:
     branches:
-      - '*'
-
+      - ['main', 'dev']
+      
 jobs:
   build:
     runs-on: ubuntu-latest

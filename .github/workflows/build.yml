@@ -3,8 +3,8 @@ name: Build
 on:
   push:
     branches:
-      - 'main'
-
+      - ['main', 'dev']
+      
 jobs:
   build:
     runs-on: ubuntu-20.04

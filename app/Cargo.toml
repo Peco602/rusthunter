@@ -9,8 +9,6 @@ edition = "2021"
 clap = "3.1.2"
 configparser = "2.1.0"
 serde_json = "1.0.59"
-json-structural-diff = { version = "0.1.0", features = ['colorize'] }
-# json_diff = "0.1.2"
 assert-json-diff = "2.0.1"
 diffy = "0.2.2"
 hostname = "0.1.5"

@@ -1,4 +1,5 @@
 use serde_json::Value;
+use assert_json_diff;
 use diffy::{create_patch, PatchFormatter};
 use std::fs;
 
@@ -7,7 +8,6 @@ use crate::utils::{
     warning,
     error
 };
-
 
 pub fn compare(initial_file: &String, current_file: &String, stats: &bool, selected_host: &String, selected_plugin: &String) -> Result<(), String> {
     // Snapshot file reading
@@ -65,10 +65,9 @@ fn show_statistics(initial_json: &Value, current_json: &Value) {
             match ((current_json[host_name])[plugin_name]).as_array() {
                     Some(v) => {
                         current_value = v.len();
-                        if current_value == initial_value {
-                            message = success("Ok");
-                        } else {
-                            message = warning("Mismatch");
+                        match assert_json_diff::assert_json_matches_no_panic(initial_plugin_data, v, assert_json_diff::Config::new(assert_json_diff::CompareMode::Strict)) {
+                            Ok(_) => message = success("Ok"),
+                            Err(_) => message = warning("Mismatch"),
                         }
                     },
                     None => {

@@ -183,7 +183,7 @@ function execute_install_subcommand {
     fi
 
     build_launcher_image
-    
+
     print_info "Successfully installed"
 }
 
@@ -356,11 +356,11 @@ function execute_global_subcommand {
     done
 
     if [ "$HOSTS_FILE" == "NONE" ]; then
-            print_error "Please specify the host file"
+        print_error "Please specify the host file"
     fi
     
     if [ "$CONFIG_FILE" == "NONE" ]; then
-            print_error "Please specify the config file"
+        print_error "Please specify the config file"
     fi
 
     cp $HOSTS_FILE $ANSIBLE_PATH/$DEFAULT_HOSTS_FILE
@@ -493,7 +493,7 @@ function execute_build_subcommand {
 
 function execute_update_subcommand {
     print_info "Downloading latest updates"
-    if [ "$(git pull)" == "Already up to date1." ];
+    if [ "$(git pull)" == "Already up to date." ];
     then
         print_warning "No updates available"
     else
@@ -543,7 +543,7 @@ function execute_test_subcommand {
     done
 
     if [[ "$UNIT_TESTS" == "NONE" && "$INTEGRATION_TESTS" == "NONE" && "$VALIDATION_TESTS" == "NONE" ]]; then
-            print_error "No tests specified"
+        print_error "No tests specified"
     fi
 
     if [ "$UNIT_TESTS" == "True" ]; then
@@ -582,7 +582,6 @@ function execute_test_subcommand {
         rm -rf $SNAPSHOT_PATH
     fi
 }
-
 
 
 ###########################################################

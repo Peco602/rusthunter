@@ -90,15 +90,16 @@ function Show-Help {
     Write-Host
     Write-Host "SUBCOMMANDS:"
     Write-Host
-    Write-Host "     install           Install RustHunter on the system"
-    Write-Host "     list              List all available plugins"
-    Write-Host "     hosts             Protect the hosts inventory file"
-    Write-Host "     local             Take a local snapshot"
-    Write-Host "     global            Take a global snapshot based on hosts file (requires Docker)"
-    Write-Host "     compare           Compare two snapshots"
-    Write-Host "     uninstall         Uninstall RustHunter from the system"
-    Write-Host "     build             Build RustHunter from code (requires Docker)"
-    Write-Host "     help              This help"
+    Write-Host "     install             Install RustHunter on the system"
+    Write-Host "     list                List all available plugins"
+    Write-Host "     hosts               Protect the hosts inventory file"
+    Write-Host "     local               Take a local snapshot"
+    Write-Host "     global              Take a global snapshot based on hosts file (requires Docker)"
+    Write-Host "     compare             Compare two snapshots"
+    Write-Host "     uninstall           Uninstall RustHunter from the system"
+    Write-Host "     build               Build RustHunter from code (requires Docker)"
+    Write-Host "     update              Get the latest RustHunter updates"
+    Write-Host "     help                This help"
     Write-Host
     Write-Host "usage: $0 hosts -HostsFile HOSTS_FILE -EncryptHosts -RekeyHosts -ViewHosts -EditHosts -DecryptHosts"
     Write-Host
@@ -369,6 +370,18 @@ function Build-RustHunter {
     Remove-Item -Force -Recurse ${APP_PATH}\target
 }
 
+function Update-RustHunter {
+    Show-Info "Downloading latest updates"
+    git pull
+
+    Show-Info "Installing new executable"
+    cp ${WINDOWS_BINARIES_PATH}\${EXECUTABLE_NAME} ${INSTALLATION_PATH}
+    
+    Build-LauncherImage
+
+    Show-Info "Successfully updated"
+}
+
 function Test-RustHunter {
     Is-ExecutableInstalled
 
@@ -434,6 +447,7 @@ switch ($Subcommand) {
     "compare"   { Compare-Snapshots }
     "uninstall" { Uninstall-RustHunter }
     "build"     { Build-RustHunter }
+    "update"    { Update-RustHunter }
     "test"      { Test-RustHunter } 
     default     { Show-Help }
 }
