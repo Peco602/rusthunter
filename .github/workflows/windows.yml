@@ -15,4 +15,4 @@ jobs:
     - name: Validation Tests
       shell: pwsh
       run: |
-        .\rusthunter.ps1 test -ValidationTests
+        powershell -ep bypass .\rusthunter.ps1 test -ValidationTests
