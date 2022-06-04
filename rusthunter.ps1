@@ -8,6 +8,21 @@ Param(
     [string]
     $HostsFile = $null,
 
+    [switch]
+    $EncryptHosts = $null,
+
+    [switch]
+    $ViewHosts = $null,
+
+    [switch]
+    $EditHosts = $null,
+
+    [switch]
+    $RekeyHosts = $null,
+
+    [switch]
+    $DecryptHosts = $null,
+
     [string]
     $ConfigFile = $null,
     
@@ -68,13 +83,14 @@ function ShowBanner {
     Write-Host ""
 }
 
-function ShowHelp {
+function Show-Help {
     Write-Host "usage: $0 [SUBCOMMAND] [ARGS]"
     Write-Host
     Write-Host "SUBCOMMANDS:"
     Write-Host
     Write-Host "     install           Install RustHunter on the system"
     Write-Host "     list              List all available plugins"
+    Write-Host "     hosts             Protect the hosts inventory file"
     Write-Host "     local             Take a local snapshot"
     Write-Host "     global            Take a global snapshot based on hosts file (requires Docker)"
     Write-Host "     compare           Compare two snapshots"
@@ -88,6 +104,15 @@ function ShowHelp {
     Write-Host "usage: $0 install"
     Write-Host
     Write-Host "usage: $0 list"
+    Write-Host
+    Write-Host "usage: $0 hosts -HostsFile HOSTS_FILE -EncryptHosts -RekeyHosts -ViewHosts -EditHosts -DecryptHosts"
+    Write-Host
+    Write-Host "     -HostsFile          Hosts file to be encrypted"
+    Write-Host "     -EncryptHosts       Add encryption"
+    Write-Host "     -RekeyHosts         Change encryption key"
+    Write-Host "     -ViewHosts          View encrypted file"
+    Write-Host "     -EditHosts          Edit encrypted file"
+    Write-Host "     -DecryptHosts       Decrypt file"
     Write-Host
     Write-Host "usage: $0 local -ConfigFile CONFIG_FILE"
     Write-Host
@@ -103,8 +128,8 @@ function ShowHelp {
     Write-Host "     -InitialSnapshot    Initial snapshot"
     Write-Host "     -CurrentSnapshot    Current snapshot"
     Write-Host "     -ShowStatistics     Show summary statistics"
-    Write-Host "     -FilterHost         Filter host for comparison"
-    Write-Host "     -FilterPlugin       Filter plugin for comparison"
+    Write-Host "     -FilterHost         Filter host"
+    Write-Host "     -FilterPlugin       Filter plugin"
     Write-Host
     Write-Host "usage: $0 uninstall"
     Write-Host
@@ -119,221 +144,301 @@ function ShowHelp {
 
 }
 
-function CheckInstallation {
-    if ( !(Test-Path ${INSTALLATION_PATH}\rusthunter.exe) ){
-        Write-Host " [*] The tool has not been installed yet" -ForegroundColor red        
+function Show-Error($message) {
+    Write-Host " [-] ${message}" -ForegroundColor red      
+}
+
+function Show-Warning($message) {
+    Write-Host " [!] ${message}" -ForegroundColor yellow      
+}
+
+function Show-Info($message) {
+    Write-Host " [+] ${message}" -ForegroundColor green
+}
+
+function Is-ExecutableInstalled {
+    if ( !(Test-Path ${INSTALLATION_PATH}\rusthunter.exe) ) {
+        Show-Error "The tool has not been installed yet"       
         Exit 1
     }
 }
 
-function CheckDocker {
-    if ( !$(docker --version) ){
-        Write-Host " [*] Please install Docker Desktop for Windows" -ForegroundColor yellows        
+function Is-DockerInstalled {
+    if ( !$(docker --version 2> $null) ){
+        Show-Error "Please install Docker Desktop for Windows"       
         Exit 1
     }
 }
 
 function Build-BuilderImage {
-    Write-Host " [+] Building builder docker image" -ForegroundColor green
-    docker build -t ${BUILDER_IMAGE_NAME} ${BUILDER_IMAGE_PATH}
+    if ( !$(docker images -q ${BUILDER_IMAGE_NAME}:latest 2> $null) ) {
+        Show-Info "Building builder docker image" 
+        docker build -t ${BUILDER_IMAGE_NAME} ${BUILDER_IMAGE_PATH}
+    }
 }
 
 function Build-LauncherImage {
-    Write-Host " [+] Building launcher docker image" -ForegroundColor green
-    docker build -t ${LAUNCHER_IMAGE_NAME} ${LAUNCHER_IMAGE_PATH}
+    if ( !$(docker images -q ${LAUNCHER_IMAGE_NAME}:latest 2> $null) ) {
+        Show-Info "Building launcher docker image"
+        docker build -t ${LAUNCHER_IMAGE_NAME} ${LAUNCHER_IMAGE_PATH}
+    }
 }
 
 function Install-RustHunter {
     if ( !(Test-Path ${WINDOWS_BINARIES_PATH}\${EXECUTABLE_NAME}) ){
-        Write-Host " [*] The tool has not been built yet" -ForegroundColor red        
+        Show-Error "The tool has not been built yet"       
         Exit 1
     } else {
-        Write-Host " [+] Installing executable" -ForegroundColor green
+        Show-Info "Installing executable"
         cp ${WINDOWS_BINARIES_PATH}\${EXECUTABLE_NAME} ${INSTALLATION_PATH}
     }
 
-    Write-Host " [+] Successfully installed" -ForegroundColor green
+    Show-Info "Successfully installed"
 }
 
 function Show-Plugins {
-    CheckInstallation
+    Is-ExecutableInstalled
     
     rusthunter.exe list
 }
 
 function Get-LocalSnapshot {
-    CheckInstallation
+    Is-ExecutableInstalled
 
-    if (!$ConfigFile) {
-        Write-Host " [!] Please specify a config file" -ForegroundColor yellow
+    if (!${ConfigFile}) {
+        Show-Error "Please specify a config file"
         Exit 1
     }
 
-    Write-Host " [+] Creating snapshots directory" -ForegroundColor green
+    Show-Info "Creating snapshots directory"
     mkdir -p ${SNAPSHOT_PATH} > $null
 
-    Write-Host " [+] Collecting data" -ForegroundColor green
-    rusthunter.exe run -c $ConfigFile -b ${WINDOWS_BINARIES_PATH}
+    Show-Info "Collecting data"
+    rusthunter.exe run -c ${ConfigFile} -b ${WINDOWS_BINARIES_PATH}
     mv snapshot.json ${SNAPSHOT_PATH}
 
-    Write-Host " [+] Merging data" -ForegroundColor green
+    Show-Info "Merging data"
     rusthunter.exe merge -d ${SNAPSHOT_PATH}
 
-    Write-Host " [*] Cleaning up" -ForegroundColor green
+    Show-Info "Cleaning up"
     Remove-Item -Force -Recurse ${SNAPSHOT_PATH}
 }
 
+function Is-FileEncrypted($file) {
+    return $(Select-String -Path ${file} -Pattern "ANSIBLE_VAULT" -CaseSensitive) -ne $null
+}
+
 function Protect-Hosts {
-    if (! $HostsFile) {
-        Write-Host " [!] Please specify an hosts file" -ForegroundColor yellow
+    Is-DockerInstalled
+
+    Build-LauncherImage
+
+    if (! ${HostsFile}) {
+        Show-Error "Please specify an hosts file"
         Exit 1
     }
 
-    CheckDocker
+    [array]$choices = @(${EncryptHosts}, ${RekeyHosts}, ${ViewHosts}, ${EditHosts}, ${DecryptHosts}) | Where-Object {$_ -ne $false}
 
-    Build-LauncherImage
-    $com = "edit"
-    Write-Host " [+] Collecting data" -ForegroundColor green
-    docker run --rm -v $PWD\${HostsFile}:/tmp/hosts -it ${LAUNCHER_IMAGE_NAME}:latest bash -c "cp /tmp/hosts /tmp/host.enc;env EDITOR=nano ansible-vault $com /tmp/host.enc; cp /tmp/host.enc /tmp/hosts"
+    if ( ${choices}.count -eq 0 ) {
+        Show-Error "Please specify an action on the hosts inventory file"
+        Exit 1
+    }
+    if ( ${choices}.count -gt 1) {
+        Show-Error "Please specify only one action on the hosts inventory file"
+        Exit 1
+    }
 
+    $isFileEncrypted = Is-FileEncrypted ${HostsFile}
+
+    if ( ${EncryptHosts} -and ${isFileEncrypted} ) {
+        Show-Error "${HostsFile} is already encrypted"
+        Exit 1
+    }
+
+    if ( ( ${RekeyHosts} -or ${ViewHosts} -or ${EditHosts} -or ${DecryptHosts}) -and !${isFileEncrypted} ) {
+        Show-Error "${HostsFile} is not encrypted"
+        Exit 1
+    }
+
+    if ( ${EncryptHosts} -and ${isFileEncrypted} ) {
+        $command = "encrypt"
+        Show-Info "Encrypting hosts file"
+    } elseif ( ${RekeyHosts} ) {
+        $command = "rekey"
+        Show-Info "Rekeying hosts file"
+    } elseif ( ${ViewHosts} ) {
+        $command = "view"
+        Show-Info "Showing hosts file"
+    } elseif ( ${EditHosts} ) {
+        $command = "edit"
+        Show-Info "Editing hosts file"
+    } elseif ( ${DecryptHosts} ) {
+        $command = "decrypt"
+        Show-Info "Decrypting hosts file"
+    }
+
+    docker run --rm -v $PWD\${HostsFile}:/tmp/hosts -it ${LAUNCHER_IMAGE_NAME}:latest bash -c "cp /tmp/hosts /tmp/host.tmp;env EDITOR=nano ansible-vault $command /tmp/host.tmp; cp /tmp/host.tmp /tmp/hosts"
 }
 
 function Get-GlobalSnapshot {
-    CheckInstallation
+    Is-ExecutableInstalled
 
-    if (! $ConfigFile) {
-        Write-Host " [!] Please specify a config file" -ForegroundColor yellow
-        Exit 1
-    }
-
-    if (! $HostsFile) {
-        Write-Host " [!] Please specify an hosts file" -ForegroundColor yellow
-        Exit 1
-    }
-
-    CheckDocker
+    Is-DockerInstalled
 
     Build-LauncherImage
 
-    cp $HostsFile ${ANSIBLE_PATH}/${DEFAULT_HOSTS_FILE}
-    cp $ConfigFile ${LINUX_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
-    cp $ConfigFile ${WINDOWS_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
+    if (! ${ConfigFile}) {
+        Show-Error "Please specify a config file"
+        Exit 1
+    }
 
-    Write-Host " [+] Creating snapshots directory" -ForegroundColor green
+    if (! ${HostsFile}) {
+        Show-Error "Please specify an hosts file"
+        Exit 1
+    }
+
+    cp ${HostsFile} ${ANSIBLE_PATH}/${DEFAULT_HOSTS_FILE}
+    cp ${ConfigFile} ${LINUX_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
+    cp ${ConfigFile} ${WINDOWS_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
+
+    Show-Info "Creating snapshots directory"
     mkdir -p ${SNAPSHOT_PATH} > $null
 
-    Write-Host " [+] Collecting data" -ForegroundColor green
-    docker run --rm -v $PWD\${ANSIBLE_PATH}:/etc/ansible -v $PWD\${SNAPSHOT_PATH}:/snapshots -w /etc/ansible -it ${LAUNCHER_IMAGE_NAME}:latest ansible-playbook playbook.yml
+    Show-Info "Collecting data"
+    if ( Is-FileEncrypted ${HostsFile} ) {
+        docker run --rm -v $PWD\${ANSIBLE_PATH}:/etc/ansible -v $PWD\${SNAPSHOT_PATH}:/snapshots -w /etc/ansible -it ${LAUNCHER_IMAGE_NAME}:latest ansible-playbook --ask-vault-pass playbook.yml
+    } else {
+        docker run --rm -v $PWD\${ANSIBLE_PATH}:/etc/ansible -v $PWD\${SNAPSHOT_PATH}:/snapshots -w /etc/ansible -it ${LAUNCHER_IMAGE_NAME}:latest ansible-playbook playbook.yml
+    }
 
-    Write-Host " [+] Merging data" -ForegroundColor green
+    Show-Info "Merging data"
     rusthunter.exe merge -d ${SNAPSHOT_PATH}
 
-    Write-Host " [*] Cleaning up" -ForegroundColor green
+    Show-Info "Cleaning up"
     Remove-Item -Force -Recurse ${SNAPSHOT_PATH}
 }
 
 function Compare-Snapshots {
-    CheckInstallation
+    Is-ExecutableInstalled
 
-    if (! $InitialSnapshot) {
-        Write-Host " [!] Please specify an initial snapshot file" -ForegroundColor yellow
+    $args = ""
+
+    if ( !${InitialSnapshot} ) {
+        Show-Error "Please specify an initial snapshot file"
+        Exit 1
+    } else {
+        $args += " --initial ${InitialSnapshot}"
+    }
+
+    if ( !${CurrentSnapshot} ) {
+        Show-Error "Please specify a current snapshot file"
+        Exit 1
+    } else {
+        $args += " --current ${CurrentSnapshot}"
+    }
+
+    if ( ${FilterPlugin} -and !${FilterHost}) {
+        Show-Error "Please filter also by host"
         Exit 1
     }
 
-    if (! $CurrentSnapshot) {
-        Write-Host " [!] Please specify a current snapshot file" -ForegroundColor yellow
-        Exit 1
+    if ( ${FilterHost} ) {
+        $args += " --host ${FilterHost}"
     }
 
+    if ( ${FilterPlugin} ) {
+        $args += " --plugin ${FilterPlugin}"
+    }
 
-    rusthunter.exe compare -i ${InitialSnapshot} -c ${CurrentSnapshot}
+    rusthunter.exe compare $args
 }
 
 function Uninstall-RustHunter {
-    CheckInstallation
+    Is-ExecutableInstalled
 
     if ( $(docker --version) ){
-        Write-Host " [-] Removing docker images" -ForegroundColor yellow
+        Show-Warning "Removing docker images"
         docker rmi ${BUILDER_IMAGE_NAME} ${LAUNCHER_IMAGE_NAME} --force
     }
 
-    Write-Host " [-] Removing executable" -ForegroundColor yellow
-    rm -f ${INSTALLATION_PATH}\rusthunter.exe
+    Show-Warning "Removing executable"
+    Remove-Item -Force ${INSTALLATION_PATH}\rusthunter.exe
 }
 
 function Build-RustHunter {
-    CheckDocker
+    Is-DockerInstalled
 
     Build-BuilderImage
 
     Build-LauncherImage
 
-    Write-Host " [+] Building release for Linux target" -ForegroundColor green
+    Show-Info "Building release for Linux target"
     docker container run --rm -v ${PWD}\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo build --target x86_64-unknown-linux-gnu --release
 
-    Write-Host " [+] Building release for Windows target" -ForegroundColor green
+    Show-Info "Building release for Windows target"
     docker container run --rm -v ${PWD}\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo build --target x86_64-pc-windows-msvc --release
 
-    Write-Host " [+] Moving executables to the launcher folders" -ForegroundColor green
+    Show-Info "Moving executables to the launcher folders"
     cp ${APP_PATH}\target\x86_64-unknown-linux-gnu\release\rusthunter ${LINUX_BINARIES_PATH}
     cp ${APP_PATH}\target\x86_64-pc-windows-msvc\release\rusthunter.exe ${WINDOWS_BINARIES_PATH}
 
-    Write-Host " [+] Installing executable" -ForegroundColor green
+    Show-Info "Installing executable"
     cp ${APP_PATH}\target\x86_64-pc-windows-msvc\release\rusthunter.exe ${INSTALLATION_PATH}
 
-    Write-Host " [*] Cleaning up" -ForegroundColor green
+    Show-Info "Cleaning up"
     Remove-Item -Force -Recurse ${APP_PATH}\target
 }
 
 function Test-RustHunter {
-    CheckInstallation
+    Is-ExecutableInstalled
 
-    if ( !$UnitTests -and !$IntegrationTests -and !$ValidationTests ) {
-        Write-Host " [*] No tests specified" -ForegroundColor yellow
-        Exit 1
-    }
-
-    CheckDocker
+    Is-DockerInstalled
 
     Build-LauncherImage
 
-    if ( $UnitTests ) {
-        Write-Host " [*] Unit testing for Linux target" -ForegroundColor green
+    if ( !${UnitTests} -and !${IntegrationTests} -and !${ValidationTests} ) {
+        Show-Error "No tests specified"
+        Exit 1
+    }
+
+    if ( ${UnitTests} ) {
+        Show-Info "Unit testing for Linux target"
         docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --lib --target x86_64-unknown-linux-gnu
 
-        Write-Host " [*] Unit testing for Windows target" -ForegroundColor green
+        Show-Info "Unit testing for Windows target"
         docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --lib --target x86_64-pc-windows-msvc
     }
     
-    if ( $IntegrationTests ) {
-        Write-Host " [*] Integration testing for Linux target" -ForegroundColor green
+    if ( ${IntegrationTests} ) {
+        Show-Info "Integration testing for Linux target"
         docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --test integration
     }
 
     if ( $ValidationTests ) {
-        Write-Host " [*] Creating snapshots directory" -ForegroundColor green
+        Show-Info "Creating snapshots directory"
         mkdir -p ${SNAPSHOT_PATH} > $null
 
-        Write-Host " [*] Creating target dockers" -ForegroundColor green
+        Show-Info "Creating target dockers"
         docker network create rusthunter_test_net --driver=bridge --subnet="192.168.100.1/24"
         for ($i = 2 ; $i -le 20 ; $i++) {
             docker run --network=rusthunter_test_net --ip="192.168.100.$i" -d ghcr.io/s1ntaxe770r/image:latest
         }
 
-        Write-Host " [*] Collecting data" -ForegroundColor green
+        Show-Info "Collecting data"
         docker run --rm -v $PWD\${ANSIBLE_PATH}:/etc/ansible -v $PWD\${SNAPSHOT_PATH}:/snapshots -w /etc/ansible --network=rusthunter_test_net ${LAUNCHER_IMAGE_NAME}:latest ansible-playbook playbook.yml -i hosts.test
 
-        Write-Host " [*] Merging data" -ForegroundColor green
+        Show-Info "Merging data"
         rusthunter merge -d ${SNAPSHOT_PATH}
 
-        Write-Host " [*] Cleaning up" -ForegroundColor green
+        Show-Info "Cleaning up"
         docker rm $(docker network inspect rusthunter_test_net --format='{{range $id, $_ := .Containers}}{{println $id}}{{end}}') --force
         docker network rm rusthunter_test_net
         Remove-Item -Force -Recurse ${SNAPSHOT_PATH}
     }
 }
 
-# Setup error handling.
+# Setup error handling
 Trap {
     $_
     Exit 1
@@ -352,5 +457,5 @@ switch ($Subcommand) {
     "uninstall" { Uninstall-RustHunter }
     "build"     { Build-RustHunter }
     "test"      { Test-RustHunter } 
-    default     { ShowHelp }
+    default     { Show-Help }
 }
