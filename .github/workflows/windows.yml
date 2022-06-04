@@ -15,12 +15,7 @@ jobs:
     - name: Switch to Linux container mode
       shell: pwsh
       run: |
-        powershell -ep bypass [Environment]::SetEnvironmentVariable("LCOW_SUPPORTED", "1", "Machine")
-
-    - name: Validation Tests
-      shell: pwsh
-      run: |
-        Restart-Service docker
+        Start-Process $Env:ProgramFiles\Docker\Docker\DockerCli.exe -ArgumentList "-SwitchLinuxEngine"
 
     - name: Validation Tests
       shell: pwsh
