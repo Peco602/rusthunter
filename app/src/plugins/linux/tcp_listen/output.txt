@@ -2,5 +2,4 @@ cupsd root 127.0.0.1:631
 cupsd root [::1]:631
 nc user *:10000
 sshd root *:22
-sshd root *:22
 systemd-r systemd-resolve 127.0.0.53:53

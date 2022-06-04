@@ -67,11 +67,6 @@ mod tests {
                 "User": "root"
             },
             {
-                "Process": "sshd",
-                "Port": "*:22",
-                "User": "root"
-            },
-            {
                 "Process": "systemd-r",
                 "Port": "127.0.0.53:53",
                 "User": "systemd-resolve"
