@@ -15,4 +15,14 @@ jobs:
     - name: Validation Tests
       shell: pwsh
       run: |
+        powershell -ep bypass .\rusthunter.ps1 install
+
+    - name: Validation Tests
+      shell: pwsh
+      run: |
         powershell -ep bypass .\rusthunter.ps1 test -ValidationTests
+
+    - name: Validation Tests
+      shell: pwsh
+      run: |
+        powershell -ep bypass .\rusthunter.ps1 uninstall
