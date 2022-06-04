@@ -36,32 +36,3 @@ impl WindowsAdministrators {
         WindowsAdministrators {}
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use serde_json::json;
-    use std::include_str;
-    use super::*;
-
-    #[test]
-    fn test_windows_administrators() {
-        let data = json!([
-            {
-                "Name":  "WINDEV2110EVAL\\Administrator",
-                "ObjectClass":  "User"
-            },
-            {
-                "Name":  "WINDEV2110EVAL\\giovanni",
-                "ObjectClass":  "User"
-            },
-            {
-                "Name":  "WINDEV2110EVAL\\User",
-                "ObjectClass":  "User"
-            }
-        ]);
-        let output = include_str!("output.txt");
-        let windows_administrators = WindowsAdministrators::new();
-        assert_eq!(data, windows_administrators.process(output).unwrap());
-    }
-}
-

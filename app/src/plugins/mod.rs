@@ -4,6 +4,7 @@
 
 pub mod linux;
 pub mod windows;
+pub mod test;
 
 use serde_json::Map;
 use powershell_script;
@@ -107,7 +108,7 @@ pub trait Plugin {
     fn _convert_csv_string_with_header(&self, output: &str, separator: &str) -> Result<Value, String> {
         let mut lines = output.trim().split(self._get_splitter());
         let headers: Vec<&str>  = lines.nth(0).unwrap().split(separator).collect(); 
-        let _output: Vec<&str> = lines.skip(1).collect();
+        let _output: Vec<&str> = lines.collect();
         self._convert_csv_string_no_header(&_output.join(self._get_splitter()), &headers, separator)
     }
 
@@ -117,7 +118,7 @@ pub trait Plugin {
 pub enum OS {
     Windows,
     Linux,
-    MacOS,
+    MacOS
 }
 
 pub fn os() -> OS {

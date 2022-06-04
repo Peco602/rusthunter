@@ -55,21 +55,3 @@ impl WindowsYara {
         WindowsYara {}
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use serde_json::json;
-    use std::include_str;
-    use super::*;
-
-    #[test]
-    fn test_windows_yara() {
-        let data = json!([
-            "ExampleRule .\\file1.txt",
-            "ExampleRule .\\file2.txt",
-            ]);
-        let output = include_str!("output.txt");
-        let windows_yara = WindowsYara::new();
-        assert_eq!(data, windows_yara.process(output).unwrap());
-    }
-}
