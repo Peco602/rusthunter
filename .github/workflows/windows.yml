@@ -12,22 +12,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Switch to Linux container mode
-      shell: pwsh
-      run: |
-        Start-Process $Env:ProgramFiles\Docker\Docker\DockerCli.exe -ArgumentList "-SwitchLinuxEngine"
+    - name: Build
+      working-directory: ${{github.workspace}}\app
+      run: cargo build --verbose
 
-    - name: Validation Tests
-      shell: pwsh
-      run: |
-        powershell -ep bypass .\rusthunter.ps1 install
+    - name: Test
+      working-directory: ${{github.workspace}}\app
+      run: cargo test --verbose
 
-    - name: Validation Tests
-      shell: pwsh
-      run: |
-        powershell -ep bypass .\rusthunter.ps1 test -ValidationTests
-
-    - name: Validation Tests
-      shell: pwsh
-      run: |
-        powershell -ep bypass .\rusthunter.ps1 uninstall

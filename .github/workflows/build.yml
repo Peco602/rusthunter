@@ -17,9 +17,3 @@ jobs:
       
     - name: Build
       run: sudo ./rusthunter.sh build
-
-    - name: Unit Tests
-      run: sudo ./rusthunter.sh test -u
-      
-    - name: Integration Tests
-      run: sudo ./rusthunter.sh test -i
