@@ -1,6 +1,6 @@
 {
   "HOST1": {
-    "windows_administrators": [
+    "PLUGIN1": [
       {
         "Name": "HOST1\\Administrator",
         "ObjectClass": "User"
@@ -8,13 +8,9 @@
       {
         "Name": "HOST1\\Peco602",
         "ObjectClass": "User"
-      },
-      {
-        "Name": "HOST1\\User",
-        "ObjectClass": "User"
       }
     ],
-    "windows_tcp_listen": [
+    "PLUGIN2": [
       {
         "LocalAddress": "::",
         "LocalPort": 135,
@@ -23,11 +19,6 @@
       {
         "LocalAddress": "::",
         "LocalPort": 445,
-        "ProcessName": null
-      },
-      {
-        "LocalAddress": "::",
-        "LocalPort": 5357,
         "ProcessName": null
       },
       {
@@ -151,7 +142,7 @@
         "ProcessName": null
       }
     ],
-    "windows_udp_listen": [
+    "PLUGIN3": [
       {
         "LocalAddress": "::",
         "LocalPort": 123,
@@ -338,7 +329,7 @@
         "ProcessName": null
       }
     ],
-    "windows_users": [
+    "PLUGIN4": [
       {
         "Enabled": false,
         "Name": "Administrator"
@@ -366,7 +357,7 @@
     ]
   },
   "HOST2": {
-    "windows_administrators": [
+    "PLUGIN1": [
       {
         "Name": "HOST2\\Administrator",
         "ObjectClass": "User"
@@ -380,7 +371,7 @@
         "ObjectClass": "User"
       }
     ],
-    "windows_tcp_listen": [
+    "PLUGIN2": [
       {
         "LocalAddress": "::",
         "LocalPort": 135,
@@ -483,11 +474,6 @@
       },
       {
         "LocalAddress": "0.0.0.0",
-        "LocalPort": 49667,
-        "ProcessName": null
-      },
-      {
-        "LocalAddress": "0.0.0.0",
         "LocalPort": 49668,
         "ProcessName": null
       },
@@ -517,7 +503,7 @@
         "ProcessName": null
       }
     ],
-    "windows_udp_listen": [
+    "PLUGIN3": [
       {
         "LocalAddress": "::",
         "LocalPort": 123,
@@ -530,7 +516,7 @@
       },
       {
         "LocalAddress": "::",
-        "LocalPort": 3702,
+        "LocalPort": 3703,
         "ProcessName": null
       },
       {
@@ -581,11 +567,6 @@
       {
         "LocalAddress": "0.0.0.0",
         "LocalPort": 123,
-        "ProcessName": null
-      },
-      {
-        "LocalAddress": "0.0.0.0",
-        "LocalPort": 500,
         "ProcessName": null
       },
       {
@@ -704,13 +685,13 @@
         "ProcessName": null
       }
     ],
-    "windows_users": [
+    "PLUGIN4": [
       {
         "Enabled": false,
         "Name": "Administrator"
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Name": "DefaultAccount"
       },
       {
@@ -720,10 +701,6 @@
       {
         "Enabled": false,
         "Name": "Guest"
-      },
-      {
-        "Enabled": true,
-        "Name": "User"
       },
       {
         "Enabled": false,

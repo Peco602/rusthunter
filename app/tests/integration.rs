@@ -68,6 +68,27 @@ fn test_merge() {
 }
 
 #[test]
+fn test_compare_stats() {
+    let options = Options {
+        mode: Mode::Compare,
+        verbose: true,
+        config: String::new(),
+        binary_directory: String::new(),
+        merging_directory: String::new(),
+        initial_file: String::from("tests/compare_directory/initial_snapshot.json"),
+        current_file: String::from("tests/compare_directory/current_snapshot.json"),
+        stats: true,
+        selected_host: String::new(),
+        selected_plugin: String::new()
+    };
+
+    if let Err(e) = execute(&options) {
+        print_error(&format!("Application print_error: {}", e));
+        process::exit(1);
+    }
+}
+
+#[test]
 fn test_compare_full() {
     let options = Options {
         mode: Mode::Compare,
@@ -80,6 +101,48 @@ fn test_compare_full() {
         stats: false,
         selected_host: String::new(),
         selected_plugin: String::new()
+    };
+
+    if let Err(e) = execute(&options) {
+        print_error(&format!("Application print_error: {}", e));
+        process::exit(1);
+    }
+}
+
+#[test]
+fn test_compare_host() {
+    let options = Options {
+        mode: Mode::Compare,
+        verbose: true,
+        config: String::new(),
+        binary_directory: String::new(),
+        merging_directory: String::new(),
+        initial_file: String::from("tests/compare_directory/initial_snapshot.json"),
+        current_file: String::from("tests/compare_directory/current_snapshot.json"),
+        stats: false,
+        selected_host: String::from("HOST1"),
+        selected_plugin: String::new()
+    };
+
+    if let Err(e) = execute(&options) {
+        print_error(&format!("Application print_error: {}", e));
+        process::exit(1);
+    }
+}
+
+#[test]
+fn test_compare_plugin() {
+    let options = Options {
+        mode: Mode::Compare,
+        verbose: true,
+        config: String::new(),
+        binary_directory: String::new(),
+        merging_directory: String::new(),
+        initial_file: String::from("tests/compare_directory/initial_snapshot.json"),
+        current_file: String::from("tests/compare_directory/current_snapshot.json"),
+        stats: false,
+        selected_host: String::from("HOST1"),
+        selected_plugin: String::from("PLUGIN1")
     };
 
     if let Err(e) = execute(&options) {

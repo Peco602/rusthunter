@@ -1,6 +1,6 @@
 {
   "HOST1": {
-    "windows_administrators": [
+    "PLUGIN1": [
       {
         "Name": "HOST1\\Administrator",
         "ObjectClass": "User"
@@ -10,7 +10,7 @@
         "ObjectClass": "User"
       }
     ],
-    "windows_tcp_listen": [
+    "PLUGIN2": [
       {
         "LocalAddress": "::",
         "LocalPort": 135,
@@ -142,7 +142,7 @@
         "ProcessName": null
       }
     ],
-    "windows_udp_listen": [
+    "PLUGIN3": [
       {
         "LocalAddress": "::",
         "LocalPort": 123,
@@ -329,7 +329,7 @@
         "ProcessName": null
       }
     ],
-    "windows_users": [
+    "PLUGIN4": [
       {
         "Enabled": false,
         "Name": "Administrator"
@@ -357,7 +357,7 @@
     ]
   },
   "HOST2": {
-    "windows_administrators": [
+    "PLUGIN1": [
       {
         "Name": "HOST2\\Administrator",
         "ObjectClass": "User"
@@ -371,7 +371,7 @@
         "ObjectClass": "User"
       }
     ],
-    "windows_tcp_listen": [
+    "PLUGIN2": [
       {
         "LocalAddress": "::",
         "LocalPort": 135,
@@ -508,7 +508,7 @@
         "ProcessName": null
       }
     ],
-    "windows_udp_listen": [
+    "PLUGIN3": [
       {
         "LocalAddress": "::",
         "LocalPort": 123,
@@ -695,7 +695,7 @@
         "ProcessName": null
       }
     ],
-    "windows_users": [
+    "PLUGIN4": [
       {
         "Enabled": false,
         "Name": "Administrator"
