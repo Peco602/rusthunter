@@ -5,7 +5,7 @@ use rusthunter::execute;
 use rusthunter::utils::print_error;
 
 #[test]
-fn test_list() {
+fn list() {
     let options = Options {
         mode: Mode::List,
         verbose: true,
@@ -26,7 +26,7 @@ fn test_list() {
 }
 
 #[test]
-fn test_run() {
+fn run() {
     let options = Options {
         mode: Mode::Run,
         verbose: false,
@@ -47,7 +47,7 @@ fn test_run() {
 }
 
 #[test]
-fn test_merge() {
+fn merge() {
     let options = Options {
         mode: Mode::Merge,
         verbose: true,
@@ -68,7 +68,7 @@ fn test_merge() {
 }
 
 #[test]
-fn test_compare_stats() {
+fn compare_stats() {
     let options = Options {
         mode: Mode::Compare,
         verbose: true,
@@ -89,7 +89,7 @@ fn test_compare_stats() {
 }
 
 #[test]
-fn test_compare_full() {
+fn compare_full() {
     let options = Options {
         mode: Mode::Compare,
         verbose: true,
@@ -110,7 +110,7 @@ fn test_compare_full() {
 }
 
 #[test]
-fn test_compare_host() {
+fn compare_host() {
     let options = Options {
         mode: Mode::Compare,
         verbose: true,
@@ -131,7 +131,7 @@ fn test_compare_host() {
 }
 
 #[test]
-fn test_compare_plugin() {
+fn compare_plugin() {
     let options = Options {
         mode: Mode::Compare,
         verbose: true,

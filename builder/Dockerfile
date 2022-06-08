@@ -1,8 +1,7 @@
-# We'll just use the official Rust image rather than build our own from scratch
-# https://github.com/Jake-Shadle/xwin
-
 FROM docker.io/library/rust:1.58.1-slim-bullseye
 
+## Linux to Windows cross-compile
+# https://github.com/Jake-Shadle/xwin
 ENV KEYRINGS /usr/local/share/keyrings
 
 RUN set -eux; \
@@ -83,3 +82,39 @@ ENV CFLAGS_x86_64_pc_windows_msvc="$CL_FLAGS" \
 # Run wineboot just to setup the default WINEPREFIX so we don't do it every
 # container run
 RUN wine wineboot --init
+
+## Linux to MacOS cross-compile
+# https://wapl.es/rust/2019/02/17/rust-cross-compile-linux-to-macos.html
+# Install build dependencies
+RUN apt update && apt-get install -y \
+        git \
+        wget \
+        clang \
+        gcc \
+        g++ \
+        zlib1g-dev \
+        libmpc-dev \
+        libmpfr-dev \
+        libgmp-dev \
+        make \
+        cmake \
+        libxml2-dev \
+        libssl-dev \
+        patch \
+        lzma-dev \
+        xz-utils
+
+# Add macOS Rust target
+RUN rustup target add x86_64-apple-darwin
+
+RUN git clone https://github.com/tpoechtrager/osxcross && \
+    cd osxcross && \
+    wget -nc https://s3.dockerproject.org/darwin/v2/MacOSX10.10.sdk.tar.xz && \
+    mv MacOSX10.10.sdk.tar.xz tarballs/ && \
+    UNATTENDED=yes OSX_VERSION_MIN=10.7 ./build.sh
+
+ENV PATH="/osxcross/target/bin:$PATH"
+ENV CC=o64-clang
+ENV CXX=o64-clang++
+ENV LIBZ_SYS_STATIC=1
+

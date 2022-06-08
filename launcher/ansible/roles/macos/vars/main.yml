@@ -1,0 +1,5 @@
+debug: false
+remote_path: /tmp/rusthunter/
+rusthunter_executable: rusthunter
+rusthunter_run_subcommand: run
+snapshots_path: /snapshots/

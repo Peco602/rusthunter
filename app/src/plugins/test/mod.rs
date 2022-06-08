@@ -39,7 +39,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_split_list() {
+    fn split_list() {
         let command_output = "
 item1
 item2
@@ -51,7 +51,7 @@ item3
     }
 
     #[test]
-    fn test_convert_json_string() {
+    fn convert_json_string() {
         let command_output = r#"
 [
     {
@@ -93,7 +93,7 @@ item3
     }
 
     #[test]
-    fn test_convert_csv_string_no_header() {
+    fn convert_csv_string_no_header() {
         let command_output = "
 val11 val12 val13
 val21 val22 val23
@@ -121,7 +121,7 @@ val31 val32 val33
     }
 
     #[test]
-    fn test_convert_csv_string_with_header() {
+    fn convert_csv_string_with_header() {
         let command_output = "
 head1 head2 head3
 val11 val12 val13

@@ -39,6 +39,7 @@ INSTALLATION_PATH="/usr/bin"
 APP_PATH="./app"
 ANSIBLE_PATH="./launcher/ansible"
 LINUX_BINARIES_PATH="$ANSIBLE_PATH/roles/linux/files"
+MACOS_BINARIES_PATH="$ANSIBLE_PATH/roles/macos/files"
 WINDOWS_BINARIES_PATH="$ANSIBLE_PATH/roles/windows/files"
 SNAPSHOT_PATH="./launcher/snapshots"
 
@@ -365,6 +366,7 @@ function execute_global_subcommand {
 
     cp $HOSTS_FILE $ANSIBLE_PATH/$DEFAULT_HOSTS_FILE
     cp $CONFIG_FILE $LINUX_BINARIES_PATH/$DEFAULT_CONFIG_FILE
+    cp $CONFIG_FILE $MACOS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
     cp $CONFIG_FILE $WINDOWS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
 
     print_info "Creating snapshots directory"
@@ -472,16 +474,18 @@ function execute_build_subcommand {
 
     build_builder_image
 
-    build_launcher_image
-
     print_info "Building release for Linux target"
     docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-unknown-linux-gnu --release
+
+    Show-Info "Building release for MacOS target"
+    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-apple-darwin --release
 
     print_info "Building release for Windows target"
     docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-pc-windows-msvc --release
 
     print_info "Moving executables to the launcher folders"
     cp $APP_PATH/target/x86_64-unknown-linux-gnu/release/rusthunter $LINUX_BINARIES_PATH
+    cp $APP_PATH/target/x86_64-unknown-linux-gnu/release/rusthunter $MACOS_BINARIES_PATH
     cp $APP_PATH/target/x86_64-pc-windows-msvc/release/rusthunter.exe $WINDOWS_BINARIES_PATH
 
     print_info "Installing executable"

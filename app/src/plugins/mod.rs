@@ -2,11 +2,20 @@
 // https://docs.serde.rs/serde_json/value/enum.Value.html
 // https://docs.serde.rs/serde_json/
 
+#[cfg(target_os = "linux")]
 pub mod linux;
+
+#[cfg(target_os = "windows")]
 pub mod windows;
+
+#[cfg(target_os = "macos")]
+pub mod macos;
+
 pub mod test;
 
 use serde_json::Map;
+
+#[cfg(target_os = "windows")]
 use powershell_script;
 
 use std::process::Command;
@@ -26,28 +35,7 @@ pub trait Plugin {
         println!("{: <32} {: <50} {:?}", self.name(), self.description(), self.os());
     }
 
-    fn windows_cmd_command(&self, command: &str) -> Result<String, String> {
-        let output = Command::new("cmd")
-                            .args(["/C", command])
-                            .output();
-        match output {
-            Ok(o) => {
-                match String::from_utf8(o.stdout) {
-                    Ok(s) => Ok(s),
-                    Err(e) =>  Err(format!("Error during cmd command output parsing: {}", e)),
-                }
-            },
-            Err(e) => Err(format!("Error during cmd command execution: {}", e)),
-        }
-    }
-
-    fn windows_powershell_command(&self, command: &str) -> Result<String, String> {
-        match powershell_script::run(command, false) {
-            Ok(o) => Ok(o.to_string()),
-            Err(e) => Err(format!("Error during powershell command execution: {}", e)),
-        }
-    }
-
+    #[cfg(target_os = "linux")]
     fn linux_command(&self, command: &str) -> Result<String, String>  {
         let output = Command::new("sh")
                             .arg("-c")
@@ -65,11 +53,53 @@ pub trait Plugin {
         }
     }
 
+    #[cfg(target_os = "macos")]
+    fn macos_command(&self, command: &str) -> Result<String, String>  {
+        let output = Command::new("zsh")
+                            .arg("-c")
+                            .arg(command)
+                            .output();
+
+        match output {
+            Ok(o) => {
+                match String::from_utf8(o.stdout) {
+                    Ok(s) => Ok(s),
+                    Err(e) =>  Err(format!("Error during shell command output parsing: {}", e)),
+                }
+            },
+            Err(e) => Err(format!("Error during shell command execution: {}", e)),
+        }
+    }
+
+    #[cfg(target_os = "windows")]
+    fn windows_cmd_command(&self, command: &str) -> Result<String, String> {
+        let output = Command::new("cmd")
+                            .args(["/C", command])
+                            .output();
+        match output {
+            Ok(o) => {
+                match String::from_utf8(o.stdout) {
+                    Ok(s) => Ok(s),
+                    Err(e) =>  Err(format!("Error during cmd command output parsing: {}", e)),
+                }
+            },
+            Err(e) => Err(format!("Error during cmd command execution: {}", e)),
+        }
+    }
+
+    #[cfg(target_os = "windows")]
+    fn windows_powershell_command(&self, command: &str) -> Result<String, String> {
+        match powershell_script::run(command, false) {
+            Ok(o) => Ok(o.to_string()),
+            Err(e) => Err(format!("Error during powershell command execution: {}", e)),
+        }
+    }
+
     fn _get_splitter(&self) -> &str {
         match self.os() {
             OS::Windows => "\r\n",
             OS::Linux => "\n",
-            _ => "\n",
+            OS::MacOS => "\n",
         }
     }
 
@@ -127,7 +157,6 @@ pub fn os() -> OS {
         "windows" => OS::Windows,
         "macos" => OS::MacOS,
         _ => {
-            // macos
             // ios
             // freebsd
             // dragonfly

@@ -1,0 +1,41 @@
+- name: Creating remote path
+  file:
+    path: "{{ remote_path }}"
+    state: directory
+    mode: '0777'
+
+- name: Uploading binaries
+  copy:
+    src: "{{ item }}"
+    dest: "{{ remote_path }}"
+  with_fileglob: "files/*"
+
+- name: Setting executable flags
+  file:
+    path: "{{ remote_path }}"
+    mode: u=rwx,g=rwx,o=rwx
+    recurse: yes
+
+- name: Collecting data
+  command: "{{ remote_path }}{{ rusthunter_executable }} {{ rusthunter_run_subcommand }}"
+  become: yes
+  become_method: sudo
+  register: shell_result
+  args:
+    chdir: "{{ remote_path }}"
+
+- name: Data output
+  when: debug
+  debug:
+    var: shell_result.stdout_lines
+
+- name: Retrieving data
+  fetch:
+    src: "{{ remote_path }}snapshot.json"
+    dest: "{{ snapshots_path }}snapshot-{{ inventory_hostname }}.json"
+    flat: yes
+
+- name: Removing remote path
+  file:
+    path: "{{ remote_path }}"
+    state: absent

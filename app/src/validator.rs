@@ -17,7 +17,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_validate_windows_path() {
+    fn windows_path() {
         assert_eq!(validate_windows_path(r"c:\"), true);
         assert_eq!(validate_windows_path(r"c:\users\"), true);
         assert_eq!(validate_windows_path(r"c:\users\application data\"), true);
@@ -27,7 +27,7 @@ mod tests {
     }
 
     #[test]
-    fn test_validate_linux_path() {
+    fn linux_path() {
         assert_eq!(validate_linux_path(r"/"), true);
         assert_eq!(validate_linux_path(r"/root/"), true);
         assert_eq!(validate_linux_path(r"/home/Desktop/"), true);

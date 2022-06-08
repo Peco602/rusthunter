@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+cfg-if = "0.1"
 clap = "3.1.2"
 configparser = "2.1.0"
 serde_json = "1.0.59"
