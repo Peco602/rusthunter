@@ -13,6 +13,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Remove build config
+      working-directory: ${{github.workspace}}/app
+      run: rm -rf .cargo
+
     - name: Build
       working-directory: ${{github.workspace}}/app
       run: cargo build --verbose

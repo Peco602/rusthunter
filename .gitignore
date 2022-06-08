@@ -1,3 +1,9 @@
+# Launching files
+launcher/ansible/hosts
+launcher/ansible/roles/linux/files/config
+launcher/ansible/roles/macos/files/config
+launcher/ansible/roles/windows/files/config
+
 # Build files
 app/target
 
