@@ -6,7 +6,7 @@
     - linux
 
 -
-  name: Run RustHunter on MacOS machines
+  name: Run RustHunter on macOS machines
   gather_facts: no
   hosts: macos
   roles:

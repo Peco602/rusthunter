@@ -99,7 +99,7 @@ pub trait Plugin {
         match self.os() {
             OS::Windows => "\r\n",
             OS::Linux => "\n",
-            OS::MacOS => "\n",
+            OS::macOS => "\n",
         }
     }
 
@@ -148,14 +148,14 @@ pub trait Plugin {
 pub enum OS {
     Windows,
     Linux,
-    MacOS
+    macOS
 }
 
 pub fn os() -> OS {
     match env::consts::OS {
         "linux" => OS::Linux,
         "windows" => OS::Windows,
-        "macos" => OS::MacOS,
+        "macos" => OS::macOS,
         _ => {
             // ios
             // freebsd
