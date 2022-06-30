@@ -417,7 +417,7 @@ function Test-RustHunter {
         Show-Info "Creating target dockers"
         docker network create rusthunter_test_net --driver=bridge --subnet="192.168.100.1/24"
         for ($i = 2 ; $i -le 20 ; $i++) {
-            docker run --network=rusthunter_test_net --ip="192.168.100.$i" -d ghcr.io/s1ntaxe770r/image:latest
+            docker run --network=rusthunter_test_net --ip="192.168.100.$i" -d peco602/ssh-linux-docker:latest
         }
 
         Show-Info "Collecting data"

@@ -571,7 +571,7 @@ function execute_test_subcommand {
         docker network create rusthunter_test_net --driver=bridge --subnet="192.168.100.1/24"
         for i in $(seq 2 20);
         do
-            docker run --network=rusthunter_test_net --ip="192.168.100.$i" -d ghcr.io/s1ntaxe770r/image:latest
+            docker run --network=rusthunter_test_net --ip="192.168.100.$i" -d peco602/ssh-linux-docker:latest
         done
 
         print_info "Collecting data"
