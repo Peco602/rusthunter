@@ -3,14 +3,14 @@
     path: "{{ remote_path }}"
     state: directory
 
-- name: Uploading binaries
+- name: Uploading files
   win_copy:
     src: "{{ item }}"
     dest: "{{ remote_path }}"
   with_fileglob: "files/*"
 
 - name: Collecting data
-  win_command: "{{ remote_path }}{{ rusthunter_executable }} {{ rusthunter_run_subcommand }}"
+  win_command: "{{ remote_path }}{{ rusthunter_executable }} {{ rusthunter_run_subcommand }} -c {{ rusthunter_config_file }}"
   register: shell_result
   args:
     chdir: "{{ remote_path }}"

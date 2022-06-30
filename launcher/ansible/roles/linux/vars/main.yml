@@ -2,4 +2,5 @@ debug: false
 remote_path: /tmp/rusthunter/
 rusthunter_executable: rusthunter
 rusthunter_run_subcommand: run
+rusthunter_config_file: config.test
 snapshots_path: /snapshots/

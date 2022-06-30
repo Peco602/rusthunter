@@ -391,13 +391,15 @@ function Test-RustHunter {
 
     Is-DockerInstalled
 
-    Build-LauncherImage
+
 
     if ( !${UnitTests} -and !${IntegrationTests} -and !${ValidationTests} ) {
         Show-Error "No tests specified"
     }
 
     if ( ${UnitTests} ) {
+        Build-BuilderImage
+
         Show-Info "Unit testing for Linux target"
         docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --lib --target x86_64-unknown-linux-gnu
 
@@ -406,11 +408,15 @@ function Test-RustHunter {
     }
     
     if ( ${IntegrationTests} ) {
+        Build-BuilderImage
+        
         Show-Info "Integration testing for Linux target"
         docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --test integration
     }
 
     if ( $ValidationTests ) {
+        Build-LauncherImage
+
         Show-Info "Creating snapshots directory"
         mkdir -p ${SNAPSHOT_PATH} > $null
 

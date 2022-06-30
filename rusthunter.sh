@@ -519,8 +519,6 @@ function execute_test_subcommand {
     
     install_docker
 
-    build_launcher_image
-
     while [[ $# -gt 0 ]]; do
         key="${1}"
         case ${key} in
@@ -551,6 +549,8 @@ function execute_test_subcommand {
     fi
 
     if [ "$UNIT_TESTS" == "True" ]; then
+        build_builder_image
+
         print_info "Unit testing for Linux target"
         docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --lib --target x86_64-unknown-linux-gnu
 
@@ -559,11 +559,15 @@ function execute_test_subcommand {
     fi
     
     if [ "$INTEGRATION_TESTS" == "True" ]; then
+        build_builder_image
+        
         print_info "Integration testing"
         docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --test integration
     fi
 
     if [ "$VALIDATION_TESTS" == "True" ]; then
+        build_launcher_image
+
         print_info "Creating snapshots directory"
         mkdir -p $SNAPSHOT_PATH
 

@@ -4,7 +4,7 @@
     state: directory
     mode: '0777'
 
-- name: Uploading binaries
+- name: Uploading files
   copy:
     src: "{{ item }}"
     dest: "{{ remote_path }}"
@@ -17,7 +17,7 @@
     recurse: yes
 
 - name: Collecting data
-  command: "{{ remote_path }}{{ rusthunter_executable }} {{ rusthunter_run_subcommand }}"
+  command: "{{ remote_path }}{{ rusthunter_executable }} {{ rusthunter_run_subcommand }} -c {{ rusthunter_config_file }}"
   become: yes
   become_method: sudo
   register: shell_result
