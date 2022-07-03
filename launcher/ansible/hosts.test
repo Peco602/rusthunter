@@ -1,22 +1,22 @@
-192.168.100.2 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.3 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.4 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.5 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.6 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.7 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.8 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.9 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.10 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.11 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.12 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.13 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.14 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.15 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.16 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.17 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.18 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.19 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
-192.168.100.20 ansible_connection=ssh ansible_user=test ansible_ssh_password=test ansible_become_password=test
+192.168.100.2 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.3 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.4 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.5 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.6 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.7 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.8 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.9 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.10 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.11 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.12 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.13 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.14 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.15 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.16 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.17 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.18 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.19 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
+192.168.100.20 ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa$$w0rd123! ansible_become_password=Pa$$w0rd123!
 
 [linux]
 192.168.100.2
@@ -40,3 +40,5 @@
 192.168.100.20
 
 [windows]
+
+[macos]

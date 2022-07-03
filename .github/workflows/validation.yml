@@ -3,20 +3,21 @@ name: Validation
 on:
   push:
     branches:
-      - 'main'
-
+      - main
+      - dev 
+         
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
 
     - name: Execution permissions
       run: chmod +x ./rusthunter.sh
-          
-    - name: Build
-      run: sudo ./rusthunter.sh build
 
-    - name: Validation Tests
-      run: sudo ./rusthunter.sh test -v
+    - name: Installation
+      run: sudo ./rusthunter.sh install
+
+    - name: Test
+      run: sudo ./rusthunter.sh test --validation

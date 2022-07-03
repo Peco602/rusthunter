@@ -12,8 +12,18 @@ BLUE="\e[34m"
 
 ###########################################################
 # VARIABLES
+INITIAL_SNAPSHOT="NONE"
+CURRENT_SNAPSHOT="NONE"
 HOSTS_FILE="NONE"
+ENCRYPT_HOSTS="NONE"
+REKEY_HOSTS="NONE"
+VIEW_HOSTS="NONE"
+EDIT_HOSTS="NONE"
+DECRYPT_HOSTS="NONE"
 CONFIG_FILE="NONE"
+PRINT_STATS="NONE"
+FILTERED_HOST="NONE"
+FILTERED_PLUGIN="NONE"
 UNIT_TESTS="NONE"
 INTEGRATION_TESTS="NONE"
 VALIDATION_TESTS="NONE"
@@ -29,6 +39,7 @@ INSTALLATION_PATH="/usr/bin"
 APP_PATH="./app"
 ANSIBLE_PATH="./launcher/ansible"
 LINUX_BINARIES_PATH="$ANSIBLE_PATH/roles/linux/files"
+MACOS_BINARIES_PATH="$ANSIBLE_PATH/roles/macos/files"
 WINDOWS_BINARIES_PATH="$ANSIBLE_PATH/roles/windows/files"
 SNAPSHOT_PATH="./launcher/snapshots"
 
@@ -38,13 +49,15 @@ DEFAULT_HOSTS_FILE="hosts"
 
 function ShowBanner {
     clear
-    echo -e "$BLUE$BOLD ______          _   _   _             _             $RESET"
-    echo -e "$BLUE$BOLD | ___ \        | | | | | |           | |            $RESET"
-    echo -e "$BLUE$BOLD | |_/ /   _ ___| |_| |_| |_   _ _ __ | |_ ___ _ __  $RESET"
-    echo -e "$BLUE$BOLD |    / | | / __| __|  _  | | | | '_ \| __/ _ \ '__| $RESET"
-    echo -e "$BLUE$BOLD | |\ \ |_| \__ \ |_| | | | |_| | | | | ||  __/ |    $RESET"
-    echo -e "$BLUE$BOLD \_| \_\__,_|___/\__\_| |_/\__,_|_| |_|\__\___|_|    $RESET"
-    echo
+    echo -e "$BLUE$BOLD  /#######                        /##     /##   /##                       /##                          $RESET"
+    echo -e "$BLUE$BOLD | ##__  ##                      | ##    | ##  | ##                      | ##                          $RESET"
+    echo -e "$BLUE$BOLD | ##  \ ## /##   /##  /####### /######  | ##  | ## /##   /## /######$  /######    /######   /######   $RESET"
+    echo -e "$BLUE$BOLD | #######/| ##  | ## /##_____/|_  ##_/  | ########| ##  | ##| ##__  ##|_  ##_/   /##__  ## /##__  ##  $RESET"
+    echo -e "$BLUE$BOLD | ##__  ##| ##  | ##|  ######   | ##    | ##__  ##| ##  | ##| ##  \ ##  | ##    | ########| ##  \__/  $RESET"
+    echo -e "$BLUE$BOLD | ##  \ ##| ##  | ## \____  ##  | ## /##| ##  | ##| ##  | ##| ##  | ##  | ## /##| ##_____/| ##        $RESET"
+    echo -e "$BLUE$BOLD | ##  | ##|  ######/ /#######/  |  ####/| ##  | ##|  ######/| ##  | ##  |  ####/|  #######| ##        $RESET"
+    echo -e "$BLUE$BOLD |__/  |__/ \______/ |_______/    \___/  |__/  |__/ \______/ |__/  |__/   \___/   \_______/|__/        $RESET"
+    echo                                                                                           
 }
 
 function ShowHelp {
@@ -55,18 +68,22 @@ function ShowHelp {
     echo "     install           Install RustHunter on the system"
     echo "     list              List all available plugins"
     echo "     local             Take a local snapshot"
+    echo "     hosts             Protect the hosts inventory file"
     echo "     global            Take a global snapshot based on hosts file (installs Docker)"
     echo "     compare           Compare two snapshots"
     echo "     uninstall         Uninstall RustHunter from the system"
     echo "     build             Build RustHunter from code (installs Docker)"
-    echo "     test              Perform unit, integration and stress tests (installs Docker)"
+    echo "     update            Get the latest RustHunter updates"
     echo "     help              This help"
     echo
-    echo "ARGS:"
+    echo "usage: $0 hosts -HostsFile HOSTS_FILE (-h |--hosts) (-e |--encrypt) (-r |--rekey) (-v |--view) (-e |--edit) (-d |--decrypt)"
     echo
-    echo "usage: $0 install"
-    echo
-    echo "usage: $0 list"
+    echo "     -h |--hosts          Hosts file"
+    echo "     -e |--encrypt        Add encryption"
+    echo "     -r |--rekey          Change encryption key"
+    echo "     -v |--view           View encrypted file"
+    echo "     -e |--edit           Edit encrypted file"
+    echo "     -d |--decrypt        Decrypt file"
     echo
     echo "usage: $0 local (-c|--config) CONFIG_FILE"
     echo
@@ -77,36 +94,41 @@ function ShowHelp {
     echo "     -h |--hosts          Hosts file"
     echo "     -c |--config         Configuration file"
     echo
-    echo "usage: $0 compare (-i|--initial) INITIAL_SNAPSHOT (-c|--current) CURRENT_SNAPSHOT"
+    echo "usage: $0 compare (-i|--initial) INITIAL_SNAPSHOT (-c|--current) CURRENT_SNAPSHOT (-s |--stats) (-h |--host) HOST (-p |--plugin) PLUGIN"
     echo
     echo "     -i |--initial         Initial snapshot"
     echo "     -c |--current         Current snapshot"
+    echo "     -s |--stats           Show statistics"
+    echo "     -h |--host            Filter host"
+    echo "     -p |--plugin          Filter plugin"
     echo
-    echo "usage: $0 uninstall"
-    echo
-    echo "usage: $0 build"
-    echo
-    echo "usage: $0 test (-u|--unit) (-i|--integration) (-v|--validation)"
-    echo
-    echo "     -u |--unit            Perform unit tests"
-    echo "     -i |--integration     Perform integration tests"
-    echo "     -v |--validation      Perform validation tests"
-    echo
-
 }
 
 ###########################################################
 # GENERAL FUNCTIONS
-function check_environment {
+function print_error {
+    echo -e "$RED$BOLD [-] $1 $RESET"
+    echo
+    exit 1
+}
+
+function print_warning {
+    echo -e "$YELLOW$BOLD [!] $1 $RESET"
+}
+
+function print_info {
+    echo -e "$GREEN$BOLD [+] $1 $RESET"
+}
+
+function is_executable_installed {
     if [ ! -f $INSTALLATION_PATH/$EXECUTABLE_NAME ]; then
-        echo -e "$RED$BOLD [*] The tool has not been installed yet! $RESET"
-        exit 1
+        print_error "The tool has not been installed yet!"
     fi    
 }
 
 function install_docker {
     if [ ! -x "$(command -v docker)" ]; then
-        echo -e "$YELLOW$BOLD [+] Installing docker daemon $RESET"
+        print_warning "Installing docker daemon"
         apt update
         apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -122,13 +144,28 @@ function install_docker {
 }
 
 function build_builder_image {
-    echo -e "$GREEN$BOLD [+] Building builder docker image $RESET"
-    docker build -t $BUILDER_IMAGE_NAME $BUILDER_IMAGE_PATH
+    if [[ -z $(docker images -q ${BUILDER_IMAGE_NAME}:latest 2> /dev/null) ]];
+    then
+        print_info "Building builder docker image"
+        docker build -t $BUILDER_IMAGE_NAME $BUILDER_IMAGE_PATH
+    fi
 }
 
 function build_launcher_image {
-    echo -e "$GREEN$BOLD [+] Building launcher docker image $RESET"
-    docker build -t $LAUNCHER_IMAGE_NAME $LAUNCHER_IMAGE_PATH
+    if [[ -z $(docker images -q ${LAUNCHER_IMAGE_NAME}:latest 2> /dev/null) ]];
+    then
+        print_info "Building launcher docker image"
+        docker build -t $LAUNCHER_IMAGE_NAME $LAUNCHER_IMAGE_PATH
+    fi
+}
+
+function is_file_encrypted {
+    if [[ -n $(grep "ANSIBLE_VAULT" $1) ]];
+    then 
+        IS_FILE_ENCRYPTED="True"
+    else
+        IS_FILE_ENCRYPTED="False"
+    fi
 }
 
 ###########################################################
@@ -136,34 +173,33 @@ function build_launcher_image {
 
 function execute_install_subcommand {
     if [ ! "$UID" -eq "0" ]; then
-        echo -e "$RED$BOLD [*] Superuser privileges required $RESET"
-        exit 1
+        print_error "Superuser privileges required"
     fi
 
     if [ ! -f $LINUX_BINARIES_PATH/$EXECUTABLE_NAME ]; then
-        echo -e "$RED$BOLD [*] The tool has not been built yet! $RESET"
-        exit 1
+        print_error "The tool has not been built yet!"
     else
-        echo -e "$GREEN$BOLD [+] Installing $RESET"
+        print_info "Installing"
         cp $LINUX_BINARIES_PATH/$EXECUTABLE_NAME $INSTALLATION_PATH
     fi
 
-    echo -e "$GREEN$BOLD [*] Successfully installed $RESET"
+    build_launcher_image
+
+    print_info "Successfully installed"
 }
 
 function execute_list_subcommand {
-    check_environment
+    is_executable_installed
 
     $EXECUTABLE_NAME list
 }
 
 function execute_local_subcommand {
     if [ ! "$UID" -eq "0" ]; then
-        echo -e "$RED$BOLD [*] Superuser privileges required $RESET"
-        exit 1
+        print_error "Superuser privileges required"
     fi
 
-    check_environment
+    is_executable_installed
 
     while [[ $# -gt 0 ]]; do
         key="${1}"
@@ -181,34 +217,120 @@ function execute_local_subcommand {
     done
     
     if [ "$CONFIG_FILE" == "NONE" ]; then
-            echo
-            echo -e "$YELLOW$BOLD [*] Specify the config file $RESET"
-            echo
-            ShowHelp
-            exit 1
+            print_error "Please specify the config file"
     fi
 
-    echo -e "$GREEN$BOLD [+] Creating snapshots directory $RESET"
+    print_info "Creating snapshots directory"
     mkdir -p $SNAPSHOT_PATH
 
-    echo -e "$GREEN$BOLD [+] Collecting data $RESET"
+    print_info "Collecting data"
     $EXECUTABLE_NAME run -c $CONFIG_FILE
     mv snapshot.json $SNAPSHOT_PATH
 
-    echo -e "$GREEN$BOLD [+] Merging data $RESET"
+    print_info "Merging data"
     $EXECUTABLE_NAME merge -d $SNAPSHOT_PATH
 
-    echo -e "$GREEN$BOLD [*] Cleaning up $RESET"
+    print_info "Cleaning up"
     rm -rf $SNAPSHOT_PATH
+}
+
+function execute_hosts_subcommand {
+    if [ ! "$UID" -eq "0" ]; then
+        print_error "Superuser privileges required"
+    fi
+
+    install_docker
+
+    build_launcher_image
+
+    while [[ $# -gt 0 ]]; do
+        key="${1}"
+        case ${key} in
+        -h|--hosts)
+            HOSTS_FILE=${2}
+            shift
+            shift
+            ;;
+        -e|--encrypt)
+            ENCRYPT_HOSTS="True"
+            shift
+            shift
+            ;;
+        -r|--rekey)
+            REKEY_HOSTS="True"
+            shift
+            shift
+            ;;
+        -v|--view)
+            VIEW_HOSTS="True"
+            shift
+            shift
+            ;;
+        -t|--edit)
+            EDIT_HOSTS="True"
+            shift
+            shift
+            ;;
+        -d|--decrypt)
+            DECRYPT_HOSTS="True"
+            shift
+            shift
+            ;;
+        *)
+            ShowHelp
+            exit 1
+            ;;
+        esac
+    done
+
+    if [ "$HOSTS_FILE" == "NONE" ]; then
+        print_error "Please specify the host file"
+    fi
+
+    if [ "$#" -lt 2 ]; then
+        print_error "Please specify an action on the hosts inventory file"
+    fi
+
+    if [[ "$ENCRYPT_HOSTS" == "NONE" && "$REKEY_HOSTS" == "NONE" && "$VIEW_HOSTS" == "NONE" && "$EDIT_HOSTS" == "NONE" && "$DECRYPT_HOSTS" == "NONE" ]]; then
+        print_error "Please specify only one action on the hosts inventory file"
+    fi
+
+    is_file_encrypted $HOSTS_FILE
+
+    if [[ "$ENCRYPT_HOSTS" == "True" && "$IS_FILE_ENCRYPTED" == "True" ]]; then
+        print_error "$HOSTS_FILE is already encrypted"
+    fi
+
+    if [[ ( "$REKEY_HOSTS" == "True" || "$VIEW_HOSTS" == "True" || "$EDIT_HOSTS" == "True" || "$DECRYPT_HOSTS" == "True" ) && "$IS_FILE_ENCRYPTED" == "False" ]]; then
+        print_error "$HOSTS_FILE is not encrypted"
+    fi
+
+    if [[ "$ENCRYPT_HOSTS" == "True" && "$IS_FILE_ENCRYPTED" == "False" ]]; then
+        COMMAND="encrypt"
+        print_info "Encrypting hosts file"
+    elif [ "$REKEY_HOSTS" == "True" ]; then
+        COMMAND="rekey"
+        print_info "Rekeying hosts file"
+    elif [ "$VIEW_HOSTS" == "True" ]; then
+        COMMAND="view"
+        print_info "Showing hosts file"
+    elif [ "$EDIT_HOSTS" == "True" ]; then
+        COMMAND="edit"
+        print_info "Editing hosts file"
+    elif [ "$DECRYPT_HOSTS" == "True" ]; then
+        COMMAND="decrypt"
+        print_info "Decrypting hosts file"
+    fi
+
+    docker run --rm -v $PWD/${HOSTS_FILE}:/tmp/hosts -it ${LAUNCHER_IMAGE_NAME}:latest bash -c "cp /tmp/hosts /tmp/host.tmp;env EDITOR=nano ansible-vault $COMMAND /tmp/host.tmp; cp /tmp/host.tmp /tmp/hosts"
 }
 
 function execute_global_subcommand {
     if [ ! "$UID" -eq "0" ]; then
-        echo -e "$RED$BOLD [*] Superuser privileges required $RESET"
-        exit 1
+        print_error "Superuser privileges required"
     fi
 
-    check_environment
+    is_executable_installed
 
     install_docker
 
@@ -235,40 +357,33 @@ function execute_global_subcommand {
     done
 
     if [ "$HOSTS_FILE" == "NONE" ]; then
-            echo
-            echo -e "$YELLOW$BOLD [*] Specify the host file $RESET"
-            echo
-            ShowHelp
-            exit 1
+        print_error "Please specify the host file"
     fi
     
     if [ "$CONFIG_FILE" == "NONE" ]; then
-            echo
-            echo -e "$YELLOW$BOLD [*] Specify the config file $RESET"
-            echo
-            ShowHelp
-            exit 1
+        print_error "Please specify the config file"
     fi
 
     cp $HOSTS_FILE $ANSIBLE_PATH/$DEFAULT_HOSTS_FILE
     cp $CONFIG_FILE $LINUX_BINARIES_PATH/$DEFAULT_CONFIG_FILE
+    cp $CONFIG_FILE $MACOS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
     cp $CONFIG_FILE $WINDOWS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
 
-    echo -e "$GREEN$BOLD [+] Creating snapshots directory $RESET"
+    print_info "Creating snapshots directory"
     mkdir -p $SNAPSHOT_PATH
 
-    echo -e "$GREEN$BOLD [+] Collecting data $RESET"
+    print_info "Collecting data"
     docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml
 
-    echo -e "$GREEN$BOLD [+] Merging data $RESET"
+    print_info "Merging data"
     $EXECUTABLE_NAME merge -d $SNAPSHOT_PATH
 
-    echo -e "$GREEN$BOLD [*] Cleaning up $RESET"
+    print_info "Cleaning up"
     rm -rf $SNAPSHOT_PATH
 }
 
 function execute_compare_subcommand {
-    check_environment
+    is_executable_installed
 
     while [[ $# -gt 0 ]]; do
         key="${1}"
@@ -283,6 +398,21 @@ function execute_compare_subcommand {
             shift
             shift
             ;;
+        -s|--stats)
+            PRINT_STATS="True"
+            shift
+            shift
+            ;;
+        -h|--host)
+            FILTERED_HOST="${2}"
+            shift
+            shift
+            ;;
+        -p|--plugin)
+            FILTERED_PLUGIN="${2}"
+            shift
+            shift
+            ;;
         *)
             ShowHelp
             exit 1
@@ -290,77 +420,104 @@ function execute_compare_subcommand {
         esac
     done
     
+    ARGS=""
+
     if [ "$INITIAL_SNAPSHOT" == "NONE" ]; then
-            echo
-            echo -e "$YELLOW$BOLD [*] Specify the initial snapshot $RESET"
-            echo
-            ShowHelp
-            exit 1
+        print_error "Please specify the initial snapshot"
+    else
+        ARGS="$ARGS --initial $INITIAL_SNAPSHOT"
     fi
     
     if [ "$CURRENT_SNAPSHOT" == "NONE" ]; then
-            echo
-            echo -e "$YELLOW$BOLD [*] Specify the current snapshot $RESET"
-            echo
-            ShowHelp
-            exit 1
+        print_error "Please specify the current snapshot"
+    else
+        ARGS="$ARGS --current $CURRENT_SNAPSHOT"
     fi
 
-    $EXECUTABLE_NAME compare -i $INITIAL_SNAPSHOT -c $CURRENT_SNAPSHOT
+    if [[ "$FILTERED_PLUGIN" != "NONE" && "$FILTERED_HOST" == "NONE" ]]; then
+        print_error "Please filter also by host"
+    fi
+
+    if [ "$FILTERED_HOST" != "NONE" ]; then
+        ARGS="$ARGS --host $FILTERED_HOST"
+    fi
+
+    if [ "$FILTERED_PLUGIN" != "NONE" ]; then
+        ARGS="$ARGS --plugin $FILTERED_PLUGIN"
+    fi
+
+    if [ "$PRINT_STATS" != "NONE" ]; then
+        ARGS="$ARGS --stats"
+    fi
+
+    $EXECUTABLE_NAME compare $ARGS
 }
 
 function execute_uninstall_subcommand {
-    check_environment
+    is_executable_installed
 
-    echo -e "$YELLOW$BOLD [-] Removing executable $RESET"
+    echo -e "$YELLOW$BOLD [-] Removing executable"
     rm -f $INSTALLATION_PATH/$EXECUTABLE_NAME
  
     if [ -x "$(command -v docker)" ]; then
-        echo -e "$YELLOW$BOLD [-] Removing docker images $RESET"
+        echo -e "$YELLOW$BOLD [-] Removing docker images"
         docker rmi $BUILDER_IMAGE_NAME $LAUNCHER_IMAGE_NAME --force
     fi
 }
 
 function execute_build_subcommand {
     if [ ! "$UID" -eq "0" ]; then
-        echo -e "$RED$BOLD [*] Superuser privileges required $RESET"
-        exit 1
+        print_error "Superuser privileges required"
     fi
 
     install_docker
 
     build_builder_image
 
-    build_launcher_image
-
-    echo -e "$GREEN$BOLD [+] Building release for Linux target $RESET"
+    print_info "Building release for Linux target"
     docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-unknown-linux-gnu --release
 
-    echo -e "$GREEN$BOLD [+] Building release for Windows target $RESET"
+    Show-Info "Building release for macOS target"
+    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-apple-darwin --release
+
+    print_info "Building release for Windows target"
     docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-pc-windows-msvc --release
 
-    echo -e "$GREEN$BOLD [+] Moving executables to the launcher folders $RESET"
+    print_info "Moving executables to the launcher folders"
     cp $APP_PATH/target/x86_64-unknown-linux-gnu/release/rusthunter $LINUX_BINARIES_PATH
+    cp $APP_PATH/target/x86_64-unknown-linux-gnu/release/rusthunter $MACOS_BINARIES_PATH
     cp $APP_PATH/target/x86_64-pc-windows-msvc/release/rusthunter.exe $WINDOWS_BINARIES_PATH
 
-    echo -e "$GREEN$BOLD [+] Installing executable $RESET"
+    print_info "Installing executable"
     cp $APP_PATH/target/x86_64-unknown-linux-gnu/release/rusthunter $INSTALLATION_PATH
 
-    echo -e "$GREEN$BOLD [*] Cleaning up $RESET"
+    print_info "Cleaning up"
     rm -rf $APP_PATH/target
+}
+
+function execute_update_subcommand {
+    print_info "Downloading latest updates"
+    if [ "$(git pull)" == "Already up to date." ];
+    then
+        print_warning "No updates available"
+    else
+        print_info "Installing new executable"
+        sudo cp $LINUX_BINARIES_PATH/$EXECUTABLE_NAME $INSTALLATION_PATH
+
+        build_launcher_image
+
+        print_info "Update successful"
+    fi
 }
 
 function execute_test_subcommand {
     if [ ! "$UID" -eq "0" ]; then
-        echo -e "$RED$BOLD [*] Superuser privileges required $RESET"
-        exit 1
+        print_error "Superuser privileges required"
     fi
 
-    check_environment
+    is_executable_installed
     
     install_docker
-
-    build_launcher_image
 
     while [[ $# -gt 0 ]]; do
         key="${1}"
@@ -388,49 +545,51 @@ function execute_test_subcommand {
     done
 
     if [[ "$UNIT_TESTS" == "NONE" && "$INTEGRATION_TESTS" == "NONE" && "$VALIDATION_TESTS" == "NONE" ]]; then
-            echo
-            echo -e "$YELLOW$BOLD [*] No tests specified $RESET"
-            echo
-            exit 1
+        print_error "No tests specified"
     fi
 
     if [ "$UNIT_TESTS" == "True" ]; then
-        echo -e "$GREEN$BOLD [*] Unit testing for Linux target $RESET"
+        build_builder_image
+
+        print_info "Unit testing for Linux target"
         docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --lib --target x86_64-unknown-linux-gnu
 
-        echo -e "$GREEN$BOLD [*] Unit testing for Windows target $RESET"
+        print_info "Unit testing for Windows target"
         docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --lib --target x86_64-pc-windows-msvc
     fi
     
     if [ "$INTEGRATION_TESTS" == "True" ]; then
-        echo -e "$GREEN$BOLD [*] Integration testing $RESET"
+        build_builder_image
+        
+        print_info "Integration testing"
         docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --test integration
     fi
 
     if [ "$VALIDATION_TESTS" == "True" ]; then
-        echo -e "$GREEN$BOLD [*] Creating snapshots directory $RESET"
+        build_launcher_image
+
+        print_info "Creating snapshots directory"
         mkdir -p $SNAPSHOT_PATH
 
-        echo -e "$GREEN$BOLD [*] Creating target linux dockers $RESET"
+        print_info "Creating target linux dockers"
         docker network create rusthunter_test_net --driver=bridge --subnet="192.168.100.1/24"
         for i in $(seq 2 20);
         do
-            docker run --network=rusthunter_test_net --ip="192.168.100.$i" -d ghcr.io/s1ntaxe770r/image:latest
+            docker run --network=rusthunter_test_net --ip="192.168.100.$i" -d peco602/ssh-linux-docker:latest
         done
 
-        echo -e "$GREEN$BOLD [*] Collecting data $RESET"
+        print_info "Collecting data"
         docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible --network=rusthunter_test_net $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml -i hosts.test
 
-        echo -e "$GREEN$BOLD [*] Merging data $RESET"
+        print_info "Merging data"
         rusthunter merge -d $SNAPSHOT_PATH
 
-        echo -e "$GREEN$BOLD [*] Cleaning up $RESET"
+        print_info "Cleaning up"
         docker rm $(sudo docker network inspect rusthunter_test_net --format='{{range $id, $_ := .Containers}}{{println $id}}{{end}}') --force
         docker network rm rusthunter_test_net
         rm -rf $SNAPSHOT_PATH
     fi
 }
-
 
 
 ###########################################################
@@ -456,6 +615,11 @@ if [[ $# -gt 0 ]]; then
             execute_local_subcommand $@
             exit 0
             ;;
+        hosts)
+            shift
+            execute_hosts_subcommand $@
+            exit 0
+            ;;
         global)
             shift
             execute_global_subcommand $@
@@ -476,6 +640,11 @@ if [[ $# -gt 0 ]]; then
             execute_build_subcommand $@
             exit 0
             ;;
+        update)
+            shift
+            execute_update_subcommand $@
+            exit 0
+            ;;
         test)
             shift
             execute_test_subcommand $@
@@ -487,7 +656,6 @@ if [[ $# -gt 0 ]]; then
             ;;
         *)
             ShowHelp
-            exit 1
             ;;
         esac
     done

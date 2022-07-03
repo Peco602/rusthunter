@@ -13,6 +13,11 @@ enabled = true
 # Data: UDO listening ports
 enabled = true
 
+[linux_root]
+# OS: Linux
+# Data: Root users
+enabled = true
+
 [windows_users]
 # OS: Windows
 # Data: Users
@@ -58,4 +63,9 @@ enabled   = true
 [windows_udp_listen]
 # OS: Windows
 # Data: UDP listening ports
+enabled   = true
+
+[macos_users]
+# OS: macOS
+# Data: Users
 enabled   = true

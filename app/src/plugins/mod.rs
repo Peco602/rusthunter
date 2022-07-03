@@ -2,17 +2,27 @@
 // https://docs.serde.rs/serde_json/value/enum.Value.html
 // https://docs.serde.rs/serde_json/
 
+#[cfg(target_os = "linux")]
 pub mod linux;
+
+#[cfg(target_os = "windows")]
 pub mod windows;
 
+#[cfg(target_os = "macos")]
+pub mod macos;
+
+pub mod test;
+
 use serde_json::Map;
+
+#[cfg(target_os = "windows")]
 use powershell_script;
 
 use std::process::Command;
 use std::{env};
 use serde_json::Value;
 
-use crate::Config;
+use crate::config::Config;
 
 pub trait Plugin {
     fn name(&self) -> &str;
@@ -25,29 +35,7 @@ pub trait Plugin {
         println!("{: <32} {: <50} {:?}", self.name(), self.description(), self.os());
     }
 
-    fn windows_cmd_command(&self, command: &str) -> Result<String, String> {
-        let output = Command::new("cmd")
-                            .args(["/C", command])
-                            .output();
-        match output {
-            Ok(o) => {
-                match String::from_utf8(o.stdout) {
-                    Ok(s) => Ok(s),
-                    Err(e) =>  Err(format!("Error during cmd command output parsing: {}", e)),
-                }
-            },
-            Err(e) => Err(format!("Error during cmd command execution: {}", e)),
-        }
-    }
-
-    fn windows_powershell_command(&self, command: &str) -> Result<String, String> {
-        match powershell_script::run(command, false) {
-            Ok(o) => Ok(o.to_string()),
-            Err(e) => Err(format!("Error during powershell command execution: {}", e)),
-        }
-    }
-
-    fn linux_command(&self, command: &str) -> Result<String, String>  {
+    fn _linux_command(&self, command: &str) -> Result<String, String>  {
         let output = Command::new("sh")
                             .arg("-c")
                             .arg(command)
@@ -64,10 +52,57 @@ pub trait Plugin {
         }
     }
 
+    fn _macos_command(&self, command: &str) -> Result<String, String>  {
+        let output = Command::new("zsh")
+                            .arg("-c")
+                            .arg(command)
+                            .output();
+
+        match output {
+            Ok(o) => {
+                match String::from_utf8(o.stdout) {
+                    Ok(s) => Ok(s),
+                    Err(e) =>  Err(format!("Error during shell command output parsing: {}", e)),
+                }
+            },
+            Err(e) => Err(format!("Error during shell command execution: {}", e)),
+        }
+    }
+
+    fn _windows_powershell_command(&self, command: &str) -> Result<String, String> {
+        match powershell_script::run(command, false) {
+            Ok(o) => Ok(o.to_string()),
+            Err(e) => Err(format!("Error during powershell command execution: {}", e)),
+        }
+    }
+
+    // fn _windows_cmd_command(&self, command: &str) -> Result<String, String> {
+    //     let output = Command::new("cmd")
+    //                         .args(["/C", command])
+    //                         .output();
+    //     match output {
+    //         Ok(o) => {
+    //             match String::from_utf8(o.stdout) {
+    //                 Ok(s) => Ok(s),
+    //                 Err(e) =>  Err(format!("Error during cmd command output parsing: {}", e)),
+    //             }
+    //         },
+    //         Err(e) => Err(format!("Error during cmd command execution: {}", e)),
+    //     }
+    // }
+
+    fn execute_command(&self, command: &str) -> Result<String, String> {
+        match self.os() {
+            OS::Windows => self._windows_powershell_command(command),
+            OS::Linux => self._linux_command(command),
+            OS::MacOS => self._macos_command(command),
+            _ => Err(format!("Operating System not defined")),
+        }
+    }
+
     fn _get_splitter(&self) -> &str {
         match self.os() {
             OS::Windows => "\r\n",
-            OS::Linux => "\n",
             _ => "\n",
         }
     }
@@ -107,7 +142,7 @@ pub trait Plugin {
     fn _convert_csv_string_with_header(&self, output: &str, separator: &str) -> Result<Value, String> {
         let mut lines = output.trim().split(self._get_splitter());
         let headers: Vec<&str>  = lines.nth(0).unwrap().split(separator).collect(); 
-        let _output: Vec<&str> = lines.skip(1).collect();
+        let _output: Vec<&str> = lines.collect();
         self._convert_csv_string_no_header(&_output.join(self._get_splitter()), &headers, separator)
     }
 
@@ -118,6 +153,7 @@ pub enum OS {
     Windows,
     Linux,
     MacOS,
+    Unknown
 }
 
 pub fn os() -> OS {
@@ -126,7 +162,6 @@ pub fn os() -> OS {
         "windows" => OS::Windows,
         "macos" => OS::MacOS,
         _ => {
-            // macos
             // ios
             // freebsd
             // dragonfly

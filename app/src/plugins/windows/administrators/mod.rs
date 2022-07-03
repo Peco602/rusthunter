@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-use crate::Config;
+use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
 pub struct WindowsAdministrators {}
@@ -11,7 +11,7 @@ impl Plugin for WindowsAdministrators {
     }
 
     fn description(&self) -> &str {
-        &"List of administrators"
+        &"Local administrators"
     }
 
     fn os(&self) -> OS {
@@ -19,8 +19,8 @@ impl Plugin for WindowsAdministrators {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "Get-LocalGroupMember -Group Administrators | Sort-Object -Property Name | select Name,ObjectClass | ConvertTo-Json";
-        match self.windows_powershell_command(&command) {
+        let command = "Get-LocalGroupMember -Group Administrators | Select-Object Name,ObjectClass | Sort-Object -Property Name | ConvertTo-Json";
+        match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
         }
@@ -36,32 +36,3 @@ impl WindowsAdministrators {
         WindowsAdministrators {}
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use serde_json::json;
-    use std::include_str;
-    use super::*;
-
-    #[test]
-    fn windows_administrators() {
-        let data = json!([
-            {
-                "Name":  "WINDEV2110EVAL\\Administrator",
-                "ObjectClass":  "User"
-            },
-            {
-                "Name":  "WINDEV2110EVAL\\giovanni",
-                "ObjectClass":  "User"
-            },
-            {
-                "Name":  "WINDEV2110EVAL\\User",
-                "ObjectClass":  "User"
-            }
-        ]);
-        let output = include_str!("output.txt");
-        let windows_administrators = WindowsAdministrators::new();
-        assert_eq!(data, windows_administrators.process(output).unwrap());
-    }
-}
-

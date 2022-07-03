@@ -1,7 +1,7 @@
 // use serde_json::Map;
 use serde_json::{Value};
 
-use crate::Config;
+use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 use crate::validator::validate_windows_path;
 
@@ -31,7 +31,7 @@ impl Plugin for WindowsYara {
         };
 
         let command = format!("{0}\\{1} {0}\\{2} {3}", _binary_directory, "yara64.exe", ".\\yara.yml", scan_path);
-        match self.windows_powershell_command(&command) {
+        match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
         }
@@ -53,23 +53,5 @@ impl Plugin for WindowsYara {
 impl WindowsYara {
     pub fn new() -> Self {
         WindowsYara {}
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use serde_json::json;
-    use std::include_str;
-    use super::*;
-
-    #[test]
-    fn windows_yara() {
-        let data = json!([
-            "ExampleRule .\\file1.txt",
-            "ExampleRule .\\file2.txt",
-            ]);
-        let output = include_str!("output.txt");
-        let windows_yara = WindowsYara::new();
-        assert_eq!(data, windows_yara.process(output).unwrap());
     }
 }
