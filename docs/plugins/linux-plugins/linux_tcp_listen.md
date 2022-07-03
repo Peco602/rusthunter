@@ -6,7 +6,7 @@ This plugin shows all the processes listening on TCP ports on a Linux machine.
 ## Parameters
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
-| enabled | true/false | true | Plugin activation status |
+| enabled | true/false | true | Plugin enable status |
 
 ## Return Values
 Array of objects:

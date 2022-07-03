@@ -35,8 +35,7 @@ pub trait Plugin {
         println!("{: <32} {: <50} {:?}", self.name(), self.description(), self.os());
     }
 
-    #[cfg(target_os = "linux")]
-    fn linux_command(&self, command: &str) -> Result<String, String>  {
+    fn _linux_command(&self, command: &str) -> Result<String, String>  {
         let output = Command::new("sh")
                             .arg("-c")
                             .arg(command)
@@ -53,8 +52,7 @@ pub trait Plugin {
         }
     }
 
-    #[cfg(target_os = "macos")]
-    fn macos_command(&self, command: &str) -> Result<String, String>  {
+    fn _macos_command(&self, command: &str) -> Result<String, String>  {
         let output = Command::new("zsh")
                             .arg("-c")
                             .arg(command)
@@ -71,35 +69,41 @@ pub trait Plugin {
         }
     }
 
-    #[cfg(target_os = "windows")]
-    fn windows_cmd_command(&self, command: &str) -> Result<String, String> {
-        let output = Command::new("cmd")
-                            .args(["/C", command])
-                            .output();
-        match output {
-            Ok(o) => {
-                match String::from_utf8(o.stdout) {
-                    Ok(s) => Ok(s),
-                    Err(e) =>  Err(format!("Error during cmd command output parsing: {}", e)),
-                }
-            },
-            Err(e) => Err(format!("Error during cmd command execution: {}", e)),
-        }
-    }
-
-    #[cfg(target_os = "windows")]
-    fn windows_powershell_command(&self, command: &str) -> Result<String, String> {
+    fn _windows_powershell_command(&self, command: &str) -> Result<String, String> {
         match powershell_script::run(command, false) {
             Ok(o) => Ok(o.to_string()),
             Err(e) => Err(format!("Error during powershell command execution: {}", e)),
         }
     }
 
+    // fn _windows_cmd_command(&self, command: &str) -> Result<String, String> {
+    //     let output = Command::new("cmd")
+    //                         .args(["/C", command])
+    //                         .output();
+    //     match output {
+    //         Ok(o) => {
+    //             match String::from_utf8(o.stdout) {
+    //                 Ok(s) => Ok(s),
+    //                 Err(e) =>  Err(format!("Error during cmd command output parsing: {}", e)),
+    //             }
+    //         },
+    //         Err(e) => Err(format!("Error during cmd command execution: {}", e)),
+    //     }
+    // }
+
+    fn execute_command(&self, command: &str) -> Result<String, String> {
+        match self.os() {
+            OS::Windows => self._windows_powershell_command(command),
+            OS::Linux => self._linux_command(command),
+            OS::MacOS => self._macos_command(command),
+            _ => Err(format!("Operating System not defined")),
+        }
+    }
+
     fn _get_splitter(&self) -> &str {
         match self.os() {
             OS::Windows => "\r\n",
-            OS::Linux => "\n",
-            OS::macOS => "\n",
+            _ => "\n",
         }
     }
 
@@ -148,7 +152,8 @@ pub trait Plugin {
 pub enum OS {
     Windows,
     Linux,
-    MacOS
+    MacOS,
+    Unknown
 }
 
 pub fn os() -> OS {
@@ -164,7 +169,7 @@ pub fn os() -> OS {
             // openbsd
             // solaris
             // android
-            panic!("Unknown operating system")
+            panic!("Unknown Operating System")
         }
     }
 }

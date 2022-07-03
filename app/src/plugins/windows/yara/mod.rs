@@ -31,7 +31,7 @@ impl Plugin for WindowsYara {
         };
 
         let command = format!("{0}\\{1} {0}\\{2} {3}", _binary_directory, "yara64.exe", ".\\yara.yml", scan_path);
-        match self.windows_powershell_command(&command) {
+        match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
         }

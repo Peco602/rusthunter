@@ -20,6 +20,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
     cfg_if::cfg_if! {
         if #[cfg(target_os = "windows")] {
             use crate::plugins::windows::{
+                // Import Windows plugins
                 users::WindowsUsers,
                 administrators::WindowsAdministrators,
                 tcp_listen::WindowsTCPListen,
@@ -28,6 +29,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
                 yara::WindowsYara,
             };
 
+            // Instantiate Windows plugins
             let windows_users = WindowsUsers::new();
             let windows_administrators = WindowsAdministrators::new();
             let windows_tcp_listen = WindowsTCPListen::new();
@@ -35,6 +37,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
             let windows_autoruns = WindowsAutoruns::new();
             let windows_yara = WindowsYara::new();
             let plugins: Vec<&dyn Plugin> = vec![
+                                                    // Execute Windows plugins
                                                     &windows_users,
                                                     &windows_administrators,
                                                     &windows_tcp_listen,
@@ -44,25 +47,32 @@ pub fn execute(options: &Options) -> Result<(), String> {
                                                 ];
          } else if #[cfg(target_os = "linux")] {
             use crate::plugins::linux::{
+                // Import Linux plugins
                 users::LinuxUsers,
+                root::LinuxRoot,
                 tcp_listen::LinuxTCPListen,
-                //udp_listen::LinuxUDPListen,
             };
 
+            // Instantiate Linux plugins
             let linux_users = LinuxUsers::new();
+            let linux_root = LinuxRoot::new();
             let linux_tcp_listen = LinuxTCPListen::new();
-            //let linux_udp_listen = LinuxUDPListen::new();
             let plugins: Vec<&dyn Plugin> = vec![
+                                                    // Execute Linux plugins
                                                     &linux_users,
                                                     &linux_tcp_listen,
+                                                    &linux_root,
                                                 ];
         } else if #[cfg(target_os = "macos")] {
             use crate::plugins::macos::{
+                // Import macOS plugins
                 users::MacOSUsers,
             };
 
+            // Instantiate macOS plugins
             let macos_users = MacOSUsers::new();
             let plugins: Vec<&dyn Plugin> = vec![
+                                                    // Execute macOS plugins
                                                     &macos_users,
                                                 ];
         }

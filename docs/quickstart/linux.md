@@ -26,7 +26,7 @@ Install the RustHunter executable on your system. RustHunter can be completely m
 
 ```console
 user@master-node:~$ cd rusthunter
-user@master-node:~$ sudo ./rusthunter.sh install
+user@master-node:~/rusthunter$ sudo ./rusthunter.sh install
 
   /#######                        /##     /##   /##                       /##
  | ##__  ##                      | ##    | ##  | ##                      | ##
@@ -179,7 +179,7 @@ Edit the `hosts` file to select the target nodes to be included in the snapshot.
 Take the snapshot based on the custom `host` and `config` files:
 
 ```console
-user@master-node:~$ sudo ./rusthunter.sh global -h ./hosts -c ./config
+user@master-node:~/rusthunter$ sudo ./rusthunter.sh global -h ./hosts -c ./config
 
   /#######                        /##     /##   /##                       /##
  | ##__  ##                      | ##    | ##  | ##                      | ##
@@ -220,7 +220,7 @@ PLAY [Run RustHunter on Windows machines] **************************************
 Compare the two environmental snapshots by checking the statistics (use the `-s` parameter):
 
 ```console
-user@master-node:~$ sudo ./rusthunter.sh compare -s -i ./snapshot-20220410_131824.json -c ./snapshot-20220420_121525.json
+user@master-node:~/rusthunter$ sudo ./rusthunter.sh compare -s -i ./snapshot-20220410_131824.json -c ./snapshot-20220420_121525.json
 
   /#######                        /##     /##   /##                       /##
  | ##__  ##                      | ##    | ##  | ##                      | ##
@@ -258,7 +258,7 @@ Host               Plugin                    Initial    Current
 It seems there is an additional TCP listening port on the Windows host `192.168.1.102`. Get the details by filtering by host and plugin (use the `-h` and `-p` parameters):
 
 ```console
-user@master-node:~$ sudo ./rusthunter.sh compare -h 192.168.1.102 -p windows_tcp_listen -i ./snapshot-20220410_131824.json -c ./snapshot-20220420_121525.json
+user@master-node:~/rusthunter$ sudo ./rusthunter.sh compare -h 192.168.1.102 -p windows_tcp_listen -i ./snapshot-20220410_131824.json -c ./snapshot-20220420_121525.json
 
   /#######                        /##     /##   /##                       /##
  | ##__  ##                      | ##    | ##  | ##                      | ##

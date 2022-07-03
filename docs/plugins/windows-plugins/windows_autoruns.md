@@ -6,7 +6,7 @@ This plugin shows the details about all the autorun entries on a Windows machine
 ## Parameters
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
-| enabled | true/false | true | Plugin activation status |
+| enabled | true/false | true | Plugin enable status |
 | boot_execute | true/false | true | Boot execute. |
 | appinit_dlls | true/false | false | Appinit DLLs. |
 | explorer_addons | true/false | false | Explorer addons. |

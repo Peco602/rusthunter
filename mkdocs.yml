@@ -19,11 +19,12 @@ nav:
       - 'windows_yara': 'plugins/windows-plugins/windows_yara.md'
     - 'Linux':
       - 'linux_users': 'plugins/linux-plugins/linux_users.md'
+      - 'linux_root': 'plugins/linux-plugins/linux_root.md'
       - 'linux_tcp_listen': 'plugins/linux-plugins/linux_tcp_listen.md'
     - 'macOS':
       - 'macos_users': 'plugins/macos-plugins/macos_users.md'
   - 'Development':
-    - 'Simple Linux Plugin': 'development/simple_linux_plugin.md'
+    - 'Basic Linux plugin': 'development/basic_linux_plugin.md'
   - 'References':
     - 'Contributing': 'references/contributing.md'
     - 'Credits': 'references/credits.md'

@@ -1,19 +1,17 @@
-
-```rust
 use serde_json::Value;
 
 use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
-pub struct LinuxPlugin {}
+pub struct LinuxRoot {}
 
-impl Plugin for LinuxPlugin {
+impl Plugin for LinuxRoot {
     fn name(&self) -> &str {
-        &"PLUGIN_NAME"
+        &"linux_root" 
     }
 
     fn description(&self) -> &str {
-        &"PLUGIN_DESCRIPTION"
+        &"Local root users"
     }
 
     fn os(&self) -> OS {
@@ -21,21 +19,20 @@ impl Plugin for LinuxPlugin {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "PLUGIN_COMMAND";
-        match self.linux_command(&command) {
+        let command = "cat /etc/passwd | grep :0: | cut -d : -f 1 | sort";
+        match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
         }
     }
 
     fn process(&self, output: &str) -> Result<Value, String> {
-
+        self._split_list(output)
     }
 }
 
-impl LinuxPlugin {
+impl LinuxRoot {
     pub fn new() -> Self {
-        LinuxPlugin {}
+        LinuxRoot {}
     }
 }
-```

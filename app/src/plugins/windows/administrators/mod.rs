@@ -20,7 +20,7 @@ impl Plugin for WindowsAdministrators {
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
         let command = "Get-LocalGroupMember -Group Administrators | Select-Object Name,ObjectClass | Sort-Object -Property Name | ConvertTo-Json";
-        match self.windows_powershell_command(&command) {
+        match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
         }

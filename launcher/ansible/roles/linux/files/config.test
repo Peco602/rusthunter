@@ -12,3 +12,8 @@ enabled = true
 # OS: Linux
 # Data: UDO listening ports
 enabled = true
+
+[linux_root]
+# OS: Linux
+# Data: Root users
+enabled = true

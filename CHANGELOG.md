@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Snapshot comparison based on statistics
 - Snapshot comparison filtering by host and plugin
 - macOS support
+- Sample plugin for custom development
 
 ### Changed
 - Snapshot comparison method

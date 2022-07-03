@@ -6,7 +6,7 @@ This plugin executes a customizable Yara rule scan over the file system of a Win
 ## Parameters
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
-| enabled | true/false | true | Plugin activation status |
+| enabled | true/false | true | Plugin enable status |
 | scan_path | Windows path | c:\ | Yara scanning path |
 
 ## Associated Files

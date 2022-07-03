@@ -1,7 +1,7 @@
-# windows_users
+# linux_root
 
 ## Description
-This plugin provides a list of the available users on a Windows machine.
+This plugin provides a list of the root users on a Linux machine.
 
 ## Parameters
 | Name | Options | Default | Description |
@@ -9,12 +9,10 @@ This plugin provides a list of the available users on a Windows machine.
 | enabled | true/false | true | Plugin enable status |
 
 ## Return Values
-Array of objects:
+Array of strings:
 
-| Key | Description |
-| --- | ----------- |
-| Name | Username |
-| Enabled | Status |
+- *root1*
+- *root2*
 
 ## Authors
 - Giovanni Pecoraro (@Peco602)

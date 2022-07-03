@@ -6,7 +6,7 @@ This plugin shows all the processes listening on UDP ports on a Windows machine.
 ## Parameters
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
-| enabled | true/false | true | Plugin activation status |
+| enabled | true/false | true | Plugin enable status |
 
 ## Return Values
 Array of objects:

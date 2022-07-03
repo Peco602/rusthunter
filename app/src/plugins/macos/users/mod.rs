@@ -20,7 +20,7 @@ impl Plugin for MacOSUsers {
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
         let command = "dscl . list /Users | grep -v \"^_\" | sort";
-        match self.macos_command(&command) {
+        match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
         }

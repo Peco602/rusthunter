@@ -3,23 +3,23 @@ use serde_json::Value;
 use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
-pub struct LinuxUsers {}
+pub struct SamplePlugin {}
 
-impl Plugin for LinuxUsers {
+impl Plugin for SamplePlugin {
     fn name(&self) -> &str {
-        &"linux_users"
+        &"sample_plugin"  // To be updated
     }
 
     fn description(&self) -> &str {
-        &"Local users"
+        &"Sample description"  // To be updated
     }
 
     fn os(&self) -> OS {
-        OS::Linux
+        OS::Unknown  // To be updated
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "cat /etc/passwd | cut -d: -f1 | sort";
+        let command = "sample command";  // To be updated
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
@@ -27,12 +27,12 @@ impl Plugin for LinuxUsers {
     }
 
     fn process(&self, output: &str) -> Result<Value, String> {
-        self._split_list(output)
+        Ok(()) // To be updated
     }
 }
 
-impl LinuxUsers {
+impl SamplePlugin {
     pub fn new() -> Self {
-        LinuxUsers {}
+        SamplePlugin {}
     }
 }

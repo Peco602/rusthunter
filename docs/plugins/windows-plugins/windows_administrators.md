@@ -6,7 +6,7 @@ This plugin provides a list of the administrative users/groups on a Windows mach
 ## Parameters
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
-| enabled | true/false | true | Plugin activation status |
+| enabled | true/false | true | Plugin enable status |
 
 ## Return Values
 Array of objects:
