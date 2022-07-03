@@ -9,16 +9,19 @@ nav:
   - 'Quickstart':
     - 'Windows': 'quickstart/windows.md'
     - 'Linux': 'quickstart/linux.md'
-  - 'Windows Plugins':
-    - 'windows_users': 'windows-plugins/windows_users.md'
-    - 'windows_administrators': 'windows-plugins/windows_administrators.md'
-    - 'windows_tcp_listen': 'windows-plugins/windows_tcp_listen.md'
-    - 'windows_udp_listen': 'windows-plugins/windows_udp_listen.md'
-    - 'windows_autoruns': 'windows-plugins/windows_autoruns.md'
-    - 'windows_yara': 'windows-plugins/windows_yara.md'
-  - 'Linux Plugins':
-    - 'linux_users': 'linux-plugins/linux_users.md'
-    - 'linux_tcp_listen': 'linux-plugins/linux_tcp_listen.md'
+  - 'Plugins':
+    - 'Windows':
+      - 'windows_users': 'plugins/windows-plugins/windows_users.md'
+      - 'windows_administrators': 'plugins/windows-plugins/windows_administrators.md'
+      - 'windows_tcp_listen': 'plugins/windows-plugins/windows_tcp_listen.md'
+      - 'windows_udp_listen': 'plugins/windows-plugins/windows_udp_listen.md'
+      - 'windows_autoruns': 'plugins/windows-plugins/windows_autoruns.md'
+      - 'windows_yara': 'plugins/windows-plugins/windows_yara.md'
+    - 'Linux':
+      - 'linux_users': 'plugins/linux-plugins/linux_users.md'
+      - 'linux_tcp_listen': 'plugins/linux-plugins/linux_tcp_listen.md'
+    - 'macOS':
+      - 'macos_users': 'plugins/macos-plugins/macos_users.md'
   - 'Development':
     - 'Simple Linux Plugin': 'development/simple_linux_plugin.md'
   - 'References':

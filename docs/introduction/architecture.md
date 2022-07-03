@@ -8,8 +8,8 @@ The main elements are listed and described hereafter:
 
 - **Snapshot**: A JSON file representing an image of the enterprise environment;
 - **Master Node**: A `Windows` or `Linux` machine from which RustHunter can be executed;
-- **Target Nodes**: Multi-platform machines that can be included in the snapshot;
+- **Target Nodes**: Multi-platform machines (`Windows`, `Linux` and `macOS`) that can be included in the environmental snapshot;
 - **Collector**: Multi-platform artifact able to collect data from the target nodes;
-- **Plugin**: One among the multiple modules constituting the collector with the capability to capture specific information in a snapshot;
+- **Plugin**: A single generic constituting the collector with the capability to capture specific information in a snapshot;
 - **Inventory File**: An INI file representing the Ansible inventory for the target nodes to be included in a snapshot;
 - **Config File**: An INI file to enable/disable or configure plugins for a snapshot.

@@ -1,18 +1,3 @@
-[linux_users]
-# OS: Linux
-# Data: Users
-enabled = true
-
-[linux_tcp_listen]
-# OS: Linux
-# Data: TCP listening ports
-enabled = true
-
-[linux_udp_listen]
-# OS: Linux
-# Data: UDO listening ports
-enabled = true
-
 [windows_users]
 # OS: Windows
 # Data: Users

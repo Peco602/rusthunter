@@ -59,3 +59,8 @@ enabled   = true
 # OS: Windows
 # Data: UDP listening ports
 enabled   = true
+
+[macos_users]
+# OS: macOS
+# Data: Users
+enabled   = true

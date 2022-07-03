@@ -98,7 +98,7 @@ function ShowHelp {
     echo
     echo "     -i |--initial         Initial snapshot"
     echo "     -c |--current         Current snapshot"
-    echo "     -s |--stats           Show summary statistics"
+    echo "     -s |--stats           Show statistics"
     echo "     -h |--host            Filter host"
     echo "     -p |--plugin          Filter plugin"
     echo

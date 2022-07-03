@@ -15,7 +15,7 @@ impl Plugin for MacOSUsers {
     }
 
     fn os(&self) -> OS {
-        OS::macOS
+        OS::MacOS
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {

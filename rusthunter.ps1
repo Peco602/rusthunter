@@ -146,7 +146,7 @@ function Show-Info($message) {
 }
 
 function Is-ExecutableInstalled {
-    if ( !(Test-Path ${INSTALLATION_PATH}\rusthunter.exe) ) {
+    if ( !(Test-Path ${INSTALLATION_PATH}\${EXECUTABLE_NAME}) ) {
         Show-Error "The tool has not been installed yet"       
     }
 }
@@ -187,7 +187,7 @@ function Install-RustHunter {
 function Show-Plugins {
     Is-ExecutableInstalled
     
-    rusthunter.exe list
+    Invoke-Expression "${EXECUTABLE_NAME} list"
 }
 
 function Get-LocalSnapshot {
@@ -201,11 +201,11 @@ function Get-LocalSnapshot {
     mkdir -p ${SNAPSHOT_PATH} > $null
 
     Show-Info "Collecting data"
-    rusthunter.exe run -c ${ConfigFile} -b ${WINDOWS_BINARIES_PATH}
+    Invoke-Expression "${EXECUTABLE_NAME} run -c ${ConfigFile} -b ${WINDOWS_BINARIES_PATH}"
     mv snapshot.json ${SNAPSHOT_PATH}
 
     Show-Info "Merging data"
-    rusthunter.exe merge -d ${SNAPSHOT_PATH}
+    Invoke-Expression "${EXECUTABLE_NAME} merge -d ${SNAPSHOT_PATH}"
 
     Show-Info "Cleaning up"
     Remove-Item -Force -Recurse ${SNAPSHOT_PATH}
@@ -294,7 +294,7 @@ function Get-GlobalSnapshot {
     }
 
     Show-Info "Merging data"
-    rusthunter.exe merge -d ${SNAPSHOT_PATH}
+    Invoke-Expression "${EXECUTABLE_NAME} merge -d ${SNAPSHOT_PATH}"
 
     Show-Info "Cleaning up"
     Remove-Item -Force -Recurse ${SNAPSHOT_PATH}
@@ -333,7 +333,7 @@ function Compare-Snapshots {
         $args += " --stats"
     }
 
-    rusthunter.exe compare $args
+    Invoke-Expression "${EXECUTABLE_NAME} compare $args"
 }
 
 function Uninstall-RustHunter {
@@ -345,7 +345,7 @@ function Uninstall-RustHunter {
     }
 
     Show-Warning "Removing executable"
-    Remove-Item -Force ${INSTALLATION_PATH}\rusthunter.exe
+    Remove-Item -Force ${INSTALLATION_PATH}\${EXECUTABLE_NAME}
 }
 
 function Build-RustHunter {
@@ -430,7 +430,7 @@ function Test-RustHunter {
         docker run --rm -v $PWD\${ANSIBLE_PATH}:/etc/ansible -v $PWD\${SNAPSHOT_PATH}:/snapshots -w /etc/ansible --network=rusthunter_test_net ${LAUNCHER_IMAGE_NAME}:latest ansible-playbook playbook.yml -i hosts.test
 
         Show-Info "Merging data"
-        rusthunter merge -d ${SNAPSHOT_PATH}
+        Invoke-Expression "${EXECUTABLE_NAME} merge -d ${SNAPSHOT_PATH}"
 
         Show-Info "Cleaning up"
         docker rm $(docker network inspect rusthunter_test_net --format='{{range $id, $_ := .Containers}}{{println $id}}{{end}}') --force
