@@ -19,7 +19,7 @@ impl Plugin for LinuxUptime {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "uptime -s; uptime -p";  // To be updated
+        let command = "uptime -s";
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
