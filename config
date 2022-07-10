@@ -18,6 +18,22 @@ enabled = true
 # Data: Root users
 enabled = true
 
+[linux_uptime]
+# OS: Linux
+# Data: Tell how long the system has been running
+enabled = true
+
+[linux_unusual_suid_root_files]
+# OS: Linux
+# Data: This requires knowledge of normal SUID files.
+enabled = true
+
+[unusual_network_usage]
+# OS: Linux
+# Data: Look for promiscuous mode, which might indicate a sniffer
+enabled = true
+
+
 [windows_users]
 # OS: Windows
 # Data: Users

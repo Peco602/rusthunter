@@ -51,17 +51,26 @@ pub fn execute(options: &Options) -> Result<(), String> {
                 users::LinuxUsers,
                 root::LinuxRoot,
                 tcp_listen::LinuxTCPListen,
+                uptime::LinuxUptime,
+                unusual_suid_root_files::LinuxUnusualSuidRootFiles,
+                unusual_network_usage::LinuxUnusualNetworkUsage,
             };
 
             // Instantiate Linux plugins
             let linux_users = LinuxUsers::new();
             let linux_root = LinuxRoot::new();
             let linux_tcp_listen = LinuxTCPListen::new();
+            let linux_uptime = LinuxUptime::new();
+            let linux_unusual_suid_root_files = LinuxUnusualSuidRootFiles::new();
+            let linux_unusual_network_usage = LinuxUnusualNetworkUsage::new();
             let plugins: Vec<&dyn Plugin> = vec![
                                                     // Execute Linux plugins
                                                     &linux_users,
                                                     &linux_tcp_listen,
                                                     &linux_root,
+                                                    &linux_uptime,
+                                                    &linux_unusual_suid_root_files,
+                                                    &linux_unusual_network_usage,
                                                 ];
         } else if #[cfg(target_os = "macos")] {
             use crate::plugins::macos::{
