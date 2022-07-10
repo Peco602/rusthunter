@@ -34,6 +34,18 @@ enabled = true
 enabled = true
 
 
+[dns_in_use]
+# OS: Linux
+# Data: Get ip of DNS in use via nmcli
+enabled = true
+
+[how_many_cronjobs]
+# OS: Linux
+# Data: Get the number of active cronjobs
+enabled = true
+
+
+
 [windows_users]
 # OS: Windows
 # Data: Users

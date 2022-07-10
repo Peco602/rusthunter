@@ -54,6 +54,8 @@ pub fn execute(options: &Options) -> Result<(), String> {
                 uptime::LinuxUptime,
                 unusual_suid_root_files::LinuxUnusualSuidRootFiles,
                 unusual_network_usage::LinuxUnusualNetworkUsage,
+                how_many_cronjobs::LinuxHowManyCronjobs,
+                dns_in_use::LinuxDnsInUse,
             };
 
             // Instantiate Linux plugins
@@ -63,6 +65,8 @@ pub fn execute(options: &Options) -> Result<(), String> {
             let linux_uptime = LinuxUptime::new();
             let linux_unusual_suid_root_files = LinuxUnusualSuidRootFiles::new();
             let linux_unusual_network_usage = LinuxUnusualNetworkUsage::new();
+            let linux_how_many_cronjobs = LinuxHowManyCronjobs::new();
+            let linux_dns_in_use = LinuxDnsInUse::new();
             let plugins: Vec<&dyn Plugin> = vec![
                                                     // Execute Linux plugins
                                                     &linux_users,
@@ -71,6 +75,8 @@ pub fn execute(options: &Options) -> Result<(), String> {
                                                     &linux_uptime,
                                                     &linux_unusual_suid_root_files,
                                                     &linux_unusual_network_usage,
+                                                    &linux_how_many_cronjobs,
+                                                    &linux_dns_in_use,
                                                 ];
         } else if #[cfg(target_os = "macos")] {
             use crate::plugins::macos::{
