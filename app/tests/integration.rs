@@ -1,5 +1,6 @@
 use std::process;
 
+use rusthunter::constants::*;
 use rusthunter::options::{ Options, Mode };
 use rusthunter::execute;
 use rusthunter::utils::print_error;
@@ -11,6 +12,7 @@ fn list() {
         verbose: true,
         config: String::new(),
         binary_directory: String::new(),
+        snapshot_tag: String::from(DEFAULT_SNAPSHOT_TAG),
         merging_directory: String::new(),
         initial_file: String::new(),
         current_file: String::new(),
@@ -32,6 +34,7 @@ fn run() {
         verbose: false,
         config: String::from("tests/config.test"),
         binary_directory: String::new(),
+        snapshot_tag: String::from(DEFAULT_SNAPSHOT_TAG),
         merging_directory: String::new(),
         initial_file: String::new(),
         current_file: String::new(),
@@ -53,6 +56,7 @@ fn merge() {
         verbose: true,
         config: String::new(),
         binary_directory: String::new(),
+        snapshot_tag: String::from(DEFAULT_SNAPSHOT_TAG),
         merging_directory: String::from("tests/merging_directory"),
         initial_file: String::new(),
         current_file: String::new(),
@@ -74,6 +78,7 @@ fn compare_stats() {
         verbose: true,
         config: String::new(),
         binary_directory: String::new(),
+        snapshot_tag: String::from(DEFAULT_SNAPSHOT_TAG),
         merging_directory: String::new(),
         initial_file: String::from("tests/compare_directory/initial_snapshot.json"),
         current_file: String::from("tests/compare_directory/current_snapshot.json"),
@@ -95,6 +100,7 @@ fn compare_full() {
         verbose: true,
         config: String::new(),
         binary_directory: String::new(),
+        snapshot_tag: String::from(DEFAULT_SNAPSHOT_TAG),
         merging_directory: String::new(),
         initial_file: String::from("tests/compare_directory/initial_snapshot.json"),
         current_file: String::from("tests/compare_directory/current_snapshot.json"),
@@ -116,6 +122,7 @@ fn compare_host() {
         verbose: true,
         config: String::new(),
         binary_directory: String::new(),
+        snapshot_tag: String::from(DEFAULT_SNAPSHOT_TAG),
         merging_directory: String::new(),
         initial_file: String::from("tests/compare_directory/initial_snapshot.json"),
         current_file: String::from("tests/compare_directory/current_snapshot.json"),
@@ -137,6 +144,7 @@ fn compare_plugin() {
         verbose: true,
         config: String::new(),
         binary_directory: String::new(),
+        snapshot_tag: String::from(DEFAULT_SNAPSHOT_TAG),
         merging_directory: String::new(),
         initial_file: String::from("tests/compare_directory/initial_snapshot.json"),
         current_file: String::from("tests/compare_directory/current_snapshot.json"),

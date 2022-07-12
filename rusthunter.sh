@@ -568,6 +568,10 @@ function execute_test_subcommand {
     if [ "$VALIDATION_TESTS" == "True" ]; then
         build_launcher_image
 
+        cp $CONFIG_FILE $LINUX_BINARIES_PATH/$DEFAULT_CONFIG_FILE
+        cp $CONFIG_FILE $MACOS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
+        cp $CONFIG_FILE $WINDOWS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
+        
         print_info "Creating snapshots directory"
         mkdir -p $SNAPSHOT_PATH
 

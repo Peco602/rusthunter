@@ -417,6 +417,10 @@ function Test-RustHunter {
     if ( $ValidationTests ) {
         Build-LauncherImage
 
+        cp ${ConfigFile} ${LINUX_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
+        cp ${ConfigFile} ${MACOS_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
+        cp ${ConfigFile} ${WINDOWS_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
+        
         Show-Info "Creating snapshots directory"
         mkdir -p ${SNAPSHOT_PATH} > $null
 

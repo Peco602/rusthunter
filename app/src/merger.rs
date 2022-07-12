@@ -3,10 +3,10 @@ use glob::glob;
 use chrono::prelude::*;
 use serde_json::{Value, Map};
 
-use crate::constants::{SNAPSHOT_FILENAME, SNAPSHOT_EXTENSION};
+use crate::constants::{SNAPSHOT_EXTENSION};
 use crate::utils::{print_info, print_success, output_json};
 
-pub fn merge(merging_directory: &String, verbose: &bool) -> Result<(), String> {
+pub fn merge(merging_directory: &String, snapshot_tag: &str, verbose: &bool) -> Result<(), String> {
     //let merging_glob = merging_directory.clone() + &"/*.json".to_string(); 
     let merging_glob = format!("{}/*.{}", merging_directory, SNAPSHOT_EXTENSION); 
     
@@ -44,7 +44,7 @@ pub fn merge(merging_directory: &String, verbose: &bool) -> Result<(), String> {
     }
 
     let local_time = Local::now().format("%Y%m%d_%H%M%S").to_string();
-    let merged_snapshots_filename: String = format!("{}-{}.{}", SNAPSHOT_FILENAME, local_time, SNAPSHOT_EXTENSION);
+    let merged_snapshots_filename: String = format!("{}-{}.{}", snapshot_tag, local_time, SNAPSHOT_EXTENSION);
     print_success(&format!("Merged snapshots file: {}", merged_snapshots_filename));
     output_json(&merged_data, merged_snapshots_filename, verbose)
 

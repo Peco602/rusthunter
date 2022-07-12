@@ -17,7 +17,7 @@
     recurse: yes
 
 - name: Collecting data
-  command: "{{ remote_path }}{{ rusthunter_executable }} {{ rusthunter_run_subcommand }} -c {{ rusthunter_config_file }}"
+  command: "{{ remote_path }}{{ rusthunter_executable }} {{ rusthunter_run_subcommand }}"
   become: yes
   become_method: sudo
   register: shell_result

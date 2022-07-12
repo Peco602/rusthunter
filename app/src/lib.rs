@@ -51,32 +51,29 @@ pub fn execute(options: &Options) -> Result<(), String> {
                 users::LinuxUsers,
                 root::LinuxRoot,
                 tcp_listen::LinuxTCPListen,
-                uptime::LinuxUptime,
-                unusual_suid_root_files::LinuxUnusualSuidRootFiles,
-                unusual_network_usage::LinuxUnusualNetworkUsage,
-                how_many_cronjobs::LinuxHowManyCronjobs,
-                dns_in_use::LinuxDns,
+                suid::LinuxSuid,
+                promisc::LinuxPromisc,
+                crontab::LinuxCrontab,
+                dns::LinuxDns,
             };
 
             // Instantiate Linux plugins
             let linux_users = LinuxUsers::new();
             let linux_root = LinuxRoot::new();
             let linux_tcp_listen = LinuxTCPListen::new();
-            let linux_uptime = LinuxUptime::new();
-            let linux_unusual_suid_root_files = LinuxUnusualSuidRootFiles::new();
-            let linux_unusual_network_usage = LinuxUnusualNetworkUsage::new();
-            let linux_how_many_cronjobs = LinuxHowManyCronjobs::new();
-            let linux_dns_in_use = LinuxDns::new();
+            let linux_suid = LinuxSuid::new();
+            let linux_promisc = LinuxPromisc::new();
+            let linux_crontab = LinuxCrontab::new();
+            let linux_dns = LinuxDns::new();
             let plugins: Vec<&dyn Plugin> = vec![
                                                     // Execute Linux plugins
                                                     &linux_users,
-                                                    &linux_tcp_listen,
                                                     &linux_root,
-                                                    &linux_uptime,
-                                                    &linux_unusual_suid_root_files,
-                                                    &linux_unusual_network_usage,
-                                                    &linux_how_many_cronjobs,
-                                                    &linux_dns_in_use,
+                                                    &linux_tcp_listen,
+                                                    &linux_suid,
+                                                    &linux_promisc,
+                                                    &linux_crontab,
+                                                    &linux_dns,
                                                 ];
         } else if #[cfg(target_os = "macos")] {
             use crate::plugins::macos::{
@@ -98,11 +95,13 @@ pub fn execute(options: &Options) -> Result<(), String> {
         Mode::Run => run(
             &plugins, 
             &options.config, 
-            &options.binary_directory, 
+            &options.binary_directory,
+            &options.snapshot_tag,
             &options.verbose
         ),
         Mode::Merge => merge(
-            &options.merging_directory, 
+            &options.merging_directory,
+            &options.snapshot_tag,
             &options.verbose
         ),
         Mode::Compare => compare(

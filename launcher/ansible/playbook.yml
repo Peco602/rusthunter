@@ -1,19 +1,19 @@
 -
-  name: Run RustHunter on Linux machines
+  name: Linux targets
   gather_facts: no
   hosts: linux
   roles:
     - linux
 
 -
-  name: Run RustHunter on macOS machines
+  name: macOS targets
   gather_facts: no
   hosts: macos
   roles:
     - macos
 
 -
-  name: Run RustHunter on Windows machines
+  name: Windows targets
   gather_facts: no
   hosts: windows
   roles:

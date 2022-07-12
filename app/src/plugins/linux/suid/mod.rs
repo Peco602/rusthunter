@@ -3,15 +3,15 @@ use serde_json::Value;
 use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
-pub struct LinuxUnusualSuidRootFiles {}
+pub struct LinuxSuid {}
 
-impl Plugin for LinuxUnusualSuidRootFiles {
+impl Plugin for LinuxSuid {
     fn name(&self) -> &str {
-        &"linux_unusual_suid_root_files"
+        &"linux_suid"
     }
 
     fn description(&self) -> &str {
-        &"This requires knowledge of normal SUID files."
+        &"Files with setuid permissions"
     }
 
     fn os(&self) -> OS {
@@ -31,8 +31,8 @@ impl Plugin for LinuxUnusualSuidRootFiles {
     }
 }
 
-impl LinuxUnusualSuidRootFiles {
+impl LinuxSuid {
     pub fn new() -> Self {
-        LinuxUnusualSuidRootFiles {}
+        LinuxSuid {}
     }
 }

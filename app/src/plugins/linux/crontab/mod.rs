@@ -3,15 +3,15 @@ use serde_json::Value;
 use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
-pub struct LinuxUptime {}
+pub struct LinuxCrontab {}
 
-impl Plugin for LinuxUptime {
+impl Plugin for LinuxCrontab {
     fn name(&self) -> &str {
-        &"linux_uptime"
+        &"linux_crontab"
     }
 
     fn description(&self) -> &str {
-        &"Tell how long the system has been running"
+        &"Crontab jobs"
     }
 
     fn os(&self) -> OS {
@@ -19,7 +19,7 @@ impl Plugin for LinuxUptime {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "uptime -s";
+        let command = "./crontab.sh";
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
@@ -31,8 +31,8 @@ impl Plugin for LinuxUptime {
     }
 }
 
-impl LinuxUptime {
+impl LinuxCrontab {
     pub fn new() -> Self {
-        LinuxUptime {}
+        LinuxCrontab {}
     }
 }

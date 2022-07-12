@@ -3,15 +3,15 @@ use serde_json::Value;
 use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
-pub struct LinuxUnusualNetworkUsage {}
+pub struct LinuxPromisc {}
 
-impl Plugin for LinuxUnusualNetworkUsage {
+impl Plugin for LinuxPromisc {
     fn name(&self) -> &str {
-        &"linux_unusual_network_usage"
+        &"linux_promisc"
     }
 
     fn description(&self) -> &str {
-        &"Look for promiscuous mode, which might indicate a sniffer"
+        &"Network interfaces in promiscuous mode"
     }
 
     fn os(&self) -> OS {
@@ -31,8 +31,8 @@ impl Plugin for LinuxUnusualNetworkUsage {
     }
 }
 
-impl LinuxUnusualNetworkUsage {
+impl LinuxPromisc {
     pub fn new() -> Self {
-        LinuxUnusualNetworkUsage {}
+        LinuxPromisc {}
     }
 }

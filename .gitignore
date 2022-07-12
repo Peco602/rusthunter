@@ -1,8 +1,8 @@
 # Launching files
 launcher/ansible/hosts
-launcher/ansible/roles/linux/files/config
-launcher/ansible/roles/macos/files/config
-launcher/ansible/roles/windows/files/config
+launcher/ansible/roles/linux/files/config.ini
+launcher/ansible/roles/macos/files/config.ini
+launcher/ansible/roles/windows/files/config.ini
 
 # Build files
 app/target

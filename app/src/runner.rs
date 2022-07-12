@@ -1,4 +1,4 @@
-use crate::constants::*;
+use crate::constants::{SNAPSHOT_EXTENSION};
 use crate::config::Config;
 use crate::utils::{print_info, print_success, print_warning, output_json};
 use crate::plugins::{Plugin, os};
@@ -13,7 +13,7 @@ pub fn list(plugins: &Vec<&dyn Plugin>) -> Result<(), String> {
     Ok(())
 }
 
-pub fn run(plugins: &Vec<&dyn Plugin>, config_file: &str, binary_directory: &str, verbose: &bool) -> Result<(), String> {
+pub fn run(plugins: &Vec<&dyn Plugin>, config_file: &str, binary_directory: &str, snapshot_tag: &str, verbose: &bool) -> Result<(), String> {
     // Config loading
     let config = match Config::new(config_file) {
         Ok(config) => config,
@@ -48,8 +48,8 @@ pub fn run(plugins: &Vec<&dyn Plugin>, config_file: &str, binary_directory: &str
         return Err("Cannot get hostname".to_string());
     }
 
-    // // Data output
-    let snapshot_filename: String = format!("{}.{}", SNAPSHOT_FILENAME, SNAPSHOT_EXTENSION);
+    // Data output
+    let snapshot_filename: String = format!("{}.{}", snapshot_tag, SNAPSHOT_EXTENSION);
     print_success(&format!("Snapshot file created: {}", snapshot_filename));
     output_json(&host_data, snapshot_filename, verbose)
 }
