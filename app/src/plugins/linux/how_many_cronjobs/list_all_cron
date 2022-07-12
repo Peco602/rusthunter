@@ -1,0 +1,96 @@
+this crontab for user : root
+no crontab for root
+this crontab for user : daemon
+no crontab for daemon
+this crontab for user : bin
+no crontab for bin
+this crontab for user : sys
+no crontab for sys
+this crontab for user : sync
+no crontab for sync
+this crontab for user : games
+no crontab for games
+this crontab for user : man
+no crontab for man
+this crontab for user : lp
+no crontab for lp
+this crontab for user : mail
+no crontab for mail
+this crontab for user : news
+no crontab for news
+this crontab for user : uucp
+no crontab for uucp
+this crontab for user : proxy
+no crontab for proxy
+this crontab for user : www-data
+no crontab for www-data
+this crontab for user : backup
+no crontab for backup
+this crontab for user : list
+no crontab for list
+this crontab for user : irc
+no crontab for irc
+this crontab for user : gnats
+no crontab for gnats
+this crontab for user : nobody
+no crontab for nobody
+this crontab for user : systemd-network
+no crontab for systemd-network
+this crontab for user : systemd-resolve
+no crontab for systemd-resolve
+this crontab for user : systemd-timesync
+no crontab for systemd-timesync
+this crontab for user : messagebus
+no crontab for messagebus
+this crontab for user : syslog
+no crontab for syslog
+this crontab for user : _apt
+no crontab for _apt
+this crontab for user : tss
+no crontab for tss
+this crontab for user : uuidd
+no crontab for uuidd
+this crontab for user : tcpdump
+no crontab for tcpdump
+this crontab for user : avahi-autoipd
+no crontab for avahi-autoipd
+this crontab for user : usbmux
+no crontab for usbmux
+this crontab for user : rtkit
+no crontab for rtkit
+this crontab for user : dnsmasq
+no crontab for dnsmasq
+this crontab for user : avahi
+no crontab for avahi
+this crontab for user : cups-pk-helper
+no crontab for cups-pk-helper
+this crontab for user : speech-dispatcher
+no crontab for speech-dispatcher
+this crontab for user : kernoops
+no crontab for kernoops
+this crontab for user : nm-openvpn
+no crontab for nm-openvpn
+this crontab for user : whoopsie
+no crontab for whoopsie
+this crontab for user : sssd
+no crontab for sssd
+this crontab for user : saned
+no crontab for saned
+this crontab for user : colord
+no crontab for colord
+this crontab for user : geoclue
+no crontab for geoclue
+this crontab for user : pulse
+no crontab for pulse
+this crontab for user : hplip
+no crontab for hplip
+this crontab for user : gnome-initial-setup
+no crontab for gnome-initial-setup
+this crontab for user : gdm
+no crontab for gdm
+this crontab for user : sccoe
+no crontab for sccoe
+this crontab for user : systemd-coredump
+no crontab for systemd-coredump
+this crontab for user : sshd
+no crontab for sshd

@@ -55,7 +55,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
                 unusual_suid_root_files::LinuxUnusualSuidRootFiles,
                 unusual_network_usage::LinuxUnusualNetworkUsage,
                 how_many_cronjobs::LinuxHowManyCronjobs,
-                dns_in_use::LinuxDnsInUse,
+                dns_in_use::LinuxDns,
             };
 
             // Instantiate Linux plugins
@@ -66,7 +66,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
             let linux_unusual_suid_root_files = LinuxUnusualSuidRootFiles::new();
             let linux_unusual_network_usage = LinuxUnusualNetworkUsage::new();
             let linux_how_many_cronjobs = LinuxHowManyCronjobs::new();
-            let linux_dns_in_use = LinuxDnsInUse::new();
+            let linux_dns_in_use = LinuxDns::new();
             let plugins: Vec<&dyn Plugin> = vec![
                                                     // Execute Linux plugins
                                                     &linux_users,

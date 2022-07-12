@@ -3,15 +3,15 @@ use serde_json::Value;
 use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
-pub struct LinuxDnsInUse {}
+pub struct LinuxDns {}
 
-impl Plugin for LinuxDnsInUse {
+impl Plugin for LinuxDns {
     fn name(&self) -> &str {
-        &"dns_in_use"
+        &"dns"
     }
 
     fn description(&self) -> &str {
-        &"Get ip of DNS in use via nmcli"
+        &"DNS in use"
     }
 
     fn os(&self) -> OS {
@@ -31,8 +31,8 @@ impl Plugin for LinuxDnsInUse {
     }
 }
 
-impl LinuxDnsInUse {
+impl LinuxDns {
     pub fn new() -> Self {
-        LinuxDnsInUse {}
+        LinuxDns {}
     }
 }

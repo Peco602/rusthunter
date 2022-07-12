@@ -19,6 +19,8 @@ impl Plugin for LinuxHowManyCronjobs {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
+        // https://www.putorius.net/list-all-cron-jobs-set-for-all-users.html
+        // https://tecadmin.net/linux-view-cronjobs/
         let command = "crontab -l 2>/dev/null | sed 's/^ *//;/^[*@0-9]/!d' | wc -l";
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),

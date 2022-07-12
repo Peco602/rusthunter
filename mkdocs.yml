@@ -21,6 +21,11 @@ nav:
       - 'linux_users': 'plugins/linux-plugins/linux_users.md'
       - 'linux_root': 'plugins/linux-plugins/linux_root.md'
       - 'linux_tcp_listen': 'plugins/linux-plugins/linux_tcp_listen.md'
+      - 'how_many_cronjobs': 'plugins/linux-plugins/how_many_cronjobs.md'
+      - 'linux_dns_in_use': 'plugins/linux-plugins/linux_dns_in_use.md'
+      - 'linux_unusual_network_usage': 'plugins/linux-plugins/linux_unusual_network_usage.md'
+      - 'linux_unusual_suid_root_files': 'plugins/linux-plugins/linux_unusual_suid_root_files.md'
+      - 'linux_uptime': 'plugins/linux-plugins/linux_uptime.md'
     - 'macOS':
       - 'macos_users': 'plugins/macos-plugins/macos_users.md'
   - 'Development':

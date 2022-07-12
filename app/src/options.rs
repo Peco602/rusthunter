@@ -124,7 +124,7 @@ impl Options {
             },
             Some(("run", sub_matches)) => {
                  mode = Mode::Run;
-                 config = sub_matches.value_of("config").unwrap_or("config").to_string();
+                 config = sub_matches.value_of("config").unwrap_or("config.ini").to_string();
                  binary_directory = sub_matches.value_of("bin").unwrap_or(".").to_string();
             },
             Some(("merge", sub_matches)) => {

@@ -13,3 +13,6 @@ app/snapshot*
 
 # Compiled docs
 site
+
+# Test files
+test.*
