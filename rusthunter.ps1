@@ -25,7 +25,10 @@ Param(
 
     [string]
     $ConfigFile = $null,
-    
+
+    [string]
+    $SnapshotTag = $null,
+
     [string]
     $InitialSnapshot = $null,
 
@@ -69,7 +72,7 @@ ${MACOS_BINARIES_PATH}="${ANSIBLE_PATH}\roles\macos\files"
 ${WINDOWS_BINARIES_PATH}="${ANSIBLE_PATH}\roles\windows\files"
 ${SNAPSHOT_PATH}=".\launcher\snapshots"
 
-${DEFAULT_CONFIG_FILE}="config"
+${DEFAULT_CONFIG_FILE}="config.ini"
 ${DEFAULT_HOSTS_FILE}="hosts"
 ###########################################################
 
@@ -119,6 +122,7 @@ function Show-Help {
     Write-Host
     Write-Host "     -HostsFile          Hosts file"
     Write-Host "     -ConfigFile         Configuration file"
+    Write-Host "     -SnapshotTag        Snapshot tag"
     Write-Host
     Write-Host "usage: $0 compare -InitialSnapshot INITIAL_SNAPSHOT -CurrentSnapshot CURRENT_SNAPSHOT -ShowStatistics -Host HOST -Plugin PLUGIN"
     Write-Host
@@ -294,7 +298,13 @@ function Get-GlobalSnapshot {
     }
 
     Show-Info "Merging data"
-    Invoke-Expression "${EXECUTABLE_NAME} merge -d ${SNAPSHOT_PATH}"
+    $args = "-d ${SNAPSHOT_PATH}"
+
+    if ( ${SnapshotTag}) {
+        $args += " --tag ${SnapshotTag}"
+    }
+
+    Invoke-Expression "${EXECUTABLE_NAME} merge $args"
 
     Show-Info "Cleaning up"
     Remove-Item -Force -Recurse ${SNAPSHOT_PATH}

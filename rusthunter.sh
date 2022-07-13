@@ -21,6 +21,7 @@ VIEW_HOSTS="NONE"
 EDIT_HOSTS="NONE"
 DECRYPT_HOSTS="NONE"
 CONFIG_FILE="NONE"
+SNAPSHOT_TAG="NONE"
 PRINT_STATS="NONE"
 FILTERED_HOST="NONE"
 FILTERED_PLUGIN="NONE"
@@ -43,7 +44,7 @@ MACOS_BINARIES_PATH="$ANSIBLE_PATH/roles/macos/files"
 WINDOWS_BINARIES_PATH="$ANSIBLE_PATH/roles/windows/files"
 SNAPSHOT_PATH="./launcher/snapshots"
 
-DEFAULT_CONFIG_FILE="config"
+DEFAULT_CONFIG_FILE="config.ini"
 DEFAULT_HOSTS_FILE="hosts"
 ###########################################################
 
@@ -93,6 +94,7 @@ function ShowHelp {
     echo
     echo "     -h |--hosts          Hosts file"
     echo "     -c |--config         Configuration file"
+    echo "     -t |--tag            Snapshot tag"
     echo
     echo "usage: $0 compare (-i|--initial) INITIAL_SNAPSHOT (-c|--current) CURRENT_SNAPSHOT (-s |--stats) (-h |--host) HOST (-p |--plugin) PLUGIN"
     echo
@@ -349,6 +351,11 @@ function execute_global_subcommand {
             shift
             shift
             ;;
+        -t|--tag)
+            SNAPSHOT_TAG="${2}"
+            shift
+            shift
+            ;;
         *)
             ShowHelp
             exit 1
@@ -376,7 +383,13 @@ function execute_global_subcommand {
     docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml
 
     print_info "Merging data"
-    $EXECUTABLE_NAME merge -d $SNAPSHOT_PATH
+    ARGS="-d $SNAPSHOT_PATH"
+
+    if [ "$SNAPSHOT_TAG" != "NONE" ]; then
+        ARGS="$ARGS --tag $SNAPSHOT_TAG"
+    fi
+
+    $EXECUTABLE_NAME merge $ARGS
 
     print_info "Cleaning up"
     rm -rf $SNAPSHOT_PATH
