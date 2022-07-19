@@ -490,7 +490,7 @@ function execute_build_subcommand {
     print_info "Building release for Linux target"
     docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-unknown-linux-gnu --release
 
-    Show-Info "Building release for macOS target"
+    print_info "Building release for macOS target"
     docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-apple-darwin --release
 
     print_info "Building release for Windows target"
