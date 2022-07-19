@@ -52,6 +52,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
                 root::LinuxRoot,
                 tcp_listen::LinuxTCPListen,
                 suid::LinuxSuid,
+                guid::LinuxGuid
                 promisc::LinuxPromisc,
                 crontab::LinuxCrontab,
                 dns::LinuxDns,
@@ -62,6 +63,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
             let linux_root = LinuxRoot::new();
             let linux_tcp_listen = LinuxTCPListen::new();
             let linux_suid = LinuxSuid::new();
+            let linux_guid = LinuxGuid::new();
             let linux_promisc = LinuxPromisc::new();
             let linux_crontab = LinuxCrontab::new();
             let linux_dns = LinuxDns::new();
@@ -71,6 +73,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
                                                     &linux_root,
                                                     &linux_tcp_listen,
                                                     &linux_suid,
+                                                    &linux_guid,
                                                     &linux_promisc,
                                                     &linux_crontab,
                                                     &linux_dns,

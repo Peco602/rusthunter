@@ -1,12 +1,20 @@
-# linux_dns_in_use
+# linux_dns
 
-## Description
-This plugin provides the primary nameserver in use on a Linux machine.
+### Description
+This plugin provides the list of DNS servers in use on a Linux machine. 
 
-## Return Values
-Array of strings with only a value:
+Adversaries may replace the local DNS server with a compromised one.
 
-- *ip_address*
+### Parameters
+| Name | Options | Default | Description |
+| ---- | ------- | ------- | ----------- |
+| enabled | true/false | true | Plugin status |
 
-## Authors
-- Andrea Vozza (@landerover)
+### Returned values
+Array of hostnames or IPs addresses:
+
+- *dns server 1*
+- *dns server 2*
+
+### Authors
+- Andrea Vozza ([landerover](https://github.com/landerover))

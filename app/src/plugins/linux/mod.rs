@@ -1,5 +1,6 @@
 pub mod crontab;
 pub mod dns;
+pub mod guid;
 pub mod promisc;
 pub mod root;
 pub mod suid;

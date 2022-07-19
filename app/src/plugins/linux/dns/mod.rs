@@ -19,7 +19,7 @@ impl Plugin for LinuxDns {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "( nmcli dev list || nmcli dev show ) 2>/dev/null | grep DNS | awk '{print $2}'";
+        let command = "cat /etc/resolv.conf | grep nameserver | cut -d" " -f2";
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),

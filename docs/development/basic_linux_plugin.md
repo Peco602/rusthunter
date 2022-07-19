@@ -2,7 +2,7 @@
 
 In this tutorial it will be shown how to develop a basic plugin that collects the list of `root` users on a Linux machine. It can be considered as a guideline to create additional plugins for Linux.
 
-## 1. Scaffolding
+### 1. Scaffolding
 
 The first steps consists of creating the structure of the plugin based on the sample plugin already made available. The plugin name will be `linux_root` so the command to be executed is the following:
 
@@ -16,7 +16,7 @@ The plugin folder contains the `mod.rs` file which provides the plugin logic:
 user@master-node:~/rusthunter$ ls -al app/src/plugins/linux/root
 ```
 
-## 2. Customization
+### 2. Customization
 
 The file `app/src/plugins/linux/root/mod.rs` must be properly customized to collect the desired data on the target machine.
 
@@ -79,7 +79,7 @@ impl LinuxRoot {
 }
 ```
 
-## 3. Unlocking
+### 3. Unlocking
 
 The plugin logic has been defined but the plugin must be linked to the main application logic, so:
 
@@ -121,7 +121,7 @@ let plugins: Vec<&dyn Plugin> = vec![
 } else if #[cfg(target_os = "macos")] {
 ```
 
-## 4. Configuration
+### 4. Configuration
 
 In order to enable/disable the plugin execution, it is necessary to add to the `./config` INI file the following block:
 
@@ -130,7 +130,7 @@ In order to enable/disable the plugin execution, it is necessary to add to the `
 enabled = true
 ```
 
-## 5. Re-building
+### 5. Re-building
 
 Execute the following command to rebuild the framework (requires Docker) to include the new plugin:
 

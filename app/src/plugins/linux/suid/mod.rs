@@ -11,7 +11,7 @@ impl Plugin for LinuxSuid {
     }
 
     fn description(&self) -> &str {
-        &"Files with setuid permissions"
+        &"Files with setuid permission"
     }
 
     fn os(&self) -> OS {
@@ -19,7 +19,7 @@ impl Plugin for LinuxSuid {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "ls -la $(find / -uid 0 -perm -4000 -print 2>/dev/null)";
+        let command = "find / -uid 0 -perm -4000 -print 2>/dev/null";
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),

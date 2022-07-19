@@ -410,17 +410,14 @@ function Test-RustHunter {
     if ( ${UnitTests} ) {
         Build-BuilderImage
 
-        Show-Info "Unit testing for Linux target"
-        docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --lib --target x86_64-unknown-linux-gnu
-
-        Show-Info "Unit testing for Windows target"
-        docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --lib --target x86_64-pc-windows-msvc
+        Show-Info "Unit testing"
+        docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --lib
     }
     
     if ( ${IntegrationTests} ) {
         Build-BuilderImage
         
-        Show-Info "Integration testing for Linux target"
+        Show-Info "Integration testing"
         docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --test integration
     }
 

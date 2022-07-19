@@ -1,3 +1,5 @@
+ansible_python_interpreter: /usr/bin/python
+
 debug: false
 remote_path: /tmp/rusthunter/
 rusthunter_executable: rusthunter

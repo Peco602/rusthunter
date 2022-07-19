@@ -1,15 +1,15 @@
 # windows_yara
 
-## Description
+### Description
 This plugin executes a customizable Yara rule scan over the file system of a Windows machine.
 
-## Parameters
+### Parameters
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
-| enabled | true/false | true | Plugin enable status |
+| enabled | true/false | true | Plugin status |
 | scan_path | Windows path | c:\ | Yara scanning path |
 
-## Associated Files
+### Files
 Path: *launcher/ansible/roles/windows/files*
 
 | File | Description |
@@ -17,15 +17,15 @@ Path: *launcher/ansible/roles/windows/files*
 | *yara64.exe* | [Yara](https://github.com/VirusTotal/yara) 64-bit Windows executable. |
 | *yara.yml* | Customizable Yara rule file. |
 
-## Return Values
+### Returned values
 Array of strings:
 
 - *"ExampleRule C:\Path\file1.txt*
 - *"ExampleRule C:\Path\file2.txt*
 
-## Notes
+### Notes
 !!! note
     Requires administrator access to scan all possible paths.
 
-## Authors
-- Giovanni Pecoraro (@Peco602)
+### Authors
+- Giovanni Pecoraro ([Peco602](https://github.com/peco602))

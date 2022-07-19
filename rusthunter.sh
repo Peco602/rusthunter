@@ -498,7 +498,7 @@ function execute_build_subcommand {
 
     print_info "Moving executables to the launcher folders"
     cp $APP_PATH/target/x86_64-unknown-linux-gnu/release/rusthunter $LINUX_BINARIES_PATH
-    cp $APP_PATH/target/x86_64-unknown-linux-gnu/release/rusthunter $MACOS_BINARIES_PATH
+    cp $APP_PATH/target/x86_64-apple-darwin/release/rusthunter $MACOS_BINARIES_PATH
     cp $APP_PATH/target/x86_64-pc-windows-msvc/release/rusthunter.exe $WINDOWS_BINARIES_PATH
 
     print_info "Installing executable"
@@ -564,11 +564,8 @@ function execute_test_subcommand {
     if [ "$UNIT_TESTS" == "True" ]; then
         build_builder_image
 
-        print_info "Unit testing for Linux target"
-        docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --lib --target x86_64-unknown-linux-gnu
-
-        print_info "Unit testing for Windows target"
-        docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --lib --target x86_64-pc-windows-msvc
+        print_info "Unit testing"
+        docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --lib
     fi
     
     if [ "$INTEGRATION_TESTS" == "True" ]; then
