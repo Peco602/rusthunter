@@ -52,7 +52,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
                 root::LinuxRoot,
                 tcp_listen::LinuxTCPListen,
                 suid::LinuxSuid,
-                guid::LinuxGuid
+                guid::LinuxGuid,
                 promisc::LinuxPromisc,
                 crontab::LinuxCrontab,
                 dns::LinuxDns,
