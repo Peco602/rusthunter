@@ -86,11 +86,12 @@ function ShowHelp {
     echo "     -e |--edit           Edit encrypted file"
     echo "     -d |--decrypt        Decrypt file"
     echo
-    echo "usage: $0 local (-c|--config) CONFIG_FILE"
+    echo "usage: $0 local (-c|--config) CONFIG_FILE (-t|--tag) SNAPSHOT_TAG"
     echo
     echo "     -c |--config         Configuration file"
+    echo "     -t |--tag            Snapshot tag"
     echo
-    echo "usage: $0 global (-h|--hosts) HOSTS_FILE (-c|--config) CONFIG_FILE"
+    echo "usage: $0 global (-h|--hosts) HOSTS_FILE (-c|--config) CONFIG_FILE (-t|--tag) SNAPSHOT_TAG"
     echo
     echo "     -h |--hosts          Hosts file"
     echo "     -c |--config         Configuration file"
@@ -211,6 +212,11 @@ function execute_local_subcommand {
             shift
             shift
             ;;
+        -t|--tag)
+            SNAPSHOT_TAG="${2}"
+            shift
+            shift
+            ;;
         *)
             ShowHelp
             exit 1
@@ -222,18 +228,12 @@ function execute_local_subcommand {
             print_error "Please specify the config file"
     fi
 
-    print_info "Creating snapshots directory"
-    mkdir -p $SNAPSHOT_PATH
-
     print_info "Collecting data"
-    $EXECUTABLE_NAME run -c $CONFIG_FILE
-    mv snapshot.json $SNAPSHOT_PATH
-
-    print_info "Merging data"
-    $EXECUTABLE_NAME merge -d $SNAPSHOT_PATH
-
-    print_info "Cleaning up"
-    rm -rf $SNAPSHOT_PATH
+    if [ "$SNAPSHOT_TAG" != "NONE" ]; then
+        $EXECUTABLE_NAME run -c $CONFIG_FILE --tag $SNAPSHOT_TAG
+    else
+        $EXECUTABLE_NAME run -c $CONFIG_FILE
+    fi
 }
 
 function execute_hosts_subcommand {
@@ -578,9 +578,9 @@ function execute_test_subcommand {
     if [ "$VALIDATION_TESTS" == "True" ]; then
         build_launcher_image
 
-        cp $CONFIG_FILE $LINUX_BINARIES_PATH/$DEFAULT_CONFIG_FILE
-        cp $CONFIG_FILE $MACOS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
-        cp $CONFIG_FILE $WINDOWS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
+        cp $DEFAULT_CONFIG_FILE $LINUX_BINARIES_PATH/$DEFAULT_CONFIG_FILE
+        cp $DEFAULT_CONFIG_FILE $MACOS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
+        cp $DEFAULT_CONFIG_FILE $WINDOWS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
         
         print_info "Creating snapshots directory"
         mkdir -p $SNAPSHOT_PATH
