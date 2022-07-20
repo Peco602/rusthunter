@@ -578,6 +578,8 @@ function execute_test_subcommand {
     if [ "$VALIDATION_TESTS" == "True" ]; then
         build_launcher_image
 
+        SNAPSHOT_TAG="validation"
+        
         cp $DEFAULT_CONFIG_FILE $LINUX_BINARIES_PATH/$DEFAULT_CONFIG_FILE
         cp $DEFAULT_CONFIG_FILE $MACOS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
         cp $DEFAULT_CONFIG_FILE $WINDOWS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
@@ -593,10 +595,10 @@ function execute_test_subcommand {
         done
 
         print_info "Collecting data"
-        docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible --network=rusthunter_test_net $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml -i hosts.test
+        docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible --network=rusthunter_test_net $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml -i hosts.test --extra-vars "snapshot_tag=$SNAPSHOT_TAG"
 
         print_info "Merging data"
-        rusthunter merge -d $SNAPSHOT_PATH
+        rusthunter merge -d $SNAPSHOT_PATH --tag $SNAPSHOT_TAG
 
         print_info "Cleaning up"
         docker rm $(sudo docker network inspect rusthunter_test_net --format='{{range $id, $_ := .Containers}}{{println $id}}{{end}}') --force
