@@ -1,22 +1,34 @@
 # macos_users
 
 ### Description
-This plugin provides a list of the available users on a macOS machine. Local accounts are those configured by an organization for use by users, remote support, services, or for administration on a single system or service.
+- Local user accounts
 
-### Parameters
+
+### Configuration
+```ini
+[macos_users]
+enabled = true
+```
+
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
 | enabled | true/false | true | Plugin status |
 
-### Returned values
-Array of strings:
 
-- *user1*
-- *user2*
+### Returned values
+```json
+"macos_users": [
+      "user",
+      "daemon",
+      "nobody",
+      "root"
+    ]
+```
+
 
 ### MITRE ATT&CK Mapping
-
 - [T1136.001 Create Account: Local Account](https://attack.mitre.org/techniques/T1136/001/)
+
 
 ### Authors
 - Giovanni Pecoraro ([Peco602](https://github.com/peco602))

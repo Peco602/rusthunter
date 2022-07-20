@@ -1,27 +1,44 @@
 # generic_plugin
 
 ### Description
+- Sample description
 
-### Parameters
+
+### Requirements
+Path: *launcher/ansible/roles/windows/files*
+
+| File | Description |
+| ---- | ----------- |
+
+
+### Configuration
+```ini
+
+```
+
 | Name | Options | Default | Description |
 | --- | --- | --- | --- |
 |     |     |     |     |
 
-### Files
-| File | Description |
-| ---- | ----------- |
 
 ### Notes
 !!! note
     This is a note.
 
+
 ### Returned values
+```json
+
+```
+
 | Key | Description |
 | --- | --- |
 |     |     |
 
+
 ### MITRE ATT&CK Mapping
 - [ID Technique](https://attack.mitre.org/techniques/XXX)
+
 
 ### Author
 - Author 1

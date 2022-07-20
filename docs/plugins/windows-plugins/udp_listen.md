@@ -1,25 +1,52 @@
 # windows_udp_listen
 
 ### Description
-This plugin shows all the processes listening on UDP ports on a Windows machine.
+- Listening UDP ports
 
-### Parameters
+
+### Configuration
+```ini
+[windows_udp_listen]
+enabled   = false
+```
+
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
-| enabled | true/false | true | Plugin status |
+| enabled | true/false | false | Plugin status |
+
 
 ### Returned values
-Array of objects:
+```json
+"windows_udp_listen": [
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  123,
+        "ProcessName":  "C:\\Windows\\system32\\svchost.exe"
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  500,
+        "ProcessName":  "C:\\Windows\\system32\\svchost.exe"
+    },
+    {
+        "LocalAddress":  "::",
+        "LocalPort":  4500,
+        "ProcessName":  "C:\\Windows\\system32\\svchost.exe"
+    }
+]
+```
 
 | Key | Description |
 | --- | ----------- |
-| ProcessName | Name of the process |
 | LocalAddress | Listening interface |
 | LocalPort | Listening port |
+| ProcessName | Name of the process |
+
 
 ### Notes
 !!! note
-    Requires administrator access to get all the information.
+    Requires administrator access to get the process name.
+
 
 ### Authors
 - Giovanni Pecoraro ([Peco602](https://github.com/peco602))

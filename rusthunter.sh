@@ -149,7 +149,7 @@ function build_builder_image {
     if [[ -z $(docker images -q ${BUILDER_IMAGE_NAME}:latest 2> /dev/null) ]];
     then
         print_info "Building builder docker image"
-        docker build -t $BUILDER_IMAGE_NAME $BUILDER_IMAGE_PATH
+        docker build -t $BUILDER_IMAGE_NAME $BUILDER_IMAGE_PATH || { print_error "Builder docker image building failed" ; exit 1; }
     fi
 }
 
@@ -157,7 +157,7 @@ function build_launcher_image {
     if [[ -z $(docker images -q ${LAUNCHER_IMAGE_NAME}:latest 2> /dev/null) ]];
     then
         print_info "Building launcher docker image"
-        docker build -t $LAUNCHER_IMAGE_NAME $LAUNCHER_IMAGE_PATH
+        docker build -t $LAUNCHER_IMAGE_NAME $LAUNCHER_IMAGE_PATH || { print_error "Launched docker image building failed" ; exit 1; }
     fi
 }
 
@@ -380,16 +380,18 @@ function execute_global_subcommand {
     mkdir -p $SNAPSHOT_PATH
 
     print_info "Collecting data"
-    docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml
-
-    print_info "Merging data"
-    ARGS="-d $SNAPSHOT_PATH"
-
     if [ "$SNAPSHOT_TAG" != "NONE" ]; then
-        ARGS="$ARGS --tag $SNAPSHOT_TAG"
+        docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml --extra-vars "snapshot_tag=$SNAPSHOT_TAG"
+    else
+        docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml
     fi
 
-    $EXECUTABLE_NAME merge $ARGS
+    print_info "Merging data"
+    if [ "$SNAPSHOT_TAG" != "NONE" ]; then
+        $EXECUTABLE_NAME merge -d $SNAPSHOT_PATH --tag $SNAPSHOT_TAG
+    else
+        $EXECUTABLE_NAME merge -d $SNAPSHOT_PATH
+    fi
 
     print_info "Cleaning up"
     rm -rf $SNAPSHOT_PATH
@@ -488,13 +490,13 @@ function execute_build_subcommand {
     build_builder_image
 
     print_info "Building release for Linux target"
-    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-unknown-linux-gnu --release
+    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-unknown-linux-gnu --release || { print_error "Linux release building failed" ; exit 1; }
 
     print_info "Building release for macOS target"
-    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-apple-darwin --release
+    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-apple-darwin --release || { print_error "macOS release building failed" ; exit 1; }
 
     print_info "Building release for Windows target"
-    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-pc-windows-msvc --release
+    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-pc-windows-msvc --release || { print_error "Windows release building failed" ; exit 1; }
 
     print_info "Moving executables to the launcher folders"
     cp $APP_PATH/target/x86_64-unknown-linux-gnu/release/rusthunter $LINUX_BINARIES_PATH
@@ -517,9 +519,7 @@ function execute_update_subcommand {
         print_info "Installing new executable"
         sudo cp $LINUX_BINARIES_PATH/$EXECUTABLE_NAME $INSTALLATION_PATH
 
-        build_launcher_image
-
-        print_info "Update successful"
+        print_info "Update completed"
     fi
 }
 
@@ -564,15 +564,15 @@ function execute_test_subcommand {
     if [ "$UNIT_TESTS" == "True" ]; then
         build_builder_image
 
-        print_info "Unit testing"
-        docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --lib
+        print_info "Unit testing" # OS-independent
+        docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --lib || { print_error "Unit testing failed" ; exit 1; }
     fi
     
     if [ "$INTEGRATION_TESTS" == "True" ]; then
         build_builder_image
         
-        print_info "Integration testing"
-        docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --test integration
+        print_info "Integration testing" # OS-dependent
+        docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --test integration || { print_error "Integration testing failed" ; exit 1; }
     fi
 
     if [ "$VALIDATION_TESTS" == "True" ]; then

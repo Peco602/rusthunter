@@ -19,5 +19,5 @@ jobs:
     - name: Installation
       run: sudo ./rusthunter.sh install
 
-    - name: Test
+    - name: Validation Tests
       run: sudo ./rusthunter.sh test --validation

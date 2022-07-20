@@ -1,15 +1,45 @@
 # linux_tcp_listen
 
 ### Description
-This plugin shows all the processes listening on TCP ports on a Linux machine.
+- Listening TCP ports
 
-### Parameters
-| Name | Options | Default | Description |
-| ---- | ------- | ------- | ----------- |
-| enabled | true/false | true | Plugin status |
+
+### Configuration
+```ini
+[linux_tcp_listen]
+enabled   = false
+```
 
 ### Returned values
-Array of objects:
+```json
+"linux_tcp_listen": [
+    {
+        "Port": "127.0.0.1:631",
+        "Process": "cupsd",
+        "User": "root"
+    },
+    {
+        "Port": "[::1]:631",
+        "Process": "cupsd",
+        "User": "root"
+    },
+    {
+        "Port": "*:22",
+        "Process": "sshd",
+        "User": "root"
+    },
+    {
+        "Port": "*:22",
+        "Process": "sshd",
+        "User": "root"
+    },
+    {
+        "Port": "127.0.0.53:53",
+        "Process": "systemd-r",
+        "User": "systemd-resolve"
+    }
+]
+```
 
 | Key | Description |
 | --- | ----------- |
@@ -19,7 +49,7 @@ Array of objects:
 
 ### Notes
 !!! note
-    Requires administrator access to get all the information.
+    Requires administrator access to get the process name.
 
 ### Authors
 - Giovanni Pecoraro ([Peco602](https://github.com/peco602))

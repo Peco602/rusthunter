@@ -1,20 +1,27 @@
 # linux_dns
 
 ### Description
-This plugin provides the list of DNS servers in use on a Linux machine. 
+- Active DNS server(s)
 
-Adversaries may replace the local DNS server with a compromised one.
 
-### Parameters
+### Configuration
+```ini
+[linux_dns]
+enabled = true
+```
+
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
 | enabled | true/false | true | Plugin status |
 
-### Returned values
-Array of hostnames or IPs addresses:
 
-- *dns server 1*
-- *dns server 2*
+### Returned values
+```json
+"linux_dns": [
+    "8.8.8.8",
+    "4.4.4.4",
+]
+```
 
 ### Authors
 - Andrea Vozza ([landerover](https://github.com/landerover))

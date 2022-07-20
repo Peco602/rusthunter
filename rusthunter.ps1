@@ -385,6 +385,7 @@ function Build-RustHunter {
 }
 
 function Update-RustHunter {
+    # Requires git
     Show-Info "Downloading latest updates"
     git pull
 
@@ -401,8 +402,6 @@ function Test-RustHunter {
 
     Is-DockerInstalled
 
-
-
     if ( !${UnitTests} -and !${IntegrationTests} -and !${ValidationTests} ) {
         Show-Error "No tests specified"
     }
@@ -410,14 +409,14 @@ function Test-RustHunter {
     if ( ${UnitTests} ) {
         Build-BuilderImage
 
-        Show-Info "Unit testing"
+        Show-Info "Unit testing" # OS-independent
         docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --lib
     }
     
     if ( ${IntegrationTests} ) {
         Build-BuilderImage
         
-        Show-Info "Integration testing"
+        Show-Info "Integration testing" # OS-dependent
         docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --test integration
     }
 

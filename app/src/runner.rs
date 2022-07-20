@@ -1,8 +1,10 @@
+use serde_json::{Value, Map};
+use chrono::prelude::Local;
+
 use crate::constants::{SNAPSHOT_EXTENSION};
 use crate::config::Config;
 use crate::utils::{print_info, print_success, print_warning, output_json};
 use crate::plugins::{Plugin, os};
-use serde_json::{Value, Map};
 
 pub fn list(plugins: &Vec<&dyn Plugin>) -> Result<(), String> {
     println!("{: <32} {: <50} {}", "Plugin", "Description", "Operating System");
@@ -40,16 +42,16 @@ pub fn run(plugins: &Vec<&dyn Plugin>, config_file: &str, binary_directory: &str
                         };
                     }
 
-    // Data wrapping
+    // Data wrapping & output
     let mut host_data : Map::<String, Value> = Map::new();
     if let Some(hostname) = hostname::get_hostname() {
-        host_data.insert(hostname, serde_json::Value::Object(plugins_data));
+        host_data.insert(hostname.clone(), serde_json::Value::Object(plugins_data));
+
+        let local_time = Local::now().format("%Y%m%d-%H%M%S").to_string();
+        let snapshot_filename: String = format!("{}_{}_{}.{}", snapshot_tag, hostname, local_time, SNAPSHOT_EXTENSION);
+        print_success(&format!("Snapshot file created: {}", snapshot_filename));
+        output_json(&host_data, snapshot_filename, verbose)
     } else {
         return Err("Cannot get hostname".to_string());
     }
-
-    // Data output
-    let snapshot_filename: String = format!("{}.{}", snapshot_tag, SNAPSHOT_EXTENSION);
-    print_success(&format!("Snapshot file created: {}", snapshot_filename));
-    output_json(&host_data, snapshot_filename, verbose)
 }

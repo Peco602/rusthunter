@@ -1,9 +1,41 @@
 # windows_administrators
 
 ### Description
-This plugin shows the details about all the autorun entries on a Windows machine.
+- Autorun entries
 
-### Parameters
+
+### Requirements
+The following file is required:
+
+| File | Description |
+| ---- | ----------- |
+| *autorunsc64.exe* | [Sysinternals tool](https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns) providing a comprehensive knowledge of auto-starting locations of any startup monitor |
+
+in the path "*launcher/ansible/roles/windows/files*".
+
+
+### Configuration
+```ini
+[windows_autoruns]
+enabled             = true
+boot_execute        = true
+appinit_dlls        = false
+explorer_addons     = false
+sidebar_gadgets     = false
+image_hijacks       = false
+ie_addons           = false
+known_dlls          = false
+logon_startups      = true
+wmi_entries         = true
+winsock_protocol    = false
+codecs              = false
+printer_dlls        = false
+lsa_providers       = false
+autostart_services  = true
+scheduled_tasks     = true
+winlogon_entries    = true
+```
+
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
 | enabled | true/false | true | Plugin status |
@@ -24,15 +56,34 @@ This plugin shows the details about all the autorun entries on a Windows machine
 | scheduled_tasks | true/false | true | Scheduled tasks. |
 | winlogon_entries | true/false | true | Winlogon entries. |
 
-### Files
-Path: *launcher/ansible/roles/windows/files*
-
-| File | Description |
-| ---- | ----------- |
-| *autorunsc64.exe* | [Sysinternals tool](https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns) providing a comprehensive knowledge of auto-starting locations of any startup monitor |
 
 ### Returned values
-Array of JSON with the following fields:
+```json
+"windows_autoruns": [
+    {
+        "Category":  "Known DLLs",
+        "Enabled":  "enabled",
+        "Entry":  "kernel32",
+        "Image Path":  "c:\\windows\\system32\\kernel32.dll",
+        "Launch String":  "kernel32.dll",
+        "MD5":  "E2143783F3A526E29BAE7F43E4FE301C",
+        "SHA-1":  "6CE38356568C7DEE9556DF557C2F8683E0D1A1AF",
+        "Signer":  "(Verified) Microsoft Windows",
+        "Time":  "02/03/2011 00:27"
+    },
+    {
+        "Category":  "Logon",
+        "Enabled":  "enabled",
+        "Entry":  "explorer.exe",
+        "Image Path":  "c:\\windows\\explorer.exe",
+        "Launch String":  "explorer.exe",
+        "MD5":  "D8F2FFB4A0842831337778C1A5E4FFD5",
+        "SHA-1":  "4544F7534D80CB368C4979BFE7E570D8EC0834D9",
+        "Signer":  "(Verified) Microsoft Windows",
+        "Time":  "19/01/1919 05:36"
+    }
+]
+```
 
 | Key | Description |
 | --- | ----------- |
@@ -55,9 +106,15 @@ Array of JSON with the following fields:
 <!-- | SHA-256 | SHA-256 hash type. | -->
 <!-- | IMP | Import hash type. | -->
 
+
 ### Notes
 !!! note
-    Requires administrator access to get all the information.
+    Requires administrator access to get full data.
+
+
+### MITRE ATT&CK Mapping
+- [T1136.001 Create Account: Local Account](https://attack.mitre.org/techniques/T1136/001/)
+
 
 ### Authors
 - Giovanni Pecoraro ([Peco602](https://github.com/peco602))

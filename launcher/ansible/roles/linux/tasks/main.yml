@@ -17,23 +17,35 @@
     recurse: yes
 
 - name: Collecting data
-  command: "{{ remote_path }}{{ rusthunter_executable }} {{ rusthunter_run_subcommand }} -c config.ini"
+  command: "{{ remote_path }}{{ rusthunter_executable }} {{ rusthunter_run_subcommand }} --tag {{ snapshot_tag }}"
   become: yes
   become_method: sudo
   register: shell_result
   args:
     chdir: "{{ remote_path }}"
 
-- name: Data output
+- name: Collected data output
   when: debug
   debug:
     var: shell_result.stdout_lines
 
+- name:  Finding snapshosts 
+  find:
+    paths: "{{ remote_path }}"
+    patterns: "{{ snapshot_tag }}_*.{{ snapshot_extension }}"
+  register: snapshots_to_fetch
+
+- name: Snapshot listing
+  when: debug
+  debug:
+    var: snapshots_to_fetch
+
 - name: Retrieving data
   fetch:
-    src: "{{ remote_path }}snapshot.json"
-    dest: "{{ snapshots_path }}snapshot-{{ inventory_hostname }}.json"
+    src: "{{ item.path }}"
+    dest: "{{ snapshots_path }}"
     flat: yes
+  with_items: "{{ snapshots_to_fetch.files }}"
 
 - name: Removing remote path
   file:

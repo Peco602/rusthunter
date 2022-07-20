@@ -56,7 +56,7 @@ fn merge() {
         verbose: true,
         config: String::new(),
         binary_directory: String::new(),
-        snapshot_tag: String::from(DEFAULT_SNAPSHOT_TAG),
+        snapshot_tag: String::from("test"),
         merging_directory: String::from("tests/merging_directory"),
         initial_file: String::new(),
         current_file: String::new(),

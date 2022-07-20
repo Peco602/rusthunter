@@ -1,18 +1,43 @@
 # linux_suid
 
 ### Description
-This plugin provides a list of the files with the setuid bit enabled on a Linux machine. An adversary may abuse configurations where an application has the setuid or setgid bits set in order to get code running in a different (and possibly more privileged) user’s context. On Linux or macOS, when the setuid or setgid bits are set for an application binary, the application will run with the privileges of the owning user or group respectively.
+- Files with Setuid bit enabled
 
-### Parameters
+
+### Configuration
+```ini
+[linux_suid]
+enabled = true
+```
+
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
 | enabled | true/false | true | Plugin status |
 
-### Returned values
-Array of files with setuid bit enabled:
 
-- *file 1*
-- *file 2*
+### Returned values
+```json
+"linux_suid": [
+    "/usr/lib/snapd/snap-confine",
+    "/usr/lib/xorg/Xorg.wrap",
+    "/usr/lib/openssh/ssh-keysign",
+    "/usr/lib/dbus-1.0/dbus-daemon-launch-helper",
+    "/usr/sbin/pppd",
+    "/usr/libexec/polkit-agent-helper-1",
+    "/usr/bin/chfn",
+    "/usr/bin/umount",
+    "/usr/bin/mount",
+    "/usr/bin/vmware-user-suid-wrapper",
+    "/usr/bin/newgrp",
+    "/usr/bin/sudo",
+    "/usr/bin/gpasswd",
+    "/usr/bin/pkexec",
+    "/usr/bin/su",
+    "/usr/bin/chsh",
+    "/usr/bin/fusermount",
+    "/usr/bin/passwd"
+]
+```
 
 ### MITRE ATT&CK Mapping
 - [T1548.001 Abuse Elevation Control Mechanism: Setuid and Setgid](https://attack.mitre.org/techniques/T1548/001/)

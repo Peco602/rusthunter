@@ -68,63 +68,54 @@ PS C:\Users\user\rusthunter-main> .\rusthunter.ps1 install
 
 ## 3. Configuration File
 
-Edit the `config` file to enable/configure specific data collection to be included in the environmental snapshots.
+Edit the `config.ini` file to enable/configure specific data collection to be included in the environmental snapshots.
 
 ```ini
-[linux_users]
-# OS: Linux
-# Data: Users
+############## Linux ##############
+
+[linux_crontab]
 enabled = true
 
-[linux_tcp_listen]
-# OS: Linux
-# Data: TCP listening ports
+[linux_dns]
 enabled = true
 
-[linux_udp_listen]
-# OS: Linux
-# Data: UDO listening ports
+// ... skipped ...
+
+############## Windows ##############
+
+[windows_users]
 enabled = true
 
-...
+[windows_administrators]
+enabled = true
 
 [windows_autoruns]
-# OS: Windows
-# Data: Autorun entries
-enabled                   = true
-boot_execute              = true
-appinit_dlls              = false
-explorer_addons           = false
-sidebar_gadgets           = false
-image_hijacks             = false
-internet_explorer_addons  = false
-known_dlls                = false
-logon_startups            = false
-wmi_entries               = false
-winsock_protocol          = false
-codecs                    = false
-printer_monitor_dlls      = false
-lsa_security_providers    = false
-autostart_services        = false
-scheduled_tasks           = false
-winlogon_entries          = false
+enabled             = true
+boot_execute        = true
+appinit_dlls        = false
+explorer_addons     = false
+sidebar_gadgets     = false
+image_hijacks       = false
+ie_addons           = false
+known_dlls          = false
+logon_startups      = true
+wmi_entries         = true
+winsock_protocol    = false
+codecs              = false
+printer_dlls        = false
+lsa_providers       = false
+autostart_services  = true
+scheduled_tasks     = true
+winlogon_entries    = true
 
-[windows_tcp_listen]
-# OS: Windows
-# Data: TCP listening ports
-enabled   = true
+// ... skipped ...
 
-[windows_udp_listen]
-# OS: Windows
-# Data: UDP listening ports
-enabled   = true
-
-...
+############## macOS ##############
 
 [macos_users]
-# OS: macOS
-# Data: Users
 enabled   = true
+
+// ... skipped ...
 
 ```
 
@@ -196,10 +187,10 @@ Edit the `hosts` file to select the target nodes to be included in the snapshot.
 
 ## 5. Snapshotting
 
-Take the snapshot based on the custom `host` and `config` files:
+Take the snapshot based on the custom `host` and `config.ini` files:
 
 ```ps1con
-PS C:\Users\user\rusthunter-main> .\rusthunter.ps1 global -HostsFile .\hosts -ConfigFile .\config
+PS C:\Users\user\rusthunter-main> .\rusthunter.ps1 global -HostsFile .\hosts -ConfigFile .\config.ini
 
   /#######                        /##     /##   /##                       /##
  | ##__  ##                      | ##    | ##  | ##                      | ##
