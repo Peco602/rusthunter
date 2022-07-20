@@ -113,7 +113,12 @@ winlogon_entries    = true
 
 
 ### MITRE ATT&CK Mapping
-- [T1136.001 Create Account: Local Account](https://attack.mitre.org/techniques/T1136/001/)
+- [T1037 Boot or Logon Initialization Scripts](https://attack.mitre.org/techniques/T1037/)
+- [T1547 Boot or Logon Autostart Execution](https://attack.mitre.org/techniques/T1547/)
+- [T1176 Browser Extensions](https://attack.mitre.org/techniques/T1176/)
+- [T1547.008 Boot or Logon Autostart Execution: LSASS Driver](https://attack.mitre.org/techniques/T1547/008/)
+- [T1547.001 Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder](https://attack.mitre.org/techniques/T1547/001/)
+- [T1547.002 Boot or Logon Autostart Execution: Authentication Package](https://attack.mitre.org/techniques/T1547/002/)
 
 
 ### Authors
