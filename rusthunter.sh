@@ -388,10 +388,10 @@ function execute_global_subcommand {
     fi
 
     if [ "$SNAPSHOT_TAG" != "NONE" ]; then
-      args="$args --extra-vars \"snapshot_tag=$SNAPSHOT_TAG\""
+      args="$args --extra-vars 'snapshot_tag=$SNAPSHOT_TAG'"
     fi
 
-    docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml $args
+    eval "docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml $args"
 
     print_info "Merging data"
     if [ "$SNAPSHOT_TAG" != "NONE" ]; then
@@ -401,7 +401,7 @@ function execute_global_subcommand {
     fi
 
     print_info "Cleaning up"
-    rm -rf $SNAPSHOT_PATH
+    #rm -rf $SNAPSHOT_PATH
 }
 
 function execute_compare_subcommand {
@@ -676,6 +676,7 @@ if [[ $# -gt 0 ]]; then
             ;;
         *)
             ShowHelp
+            exit 0
             ;;
         esac
     done
