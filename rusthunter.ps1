@@ -243,23 +243,23 @@ function Protect-Hosts {
     }
 
     if ( ${EncryptHosts} -and ${isFileEncrypted} ) {
-        $command = "encrypt"
+        $Command = "encrypt"
         Show-Info "Encrypting hosts file"
     } elseif ( ${RekeyHosts} ) {
-        $command = "rekey"
+        $Command = "rekey"
         Show-Info "Rekeying hosts file"
     } elseif ( ${ViewHosts} ) {
-        $command = "view"
+        $Command = "view"
         Show-Info "Showing hosts file"
     } elseif ( ${EditHosts} ) {
-        $command = "edit"
+        $Command = "edit"
         Show-Info "Editing hosts file"
     } elseif ( ${DecryptHosts} ) {
-        $command = "decrypt"
+        $Command = "decrypt"
         Show-Info "Decrypting hosts file"
     }
 
-    docker run --rm -v $PWD\${HostsFile}:/tmp/hosts -it ${LAUNCHER_IMAGE_NAME}:latest bash -c "cp /tmp/hosts /tmp/host.tmp;env EDITOR=nano ansible-vault $command /tmp/host.tmp; cp /tmp/host.tmp /tmp/hosts"
+    docker run --rm -v $PWD\${HostsFile}:/tmp/hosts -it ${LAUNCHER_IMAGE_NAME}:latest bash -c "cp /tmp/hosts /tmp/host.tmp;env EDITOR=nano ansible-vault $Command /tmp/host.tmp; cp /tmp/host.tmp /tmp/hosts"
 }
 
 function Get-GlobalSnapshot {
@@ -283,22 +283,22 @@ function Get-GlobalSnapshot {
     cp ${ConfigFile} ${WINDOWS_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
 
     Show-Info "Creating snapshots directory"
-    mkdir -p ${SNAPSHOT_PATH} > $null
+    mkdir -Force -Path ${SNAPSHOT_PATH} > $null
 
     Show-Info "Collecting data"
-    $args = ""
+    ${Arguments} = ""
     if ( Is-FileEncrypted ${HostsFile} ) {
-      $args += " --ask-vault-pass"
+      ${Arguments} += " --ask-vault-pass"
     }
 
     if (${SnapshotTag}) {
-      $args += "--extra-vars ""snapshot_tag=$SnapshotTag"""
+      ${Arguments} += " --extra-vars `"snapshot_tag=${SnapshotTag}`""
     }
 
-    docker run --rm -v $PWD\${ANSIBLE_PATH}:/etc/ansible -v $PWD\${SNAPSHOT_PATH}:/snapshots -w /etc/ansible -it ${LAUNCHER_IMAGE_NAME}:latest ansible-playbook playbook.yml $args
+    Invoke-Expression "docker run --rm -v $PWD\${ANSIBLE_PATH}:/etc/ansible -v $PWD\${SNAPSHOT_PATH}:/snapshots -w /etc/ansible -it ${LAUNCHER_IMAGE_NAME}:latest ansible-playbook ${Arguments} playbook.yml"
 
     Show-Info "Merging data"
-    $args = "-d ${SNAPSHOT_PATH}"
+    ${Arguments} = "-d ${SNAPSHOT_PATH}"
 
     if ( ${SnapshotTag}) {
       Invoke-Expression "${EXECUTABLE_NAME} merge -d ${SNAPSHOT_PATH} --tag ${SnapshotTag}"
@@ -313,18 +313,18 @@ function Get-GlobalSnapshot {
 function Compare-Snapshots {
     Is-ExecutableInstalled
 
-    $args = ""
+    ${Arguments} = ""
 
     if ( !${InitialSnapshot} ) {
         Show-Error "Please specify an initial snapshot file"
     } else {
-        $args += " --initial ${InitialSnapshot}"
+        ${Arguments} += " --initial ${InitialSnapshot}"
     }
 
     if ( !${CurrentSnapshot} ) {
         Show-Error "Please specify a current snapshot file"
     } else {
-        $args += " --current ${CurrentSnapshot}"
+        ${Arguments} += " --current ${CurrentSnapshot}"
     }
 
     if ( ${FilterPlugin} -and !${FilterHost}) {
@@ -332,18 +332,18 @@ function Compare-Snapshots {
     }
 
     if ( ${FilterHost} ) {
-        $args += " --host ${FilterHost}"
+        ${Arguments} += " --host ${FilterHost}"
     }
 
     if ( ${FilterPlugin} ) {
-        $args += " --plugin ${FilterPlugin}"
+        ${Arguments} += " --plugin ${FilterPlugin}"
     }
 
     if ( ${ShowStatistics} ) {
-        $args += " --stats"
+        ${Arguments} += " --stats"
     }
 
-    Invoke-Expression "${EXECUTABLE_NAME} compare $args"
+    Invoke-Expression "${EXECUTABLE_NAME} compare ${Arguments}"
 }
 
 function Uninstall-RustHunter {
@@ -420,13 +420,13 @@ function Test-RustHunter {
 
     if ( $ValidationTests ) {
         Show-Info "Creating target dockers"
-        $N=20
-        echo "[linux]" > hosts.test
+        $N=4
+        echo "[linux]" | Out-File -Encoding ASCII test.hosts
         for ($i = 2 ; $i -le $N ; $i++) {
             ${TARGET_NAME}="target-$i"
             docker run --name ${TARGET_NAME} -d peco602/ssh-linux-docker:latest
             ${TARGET_IP}=$(docker inspect -f "{{ .NetworkSettings.Networks.bridge.IPAddress }}" $TARGET_NAME)
-            echo "${TARGET_IP} ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa\$\$w0rd123! ansible_become_password=Pa\$\$w0rd123!" >> hosts.test
+            echo "${TARGET_IP} ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa`$`$w0rd123! ansible_become_password=Pa`$`$w0rd123!" | Out-File -Encoding ASCII -Append test.hosts
         }
 
         ${ConfigFile} = ${DEFAULT_CONFIG_FILE}

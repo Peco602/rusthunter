@@ -392,7 +392,7 @@ function execute_global_subcommand {
     fi
 
     docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml $args
-    
+
     print_info "Merging data"
     if [ "$SNAPSHOT_TAG" != "NONE" ]; then
         $EXECUTABLE_NAME merge -d $SNAPSHOT_PATH --tag $SNAPSHOT_TAG
@@ -584,14 +584,14 @@ function execute_test_subcommand {
 
     if [ "$VALIDATION_TESTS" == "True" ]; then
         print_info "Creating target dockers"
-        N=20
-        echo "[linux]" > hosts.test
+        N=4
+        echo "[linux]" > test.hosts
         for i in $(seq 2 $N);
         do
             TARGET_NAME="target-$i"
             docker run --name $TARGET_NAME -d peco602/ssh-linux-docker:latest
             TARGET_IP=$(docker inspect -f "{{ .NetworkSettings.Networks.bridge.IPAddress }}" $TARGET_NAME)
-            echo "$TARGET_IP ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa\$\$w0rd123! ansible_become_password=Pa\$\$w0rd123!" >> hosts.test
+            echo "$TARGET_IP ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa\$\$w0rd123! ansible_become_password=Pa\$\$w0rd123!" >> test.hosts
         done
 
         execute_global_subcommand -h hosts.test -c $DEFAULT_CONFIG_FILE -t "validation"
