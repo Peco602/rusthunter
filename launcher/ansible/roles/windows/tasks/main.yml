@@ -1,44 +1,49 @@
-- name: Creating remote path
+- name: Clean-up
+  win_file:
+    path: "{{ remote_path }}"
+    state: absent
+
+- name: Remote path creation
   win_file:
     path: "{{ remote_path }}"
     state: directory
 
-- name: Uploading files
+- name: Files upload
   win_copy:
     src: "{{ item }}"
     dest: "{{ remote_path }}"
   with_fileglob: "files/*"
 
-- name: Collecting data
+- name: Snapshotting
   win_command: "{{ remote_path }}{{ rusthunter_executable }} {{ rusthunter_run_subcommand }} --tag {{ snapshot_tag }}"
   register: shell_result
   args:
     chdir: "{{ remote_path }}"
 
-- name: Data output
+- name: Snapshot output [DEBUG]
   when: debug
   debug:
     var: shell_result.stdout_lines
 
-- name:  Finding snapshosts 
-  find:
+- name: Snapshot file finding 
+  win_find:
     paths: "{{ remote_path }}"
     patterns: "{{ snapshot_tag }}_*.{{ snapshot_extension }}"
   register: snapshots_to_fetch
 
-- name: Snapshot listing
+- name: Snapshot file listing [DEBUG]
   when: debug
   debug:
     var: snapshots_to_fetch
 
-- name: Retrieving data
+- name: Snapshot download
   fetch:
     src: "{{ item.path }}"
     dest: "{{ snapshots_path }}"
     flat: yes
   with_items: "{{ snapshots_to_fetch.files }}"
 
-- name: Removing remote path
+- name: Clean-up
   win_file:
     path: "{{ remote_path }}"
     state: absent
