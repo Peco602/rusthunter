@@ -586,9 +586,9 @@ function execute_test_subcommand {
         print_info "Creating target dockers"
 
         N=4
-        CONFIG_FILE = $DEFAULT_CONFIG_FILE
-        HOSTS_FILE = "test.hosts"
-        SNAPSHOT_TAG = "validation"
+        CONFIG_FILE=$DEFAULT_CONFIG_FILE
+        HOSTS_FILE="test.hosts"
+        SNAPSHOT_TAG="validation"
 
         echo "[linux]" > $HOSTS_FILE
         for i in $(seq 2 $N);
