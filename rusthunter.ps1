@@ -430,7 +430,7 @@ function Test-RustHunter {
         }
 
         ${ConfigFile} = ${DEFAULT_CONFIG_FILE}
-        ${HostsFile} = "hosts.test"
+        ${HostsFile} = "test.hosts"
         ${SnapshotTag} = "validation"
 
         Get-GlobalSnapshot

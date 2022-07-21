@@ -594,7 +594,7 @@ function execute_test_subcommand {
             echo "$TARGET_IP ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa\$\$w0rd123! ansible_become_password=Pa\$\$w0rd123!" >> test.hosts
         done
 
-        execute_global_subcommand -h hosts.test -c $DEFAULT_CONFIG_FILE -t "validation"
+        execute_global_subcommand -h test.hosts -c $DEFAULT_CONFIG_FILE -t "validation"
 
         print_info "Destroying target dockers"
         for i in $(seq 2 $N);
