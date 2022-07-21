@@ -584,17 +584,22 @@ function execute_test_subcommand {
 
     if [ "$VALIDATION_TESTS" == "True" ]; then
         print_info "Creating target dockers"
+        
         N=4
-        echo "[linux]" > test.hosts
+        $CONFIG_FILE = $DEFAULT_CONFIG_FILE
+        $HOSTS_FILE = "test.hosts"
+        $SNAPSHOT_TAG = "validation"
+
+        echo "[linux]" > $HOSTS_FILE
         for i in $(seq 2 $N);
         do
             TARGET_NAME="target-$i"
             docker run --name $TARGET_NAME -d peco602/ssh-linux-docker:latest
             TARGET_IP=$(docker inspect -f "{{ .NetworkSettings.Networks.bridge.IPAddress }}" $TARGET_NAME)
-            echo "$TARGET_IP ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa\$\$w0rd123! ansible_become_password=Pa\$\$w0rd123!" >> test.hosts
+            echo "$TARGET_IP ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa\$\$w0rd123! ansible_become_password=Pa\$\$w0rd123!" >> $HOSTS_FILE
         done
 
-        execute_global_subcommand -h test.hosts -c $DEFAULT_CONFIG_FILE -t "validation"
+        execute_global_subcommand -h $HOSTS_FILE -c $CONFIG_FILE -t $SNAPSHOT_TAG
 
         print_info "Destroying target dockers"
         for i in $(seq 2 $N);
@@ -602,7 +607,7 @@ function execute_test_subcommand {
             TARGET_NAME="target-$i"
             docker rm $TARGET_NAME --force
         done
-        rm hosts.test
+        rm $HOSTS_FILE
     fi
 }
 
