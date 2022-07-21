@@ -379,7 +379,6 @@ function execute_global_subcommand {
     print_info "Creating snapshots directory"
     mkdir -p $SNAPSHOT_PATH
 
-## TODO: ADD ASK-PASS MANAGEMENT
     print_info "Collecting data"
     is_file_encrypted $HOSTS_FILE
 
@@ -584,34 +583,26 @@ function execute_test_subcommand {
     fi
 
     if [ "$VALIDATION_TESTS" == "True" ]; then
-        build_launcher_image
-
-        SNAPSHOT_TAG="validation"
-
-        cp $DEFAULT_CONFIG_FILE $LINUX_BINARIES_PATH/$DEFAULT_CONFIG_FILE
-        cp $DEFAULT_CONFIG_FILE $MACOS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
-        cp $DEFAULT_CONFIG_FILE $WINDOWS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
-
-        print_info "Creating snapshots directory"
-        mkdir -p $SNAPSHOT_PATH
-
-        print_info "Creating target linux dockers"
-        docker network create rusthunter_test_net --driver=bridge --subnet="192.168.100.1/24"
-        for i in $(seq 2 20);
+        print_info "Creating target dockers"
+        N=20
+        echo "[linux]" > hosts.test
+        for i in $(seq 2 $N);
         do
-            docker run --network=rusthunter_test_net --ip="192.168.100.$i" -d peco602/ssh-linux-docker:latest
+            TARGET_NAME="target-$i"
+            docker run --name $TARGET_NAME -d peco602/ssh-linux-docker:latest
+            TARGET_IP=$(docker inspect -f "{{ .NetworkSettings.Networks.bridge.IPAddress }}" $TARGET_NAME)
+            echo "$TARGET_IP ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa\$\$w0rd123! ansible_become_password=Pa\$\$w0rd123!" >> hosts.test
         done
 
-        print_info "Collecting data"
-        docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible --network=rusthunter_test_net $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml -i hosts.test --extra-vars "snapshot_tag=$SNAPSHOT_TAG"
+        execute_global_subcommand -h hosts.test -c $DEFAULT_CONFIG_FILE -t "validation"
 
-        print_info "Merging data"
-        rusthunter merge -d $SNAPSHOT_PATH --tag $SNAPSHOT_TAG
-
-        print_info "Cleaning up"
-        docker rm $(sudo docker network inspect rusthunter_test_net --format='{{range $id, $_ := .Containers}}{{println $id}}{{end}}') --force
-        docker network rm rusthunter_test_net
-        rm -rf $SNAPSHOT_PATH
+        print_info "Destroying target dockers"
+        for i in $(seq 2 $N);
+        do
+            TARGET_NAME="target-$i"
+            docker rm $TARGET_NAME --force
+        done
+        rm hosts.test
     fi
 }
 

@@ -419,33 +419,28 @@ function Test-RustHunter {
     }
 
     if ( $ValidationTests ) {
-        Build-LauncherImage
-
-        ${SNAPSHOT_TAG} = "validation"
-
-        cp ${DEFAULT_CONFIG_FILE} ${LINUX_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
-        cp ${DEFAULT_CONFIG_FILE} ${MACOS_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
-        cp ${DEFAULT_CONFIG_FILE} ${WINDOWS_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
-
-        Show-Info "Creating snapshots directory"
-        mkdir -p ${SNAPSHOT_PATH} > $null
-
         Show-Info "Creating target dockers"
-        docker network create rusthunter_test_net --driver=bridge --subnet="192.168.100.1/24"
-        for ($i = 2 ; $i -le 20 ; $i++) {
-            docker run --network=rusthunter_test_net --ip="192.168.100.$i" -d peco602/ssh-linux-docker:latest
+        $N=20
+        echo "[linux]" > hosts.test
+        for ($i = 2 ; $i -le $N ; $i++) {
+            ${TARGET_NAME}="target-$i"
+            docker run --name ${TARGET_NAME} -d peco602/ssh-linux-docker:latest
+            ${TARGET_IP}=$(docker inspect -f "{{ .NetworkSettings.Networks.bridge.IPAddress }}" $TARGET_NAME)
+            echo "${TARGET_IP} ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa\$\$w0rd123! ansible_become_password=Pa\$\$w0rd123!" >> hosts.test
         }
 
-        Show-Info "Collecting data"
-        docker run --rm -v $PWD\${ANSIBLE_PATH}:/etc/ansible -v $PWD\${SNAPSHOT_PATH}:/snapshots -w /etc/ansible --network=rusthunter_test_net ${LAUNCHER_IMAGE_NAME}:latest ansible-playbook playbook.yml -i hosts.test
+        ${ConfigFile} = ${DEFAULT_CONFIG_FILE}
+        ${HostsFile} = "hosts.test"
+        ${SnapshotTag} = "validation"
 
-        Show-Info "Merging data"
-        Invoke-Expression "${EXECUTABLE_NAME} merge -d ${SNAPSHOT_PATH} --tag {SNAPSHOT_TAG}"
+        Get-GlobalSnapshot
 
-        Show-Info "Cleaning up"
-        docker rm $(docker network inspect rusthunter_test_net --format='{{range $id, $_ := .Containers}}{{println $id}}{{end}}') --force
-        docker network rm rusthunter_test_net
-        Remove-Item -Force -Recurse ${SNAPSHOT_PATH}
+        Show-Info "Destroying target dockers"
+        for ($i = 2 ; $i -le $N ; $i++) {
+            ${TARGET_NAME}="target-$i"
+            docker rm $TARGET_NAME --force
+        }
+        Remove-Item ${HostsFile}
     }
 }
 
