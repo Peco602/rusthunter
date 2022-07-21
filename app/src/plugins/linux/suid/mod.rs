@@ -19,7 +19,7 @@ impl Plugin for LinuxSuid {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "find / -uid 0 -perm -4000 -print 2>/dev/null";
+        let command = "sudo -u $(whoami) find / -uid 0 -perm -4000 -print 2>/dev/null";
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
