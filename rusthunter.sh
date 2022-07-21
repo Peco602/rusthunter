@@ -401,7 +401,7 @@ function execute_global_subcommand {
     fi
 
     print_info "Cleaning up"
-    #rm -rf $SNAPSHOT_PATH
+    rm -rf $SNAPSHOT_PATH
 }
 
 function execute_compare_subcommand {
