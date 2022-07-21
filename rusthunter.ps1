@@ -117,6 +117,7 @@ function Show-Help {
     Write-Host "usage: $0 local -ConfigFile CONFIG_FILE"
     Write-Host
     Write-Host "     -ConfigFile         Configuration file"
+    Write-Host "     -SnapshotTag        Snapshot tag"
     Write-Host
     Write-Host "usage: $0 global -HostsFile HOSTS_FILE -ConfigFile CONFIG_FILE"
     Write-Host
@@ -138,11 +139,11 @@ function Show-Help {
 function Show-Error($message) {
     Write-Host " [-] ${message}" -ForegroundColor red
     Write-Host ""
-    Exit 1    
+    Exit 1
 }
 
 function Show-Warning($message) {
-    Write-Host " [!] ${message}" -ForegroundColor yellow      
+    Write-Host " [!] ${message}" -ForegroundColor yellow
 }
 
 function Show-Info($message) {
@@ -151,19 +152,19 @@ function Show-Info($message) {
 
 function Is-ExecutableInstalled {
     if ( !(Test-Path ${INSTALLATION_PATH}\${EXECUTABLE_NAME}) ) {
-        Show-Error "The tool has not been installed yet"       
+        Show-Error "The tool has not been installed yet"
     }
 }
 
 function Is-DockerInstalled {
     if ( !$(docker --version 2> $null) ){
-        Show-Error "Please install Docker Desktop for Windows"       
+        Show-Error "Please install Docker Desktop for Windows"
     }
 }
 
 function Build-BuilderImage {
     if ( !$(docker images -q ${BUILDER_IMAGE_NAME}:latest 2> $null) ) {
-        Show-Info "Building builder docker image" 
+        Show-Info "Building builder docker image"
         docker build -t ${BUILDER_IMAGE_NAME} ${BUILDER_IMAGE_PATH}
     }
 }
@@ -177,7 +178,7 @@ function Build-LauncherImage {
 
 function Install-RustHunter {
     if ( !(Test-Path ${WINDOWS_BINARIES_PATH}\${EXECUTABLE_NAME}) ){
-        Show-Error "The tool has not been built yet"       
+        Show-Error "The tool has not been built yet"
     } else {
         Show-Info "Installing executable"
         cp ${WINDOWS_BINARIES_PATH}\${EXECUTABLE_NAME} ${INSTALLATION_PATH}
@@ -190,7 +191,7 @@ function Install-RustHunter {
 
 function Show-Plugins {
     Is-ExecutableInstalled
-    
+
     Invoke-Expression "${EXECUTABLE_NAME} list"
 }
 
@@ -198,21 +199,15 @@ function Get-LocalSnapshot {
     Is-ExecutableInstalled
 
     if (!${ConfigFile}) {
-        Show-Error "Please specify a config file"
+      Show-Error "Please specify a config file"
     }
 
-    Show-Info "Creating snapshots directory"
-    mkdir -p ${SNAPSHOT_PATH} > $null
-
     Show-Info "Collecting data"
-    Invoke-Expression "${EXECUTABLE_NAME} run -c ${ConfigFile} -b ${WINDOWS_BINARIES_PATH}"
-    mv snapshot.json ${SNAPSHOT_PATH}
-
-    Show-Info "Merging data"
-    Invoke-Expression "${EXECUTABLE_NAME} merge -d ${SNAPSHOT_PATH}"
-
-    Show-Info "Cleaning up"
-    Remove-Item -Force -Recurse ${SNAPSHOT_PATH}
+    if (!${SnapshotTag}) {
+      Invoke-Expression "${EXECUTABLE_NAME} run -c ${ConfigFile} -b ${WINDOWS_BINARIES_PATH}"
+    } else {
+      Invoke-Expression "${EXECUTABLE_NAME} run -c ${ConfigFile} -b ${WINDOWS_BINARIES_PATH} --tag ${SnapshotTag}"
+    }
 }
 
 function Is-FileEncrypted($file) {
@@ -291,20 +286,25 @@ function Get-GlobalSnapshot {
     mkdir -p ${SNAPSHOT_PATH} > $null
 
     Show-Info "Collecting data"
+    $args = ""
     if ( Is-FileEncrypted ${HostsFile} ) {
-        docker run --rm -v $PWD\${ANSIBLE_PATH}:/etc/ansible -v $PWD\${SNAPSHOT_PATH}:/snapshots -w /etc/ansible -it ${LAUNCHER_IMAGE_NAME}:latest ansible-playbook --ask-vault-pass playbook.yml
-    } else {
-        docker run --rm -v $PWD\${ANSIBLE_PATH}:/etc/ansible -v $PWD\${SNAPSHOT_PATH}:/snapshots -w /etc/ansible -it ${LAUNCHER_IMAGE_NAME}:latest ansible-playbook playbook.yml
+      $args += " --ask-vault-pass"
     }
+
+    if (${SnapshotTag}) {
+      $args += "--extra-vars ""snapshot_tag=$SnapshotTag"""
+    }
+
+    docker run --rm -v $PWD\${ANSIBLE_PATH}:/etc/ansible -v $PWD\${SNAPSHOT_PATH}:/snapshots -w /etc/ansible -it ${LAUNCHER_IMAGE_NAME}:latest ansible-playbook playbook.yml $args
 
     Show-Info "Merging data"
     $args = "-d ${SNAPSHOT_PATH}"
 
     if ( ${SnapshotTag}) {
-        $args += " --tag ${SnapshotTag}"
+      Invoke-Expression "${EXECUTABLE_NAME} merge -d ${SNAPSHOT_PATH} --tag ${SnapshotTag}"
+    } else {
+      Invoke-Expression "${EXECUTABLE_NAME} merge -d ${SNAPSHOT_PATH}"
     }
-
-    Invoke-Expression "${EXECUTABLE_NAME} merge $args"
 
     Show-Info "Cleaning up"
     Remove-Item -Force -Recurse ${SNAPSHOT_PATH}
@@ -391,8 +391,6 @@ function Update-RustHunter {
 
     Show-Info "Installing new executable"
     cp ${WINDOWS_BINARIES_PATH}\${EXECUTABLE_NAME} ${INSTALLATION_PATH}
-    
-    Build-LauncherImage
 
     Show-Info "Successfully updated"
 }
@@ -412,10 +410,10 @@ function Test-RustHunter {
         Show-Info "Unit testing" # OS-independent
         docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --lib
     }
-    
+
     if ( ${IntegrationTests} ) {
         Build-BuilderImage
-        
+
         Show-Info "Integration testing" # OS-dependent
         docker run --rm -v $PWD\${APP_PATH}:/app -w /app ${BUILDER_IMAGE_NAME}:latest cargo test --test integration
     }
@@ -423,10 +421,12 @@ function Test-RustHunter {
     if ( $ValidationTests ) {
         Build-LauncherImage
 
-        cp ${ConfigFile} ${LINUX_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
-        cp ${ConfigFile} ${MACOS_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
-        cp ${ConfigFile} ${WINDOWS_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
-        
+        ${SNAPSHOT_TAG} = "validation"
+
+        cp ${DEFAULT_CONFIG_FILE} ${LINUX_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
+        cp ${DEFAULT_CONFIG_FILE} ${MACOS_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
+        cp ${DEFAULT_CONFIG_FILE} ${WINDOWS_BINARIES_PATH}/${DEFAULT_CONFIG_FILE}
+
         Show-Info "Creating snapshots directory"
         mkdir -p ${SNAPSHOT_PATH} > $null
 
@@ -440,7 +440,7 @@ function Test-RustHunter {
         docker run --rm -v $PWD\${ANSIBLE_PATH}:/etc/ansible -v $PWD\${SNAPSHOT_PATH}:/snapshots -w /etc/ansible --network=rusthunter_test_net ${LAUNCHER_IMAGE_NAME}:latest ansible-playbook playbook.yml -i hosts.test
 
         Show-Info "Merging data"
-        Invoke-Expression "${EXECUTABLE_NAME} merge -d ${SNAPSHOT_PATH}"
+        Invoke-Expression "${EXECUTABLE_NAME} merge -d ${SNAPSHOT_PATH} --tag {SNAPSHOT_TAG}"
 
         Show-Info "Cleaning up"
         docker rm $(docker network inspect rusthunter_test_net --format='{{range $id, $_ := .Containers}}{{println $id}}{{end}}') --force
@@ -468,6 +468,6 @@ switch ($Subcommand) {
     "uninstall" { Uninstall-RustHunter }
     "build"     { Build-RustHunter }
     "update"    { Update-RustHunter }
-    "test"      { Test-RustHunter } 
+    "test"      { Test-RustHunter }
     default     { Show-Help }
 }

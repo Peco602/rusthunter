@@ -58,7 +58,7 @@ function ShowBanner {
     echo -e "$BLUE$BOLD | ##  \ ##| ##  | ## \____  ##  | ## /##| ##  | ##| ##  | ##| ##  | ##  | ## /##| ##_____/| ##        $RESET"
     echo -e "$BLUE$BOLD | ##  | ##|  ######/ /#######/  |  ####/| ##  | ##|  ######/| ##  | ##  |  ####/|  #######| ##        $RESET"
     echo -e "$BLUE$BOLD |__/  |__/ \______/ |_______/    \___/  |__/  |__/ \______/ |__/  |__/   \___/   \_______/|__/        $RESET"
-    echo                                                                                           
+    echo
 }
 
 function ShowHelp {
@@ -126,7 +126,7 @@ function print_info {
 function is_executable_installed {
     if [ ! -f $INSTALLATION_PATH/$EXECUTABLE_NAME ]; then
         print_error "The tool has not been installed yet!"
-    fi    
+    fi
 }
 
 function install_docker {
@@ -164,7 +164,7 @@ function build_launcher_image {
 
 function is_file_encrypted {
     if [[ -n $(grep "ANSIBLE_VAULT" $1) ]];
-    then 
+    then
         IS_FILE_ENCRYPTED="True"
     else
         IS_FILE_ENCRYPTED="False"
@@ -223,16 +223,16 @@ function execute_local_subcommand {
             ;;
         esac
     done
-    
+
     if [ "$CONFIG_FILE" == "NONE" ]; then
             print_error "Please specify the config file"
     fi
 
     print_info "Collecting data"
     if [ "$SNAPSHOT_TAG" != "NONE" ]; then
-        $EXECUTABLE_NAME run -c $CONFIG_FILE --tag $SNAPSHOT_TAG
+        $EXECUTABLE_NAME run -c $CONFIG_FILE -d $LINUX_BINARIES_PATH --tag $SNAPSHOT_TAG
     else
-        $EXECUTABLE_NAME run -c $CONFIG_FILE
+        $EXECUTABLE_NAME run -c $CONFIG_FILE -d $LINUX_BINARIES_PATH
     fi
 }
 
@@ -366,7 +366,7 @@ function execute_global_subcommand {
     if [ "$HOSTS_FILE" == "NONE" ]; then
         print_error "Please specify the host file"
     fi
-    
+
     if [ "$CONFIG_FILE" == "NONE" ]; then
         print_error "Please specify the config file"
     fi
@@ -379,13 +379,21 @@ function execute_global_subcommand {
     print_info "Creating snapshots directory"
     mkdir -p $SNAPSHOT_PATH
 
+## TODO: ADD ASK-PASS MANAGEMENT
     print_info "Collecting data"
-    if [ "$SNAPSHOT_TAG" != "NONE" ]; then
-        docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml --extra-vars "snapshot_tag=$SNAPSHOT_TAG"
-    else
-        docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml
+    is_file_encrypted $HOSTS_FILE
+
+    args=""
+    if [ "$IS_FILE_ENCRYPTED" == "True" ]; then
+      args=" --ask-vault-pass"
     fi
 
+    if [ "$SNAPSHOT_TAG" != "NONE" ]; then
+      args="$args --extra-vars \"snapshot_tag=$SNAPSHOT_TAG\""
+    fi
+
+    docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml $args
+    
     print_info "Merging data"
     if [ "$SNAPSHOT_TAG" != "NONE" ]; then
         $EXECUTABLE_NAME merge -d $SNAPSHOT_PATH --tag $SNAPSHOT_TAG
@@ -434,7 +442,7 @@ function execute_compare_subcommand {
             ;;
         esac
     done
-    
+
     ARGS=""
 
     if [ "$INITIAL_SNAPSHOT" == "NONE" ]; then
@@ -442,7 +450,7 @@ function execute_compare_subcommand {
     else
         ARGS="$ARGS --initial $INITIAL_SNAPSHOT"
     fi
-    
+
     if [ "$CURRENT_SNAPSHOT" == "NONE" ]; then
         print_error "Please specify the current snapshot"
     else
@@ -473,7 +481,7 @@ function execute_uninstall_subcommand {
 
     echo -e "$YELLOW$BOLD [-] Removing executable"
     rm -f $INSTALLATION_PATH/$EXECUTABLE_NAME
- 
+
     if [ -x "$(command -v docker)" ]; then
         echo -e "$YELLOW$BOLD [-] Removing docker images"
         docker rmi $BUILDER_IMAGE_NAME $LAUNCHER_IMAGE_NAME --force
@@ -529,7 +537,7 @@ function execute_test_subcommand {
     fi
 
     is_executable_installed
-    
+
     install_docker
 
     while [[ $# -gt 0 ]]; do
@@ -567,10 +575,10 @@ function execute_test_subcommand {
         print_info "Unit testing" # OS-independent
         docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --lib || { print_error "Unit testing failed" ; exit 1; }
     fi
-    
+
     if [ "$INTEGRATION_TESTS" == "True" ]; then
         build_builder_image
-        
+
         print_info "Integration testing" # OS-dependent
         docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --test integration || { print_error "Integration testing failed" ; exit 1; }
     fi
@@ -579,11 +587,11 @@ function execute_test_subcommand {
         build_launcher_image
 
         SNAPSHOT_TAG="validation"
-        
+
         cp $DEFAULT_CONFIG_FILE $LINUX_BINARIES_PATH/$DEFAULT_CONFIG_FILE
         cp $DEFAULT_CONFIG_FILE $MACOS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
         cp $DEFAULT_CONFIG_FILE $WINDOWS_BINARIES_PATH/$DEFAULT_CONFIG_FILE
-        
+
         print_info "Creating snapshots directory"
         mkdir -p $SNAPSHOT_PATH
 
