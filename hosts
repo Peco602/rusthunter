@@ -1,12 +1,12 @@
-192.168.1.101 ansible_connection=ssh ansible_user=user ansible_ssh_password=user ansible_become_pass=user
-192.168.1.102 ansible_connection=winrm ansible_port=5985 ansible_winrm_transport=ntlm ansible_user=peco ansible_password=password
-192.168.1.103 ansible_connection=winrm ansible_port=5985 ansible_winrm_transport=kerberos ansible_user=giovanni ansible_password=Password123.
+192.168.1.101 ansible_connection=ssh ansible_user=linux_user ansible_ssh_password=P4ssw0rd123@ ansible_become_pass=P4ssw0rd123@
+192.168.1.102 ansible_connection=winrm ansible_port=5985 ansible_winrm_transport=ntlm ansible_user=windows_user ansible_password=P4ssw0rd123@
+192.168.1.103 ansible_connection=ssh ansible_user=linux_user ansible_ssh_password=P4ssw0rd123@ ansible_become_pass=P4ssw0rd123@
 
 [linux]
 192.168.1.101
 
 [windows]
 192.168.1.102
-192.168.1.103
 
-[macos]
+[linux]
+192.168.1.103

@@ -2,5 +2,6 @@ debug: false
 remote_path: c:\Windows\Temp\rusthunter\
 rusthunter_executable: rusthunter.exe
 rusthunter_run_subcommand: run
-rusthunter_config_file: config.test
 snapshots_path: /snapshots/
+snapshot_tag: snapshot
+snapshot_extension: json

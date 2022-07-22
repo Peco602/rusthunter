@@ -1,14 +1,14 @@
 use std::fs;
 use glob::glob;
-use chrono::prelude::*;
+use chrono::prelude::Local;
 use serde_json::{Value, Map};
 
-use crate::constants::{SNAPSHOT_FILENAME, SNAPSHOT_EXTENSION};
+use crate::constants::{SNAPSHOT_EXTENSION};
 use crate::utils::{print_info, print_success, output_json};
 
-pub fn merge(merging_directory: &String, verbose: &bool) -> Result<(), String> {
+pub fn merge(merging_directory: &String, snapshot_tag: &str, verbose: &bool) -> Result<(), String> {
     //let merging_glob = merging_directory.clone() + &"/*.json".to_string(); 
-    let merging_glob = format!("{}/*.{}", merging_directory, SNAPSHOT_EXTENSION); 
+    let merging_glob = format!("{}/{}*.{}", merging_directory, snapshot_tag, SNAPSHOT_EXTENSION); 
     
     let files = match glob(merging_glob.as_str()) {
         Ok(files) => files,
@@ -43,8 +43,8 @@ pub fn merge(merging_directory: &String, verbose: &bool) -> Result<(), String> {
         }
     }
 
-    let local_time = Local::now().format("%Y%m%d_%H%M%S").to_string();
-    let merged_snapshots_filename: String = format!("{}-{}.{}", SNAPSHOT_FILENAME, local_time, SNAPSHOT_EXTENSION);
+    let local_time = Local::now().format("%Y%m%d-%H%M%S").to_string();
+    let merged_snapshots_filename: String = format!("{}_{}.{}", snapshot_tag, local_time, SNAPSHOT_EXTENSION);
     print_success(&format!("Merged snapshots file: {}", merged_snapshots_filename));
     output_json(&merged_data, merged_snapshots_filename, verbose)
 

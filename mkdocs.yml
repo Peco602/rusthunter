@@ -6,25 +6,41 @@ nav:
   - 'Introduction':
     - 'What is RustHunter?' : 'index.md'
     - 'Architecture': 'introduction/architecture.md'
-  - 'Quickstart':
-    - 'Windows': 'quickstart/windows.md'
-    - 'Linux': 'quickstart/linux.md'
+  - 'Linux':
+    - 'Setup': 'linux/setup.md'
+    - 'Configuration': 'linux/configuration.md'
+    - 'Local snapshot': 'linux/local.md'
+    - 'Global snapshot': 'linux/global.md'
+    - 'Compare': 'linux/compare.md'
+    - 'Encryption': 'linux/encryption.md'
+  - 'Windows':
+    - 'Setup': 'windows/setup.md'
+    - 'Local snapshot': 'windows/local.md'
+    - 'Global snapshot': 'windows/global.md'
+    - 'Compare': 'windows/compare.md'
+    - 'Encryption': 'windows/encryption.md'
   - 'Plugins':
     - 'Windows':
-      - 'windows_users': 'plugins/windows-plugins/windows_users.md'
-      - 'windows_administrators': 'plugins/windows-plugins/windows_administrators.md'
-      - 'windows_tcp_listen': 'plugins/windows-plugins/windows_tcp_listen.md'
-      - 'windows_udp_listen': 'plugins/windows-plugins/windows_udp_listen.md'
-      - 'windows_autoruns': 'plugins/windows-plugins/windows_autoruns.md'
-      - 'windows_yara': 'plugins/windows-plugins/windows_yara.md'
+      - 'windows_users': 'plugins/windows-plugins/users.md'
+      - 'windows_administrators': 'plugins/windows-plugins/administrators.md'
+      - 'windows_tcp_listen': 'plugins/windows-plugins/tcp_listen.md'
+      - 'windows_udp_listen': 'plugins/windows-plugins/udp_listen.md'
+      - 'windows_autoruns': 'plugins/windows-plugins/autoruns.md'
+      - 'windows_yara': 'plugins/windows-plugins/yara.md'
     - 'Linux':
-      - 'linux_users': 'plugins/linux-plugins/linux_users.md'
-      - 'linux_root': 'plugins/linux-plugins/linux_root.md'
-      - 'linux_tcp_listen': 'plugins/linux-plugins/linux_tcp_listen.md'
+      - 'linux_crontab': 'plugins/linux-plugins/crontab.md'
+      - 'linux_dns': 'plugins/linux-plugins/dns.md'
+      - 'linux_guid': 'plugins/linux-plugins/guid.md'
+      - 'linux_promisc': 'plugins/linux-plugins/promisc.md'
+      - 'linux_root': 'plugins/linux-plugins/root.md'
+      - 'linux_suid': 'plugins/linux-plugins/suid.md'
+      - 'linux_tcp_listen': 'plugins/linux-plugins/tcp_listen.md'
+      - 'linux_users': 'plugins/linux-plugins/users.md'
     - 'macOS':
-      - 'macos_users': 'plugins/macos-plugins/macos_users.md'
+      - 'macos_users': 'plugins/macos-plugins/users.md'
   - 'Development':
     - 'Basic Linux plugin': 'development/basic_linux_plugin.md'
+    - 'Linux plugin with external script': 'development/linux_plugin_script.md'
   - 'References':
     - 'Contributing': 'references/contributing.md'
     - 'Credits': 'references/credits.md'

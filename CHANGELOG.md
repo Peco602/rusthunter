@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.0.3] - 22/07/2022
+### Added
+- MITRE ATT&CK mapping
+- Snapshot tagging
+- Linux plugins (crontab, dns, suid, guid, promisc)
+
+### Changed
+- Documentation updated
+- Validation testing logic
+
+### Fixed
+- macOS executable creation issue
+- General bugfix
+
+
 ## [v0.0.2] - 03/07/2022
 ### Added
 - Snapshot comparison based on statistics
@@ -20,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Windows installation bug
+- Host file encryption logic
 
 ### Security
 - Hosts inventory file encryption

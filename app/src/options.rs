@@ -1,5 +1,7 @@
 extern crate clap;
 
+use crate::constants::*;
+
 use clap::{Arg, Command};
 
 pub enum Mode {
@@ -15,6 +17,7 @@ pub struct Options {
     // Run
     pub config: String,
     pub binary_directory: String,
+    pub snapshot_tag: String,
     // Merge
     pub merging_directory: String,
     // Compare
@@ -48,13 +51,19 @@ impl Options {
                                                 .short('c')
                                                 .long("config")
                                                 .value_name("FILE")
-                                                .help("Custom config file")
+                                                .help("Config file")
                                                 .takes_value(true))
                                             .arg(Arg::new("bin")
                                                 .short('b')
                                                 .long("binary-dir")
                                                 .value_name("DIRECTORY")
-                                                .help("Custom binary directory")
+                                                .help("Binary directory")
+                                                .takes_value(true))
+                                            .arg(Arg::new("tag")
+                                                .short('t')
+                                                .long("tag")
+                                                .value_name("TAG")
+                                                .help("Custom snapshot tag")
                                                 .takes_value(true)))
                                 .subcommand(Command::new("merge")
                                             .about("Merge snapshot files in a directory")
@@ -64,6 +73,12 @@ impl Options {
                                                 .value_name("DIRECTORY")
                                                 .help("Directory with snapshot files")
                                                 .required(true)
+                                                .takes_value(true))
+                                            .arg(Arg::new("tag")
+                                                .short('t')
+                                                .long("tag")
+                                                .value_name("TAG")
+                                                .help("Custom snapshot tag")
                                                 .takes_value(true)))                            
                                 .subcommand(Command::new("compare")
                                             .about("Compare two snapshot files")
@@ -90,13 +105,13 @@ impl Options {
                                                 .short('H')
                                                 .long("host")
                                                 .value_name("HOST")
-                                                .help("Filter host")
+                                                .help("Filter by host")
                                                 .takes_value(true))
                                             .arg(Arg::new("plugin")
                                                 .short('P')
                                                 .long("plugin")
-                                                .value_name("Plugin")
-                                                .help("Filter plugin")
+                                                .value_name("PLUGIN")
+                                                .help("Filter by plugin")
                                                 .takes_value(true))
                                             )
                                 .get_matches();
@@ -107,6 +122,7 @@ impl Options {
         // Run
         let mut config = String::new();
         let mut binary_directory = String::new();
+        let mut snapshot_tag = String::new();
 
         // Merge
         let mut merging_directory = String::new();
@@ -124,12 +140,14 @@ impl Options {
             },
             Some(("run", sub_matches)) => {
                  mode = Mode::Run;
-                 config = sub_matches.value_of("config").unwrap_or("config").to_string();
-                 binary_directory = sub_matches.value_of("bin").unwrap_or(".").to_string();
+                 config = sub_matches.value_of("config").unwrap_or(DEFAULT_CONFIG_FILE).to_string();
+                 binary_directory = sub_matches.value_of("bin").unwrap_or(DEFAULT_BINARY_DIR).to_string();
+                 snapshot_tag = sub_matches.value_of("tag").unwrap_or(DEFAULT_SNAPSHOT_TAG).to_string();
             },
             Some(("merge", sub_matches)) => {
                  mode = Mode::Merge;
                  merging_directory = sub_matches.value_of("directory").unwrap().to_string();
+                 snapshot_tag = sub_matches.value_of("tag").unwrap_or(DEFAULT_SNAPSHOT_TAG).to_string();
             },
             Some(("compare", sub_matches)) => {
                  mode = Mode::Compare;
@@ -152,6 +170,7 @@ impl Options {
             verbose,
             config,
             binary_directory,
+            snapshot_tag,
             merging_directory,
             initial_file,
             current_file,

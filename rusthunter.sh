@@ -21,6 +21,7 @@ VIEW_HOSTS="NONE"
 EDIT_HOSTS="NONE"
 DECRYPT_HOSTS="NONE"
 CONFIG_FILE="NONE"
+SNAPSHOT_TAG="NONE"
 PRINT_STATS="NONE"
 FILTERED_HOST="NONE"
 FILTERED_PLUGIN="NONE"
@@ -43,7 +44,7 @@ MACOS_BINARIES_PATH="$ANSIBLE_PATH/roles/macos/files"
 WINDOWS_BINARIES_PATH="$ANSIBLE_PATH/roles/windows/files"
 SNAPSHOT_PATH="./launcher/snapshots"
 
-DEFAULT_CONFIG_FILE="config"
+DEFAULT_CONFIG_FILE="config.ini"
 DEFAULT_HOSTS_FILE="hosts"
 ###########################################################
 
@@ -57,7 +58,7 @@ function ShowBanner {
     echo -e "$BLUE$BOLD | ##  \ ##| ##  | ## \____  ##  | ## /##| ##  | ##| ##  | ##| ##  | ##  | ## /##| ##_____/| ##        $RESET"
     echo -e "$BLUE$BOLD | ##  | ##|  ######/ /#######/  |  ####/| ##  | ##|  ######/| ##  | ##  |  ####/|  #######| ##        $RESET"
     echo -e "$BLUE$BOLD |__/  |__/ \______/ |_______/    \___/  |__/  |__/ \______/ |__/  |__/   \___/   \_______/|__/        $RESET"
-    echo                                                                                           
+    echo
 }
 
 function ShowHelp {
@@ -85,14 +86,16 @@ function ShowHelp {
     echo "     -e |--edit           Edit encrypted file"
     echo "     -d |--decrypt        Decrypt file"
     echo
-    echo "usage: $0 local (-c|--config) CONFIG_FILE"
+    echo "usage: $0 local (-c|--config) CONFIG_FILE (-t|--tag) SNAPSHOT_TAG"
     echo
     echo "     -c |--config         Configuration file"
+    echo "     -t |--tag            Snapshot tag"
     echo
-    echo "usage: $0 global (-h|--hosts) HOSTS_FILE (-c|--config) CONFIG_FILE"
+    echo "usage: $0 global (-h|--hosts) HOSTS_FILE (-c|--config) CONFIG_FILE (-t|--tag) SNAPSHOT_TAG"
     echo
     echo "     -h |--hosts          Hosts file"
     echo "     -c |--config         Configuration file"
+    echo "     -t |--tag            Snapshot tag"
     echo
     echo "usage: $0 compare (-i|--initial) INITIAL_SNAPSHOT (-c|--current) CURRENT_SNAPSHOT (-s |--stats) (-h |--host) HOST (-p |--plugin) PLUGIN"
     echo
@@ -123,7 +126,7 @@ function print_info {
 function is_executable_installed {
     if [ ! -f $INSTALLATION_PATH/$EXECUTABLE_NAME ]; then
         print_error "The tool has not been installed yet!"
-    fi    
+    fi
 }
 
 function install_docker {
@@ -147,7 +150,7 @@ function build_builder_image {
     if [[ -z $(docker images -q ${BUILDER_IMAGE_NAME}:latest 2> /dev/null) ]];
     then
         print_info "Building builder docker image"
-        docker build -t $BUILDER_IMAGE_NAME $BUILDER_IMAGE_PATH
+        docker build -t $BUILDER_IMAGE_NAME $BUILDER_IMAGE_PATH || { print_error "Builder docker image building failed" ; exit 1; }
     fi
 }
 
@@ -155,13 +158,13 @@ function build_launcher_image {
     if [[ -z $(docker images -q ${LAUNCHER_IMAGE_NAME}:latest 2> /dev/null) ]];
     then
         print_info "Building launcher docker image"
-        docker build -t $LAUNCHER_IMAGE_NAME $LAUNCHER_IMAGE_PATH
+        docker build -t $LAUNCHER_IMAGE_NAME $LAUNCHER_IMAGE_PATH || { print_error "Launched docker image building failed" ; exit 1; }
     fi
 }
 
 function is_file_encrypted {
     if [[ -n $(grep "ANSIBLE_VAULT" $1) ]];
-    then 
+    then
         IS_FILE_ENCRYPTED="True"
     else
         IS_FILE_ENCRYPTED="False"
@@ -209,29 +212,28 @@ function execute_local_subcommand {
             shift
             shift
             ;;
+        -t|--tag)
+            SNAPSHOT_TAG="${2}"
+            shift
+            shift
+            ;;
         *)
             ShowHelp
             exit 1
             ;;
         esac
     done
-    
+
     if [ "$CONFIG_FILE" == "NONE" ]; then
             print_error "Please specify the config file"
     fi
 
-    print_info "Creating snapshots directory"
-    mkdir -p $SNAPSHOT_PATH
-
     print_info "Collecting data"
-    $EXECUTABLE_NAME run -c $CONFIG_FILE
-    mv snapshot.json $SNAPSHOT_PATH
-
-    print_info "Merging data"
-    $EXECUTABLE_NAME merge -d $SNAPSHOT_PATH
-
-    print_info "Cleaning up"
-    rm -rf $SNAPSHOT_PATH
+    if [ "$SNAPSHOT_TAG" != "NONE" ]; then
+        sudo $EXECUTABLE_NAME run --config $CONFIG_FILE --binary-dir $LINUX_BINARIES_PATH --tag $SNAPSHOT_TAG
+    else
+        $EXECUTABLE_NAME run --config $CONFIG_FILE --binary-dir $LINUX_BINARIES_PATH
+    fi
 }
 
 function execute_hosts_subcommand {
@@ -287,12 +289,8 @@ function execute_hosts_subcommand {
         print_error "Please specify the host file"
     fi
 
-    if [ "$#" -lt 2 ]; then
-        print_error "Please specify an action on the hosts inventory file"
-    fi
-
     if [[ "$ENCRYPT_HOSTS" == "NONE" && "$REKEY_HOSTS" == "NONE" && "$VIEW_HOSTS" == "NONE" && "$EDIT_HOSTS" == "NONE" && "$DECRYPT_HOSTS" == "NONE" ]]; then
-        print_error "Please specify only one action on the hosts inventory file"
+        print_error "Please specify an action on the hosts inventory file"
     fi
 
     is_file_encrypted $HOSTS_FILE
@@ -349,6 +347,11 @@ function execute_global_subcommand {
             shift
             shift
             ;;
+        -t|--tag)
+            SNAPSHOT_TAG="${2}"
+            shift
+            shift
+            ;;
         *)
             ShowHelp
             exit 1
@@ -359,7 +362,7 @@ function execute_global_subcommand {
     if [ "$HOSTS_FILE" == "NONE" ]; then
         print_error "Please specify the host file"
     fi
-    
+
     if [ "$CONFIG_FILE" == "NONE" ]; then
         print_error "Please specify the config file"
     fi
@@ -373,10 +376,25 @@ function execute_global_subcommand {
     mkdir -p $SNAPSHOT_PATH
 
     print_info "Collecting data"
-    docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml
+    is_file_encrypted $HOSTS_FILE
+
+    args=""
+    if [ "$IS_FILE_ENCRYPTED" == "True" ]; then
+      args=" --ask-vault-pass"
+    fi
+
+    if [ "$SNAPSHOT_TAG" != "NONE" ]; then
+      args="$args --extra-vars 'snapshot_tag=$SNAPSHOT_TAG'"
+    fi
+
+    eval "docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible -it $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml $args"
 
     print_info "Merging data"
-    $EXECUTABLE_NAME merge -d $SNAPSHOT_PATH
+    if [ "$SNAPSHOT_TAG" != "NONE" ]; then
+        $EXECUTABLE_NAME merge --directory $SNAPSHOT_PATH --tag $SNAPSHOT_TAG
+    else
+        $EXECUTABLE_NAME merge --directory $SNAPSHOT_PATH
+    fi
 
     print_info "Cleaning up"
     rm -rf $SNAPSHOT_PATH
@@ -419,7 +437,7 @@ function execute_compare_subcommand {
             ;;
         esac
     done
-    
+
     ARGS=""
 
     if [ "$INITIAL_SNAPSHOT" == "NONE" ]; then
@@ -427,7 +445,7 @@ function execute_compare_subcommand {
     else
         ARGS="$ARGS --initial $INITIAL_SNAPSHOT"
     fi
-    
+
     if [ "$CURRENT_SNAPSHOT" == "NONE" ]; then
         print_error "Please specify the current snapshot"
     else
@@ -458,7 +476,7 @@ function execute_uninstall_subcommand {
 
     echo -e "$YELLOW$BOLD [-] Removing executable"
     rm -f $INSTALLATION_PATH/$EXECUTABLE_NAME
- 
+
     if [ -x "$(command -v docker)" ]; then
         echo -e "$YELLOW$BOLD [-] Removing docker images"
         docker rmi $BUILDER_IMAGE_NAME $LAUNCHER_IMAGE_NAME --force
@@ -475,17 +493,17 @@ function execute_build_subcommand {
     build_builder_image
 
     print_info "Building release for Linux target"
-    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-unknown-linux-gnu --release
+    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-unknown-linux-gnu --release || { print_error "Linux release building failed" ; exit 1; }
 
-    Show-Info "Building release for macOS target"
-    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-apple-darwin --release
+    print_info "Building release for macOS target"
+    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-apple-darwin --release || { print_error "macOS release building failed" ; exit 1; }
 
     print_info "Building release for Windows target"
-    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-pc-windows-msvc --release
+    docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo build --target x86_64-pc-windows-msvc --release || { print_error "Windows release building failed" ; exit 1; }
 
     print_info "Moving executables to the launcher folders"
     cp $APP_PATH/target/x86_64-unknown-linux-gnu/release/rusthunter $LINUX_BINARIES_PATH
-    cp $APP_PATH/target/x86_64-unknown-linux-gnu/release/rusthunter $MACOS_BINARIES_PATH
+    cp $APP_PATH/target/x86_64-apple-darwin/release/rusthunter $MACOS_BINARIES_PATH
     cp $APP_PATH/target/x86_64-pc-windows-msvc/release/rusthunter.exe $WINDOWS_BINARIES_PATH
 
     print_info "Installing executable"
@@ -504,9 +522,7 @@ function execute_update_subcommand {
         print_info "Installing new executable"
         sudo cp $LINUX_BINARIES_PATH/$EXECUTABLE_NAME $INSTALLATION_PATH
 
-        build_launcher_image
-
-        print_info "Update successful"
+        print_info "Update completed"
     fi
 }
 
@@ -516,7 +532,7 @@ function execute_test_subcommand {
     fi
 
     is_executable_installed
-    
+
     install_docker
 
     while [[ $# -gt 0 ]]; do
@@ -551,43 +567,43 @@ function execute_test_subcommand {
     if [ "$UNIT_TESTS" == "True" ]; then
         build_builder_image
 
-        print_info "Unit testing for Linux target"
-        docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --lib --target x86_64-unknown-linux-gnu
-
-        print_info "Unit testing for Windows target"
-        docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --lib --target x86_64-pc-windows-msvc
+        print_info "Unit testing" # OS-independent
+        docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --lib || { print_error "Unit testing failed" ; exit 1; }
     fi
-    
+
     if [ "$INTEGRATION_TESTS" == "True" ]; then
         build_builder_image
-        
-        print_info "Integration testing"
-        docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --test integration
+
+        print_info "Integration testing" # OS-dependent
+        docker run --rm -v $PWD/$APP_PATH:/app -w /app $BUILDER_IMAGE_NAME:latest cargo test --test integration || { print_error "Integration testing failed" ; exit 1; }
     fi
 
     if [ "$VALIDATION_TESTS" == "True" ]; then
-        build_launcher_image
+        print_info "Creating target dockers"
 
-        print_info "Creating snapshots directory"
-        mkdir -p $SNAPSHOT_PATH
+        N=4
+        CONFIG_FILE=$DEFAULT_CONFIG_FILE
+        HOSTS_FILE="test.hosts"
+        SNAPSHOT_TAG="validation"
 
-        print_info "Creating target linux dockers"
-        docker network create rusthunter_test_net --driver=bridge --subnet="192.168.100.1/24"
-        for i in $(seq 2 20);
+        echo "[linux]" > $HOSTS_FILE
+        for i in $(seq 2 $N);
         do
-            docker run --network=rusthunter_test_net --ip="192.168.100.$i" -d peco602/ssh-linux-docker:latest
+            TARGET_NAME="target-$i"
+            docker run --name $TARGET_NAME -d peco602/ssh-linux-docker:latest
+            TARGET_IP=$(docker inspect -f "{{ .NetworkSettings.Networks.bridge.IPAddress }}" $TARGET_NAME)
+            echo "$TARGET_IP ansible_connection=ssh ansible_user=user ansible_ssh_password=Pa\$\$w0rd123! ansible_become_password=Pa\$\$w0rd123!" >> $HOSTS_FILE
         done
 
-        print_info "Collecting data"
-        docker run --rm -v $PWD/$ANSIBLE_PATH:/etc/ansible -v $PWD/$SNAPSHOT_PATH:/snapshots -w /etc/ansible --network=rusthunter_test_net $LAUNCHER_IMAGE_NAME:latest ansible-playbook playbook.yml -i hosts.test
+        execute_global_subcommand -h $HOSTS_FILE -c $CONFIG_FILE -t $SNAPSHOT_TAG
 
-        print_info "Merging data"
-        rusthunter merge -d $SNAPSHOT_PATH
-
-        print_info "Cleaning up"
-        docker rm $(sudo docker network inspect rusthunter_test_net --format='{{range $id, $_ := .Containers}}{{println $id}}{{end}}') --force
-        docker network rm rusthunter_test_net
-        rm -rf $SNAPSHOT_PATH
+        print_info "Destroying target dockers"
+        for i in $(seq 2 $N);
+        do
+            TARGET_NAME="target-$i"
+            docker rm $TARGET_NAME --force
+        done
+        rm $HOSTS_FILE
     fi
 }
 
@@ -656,6 +672,7 @@ if [[ $# -gt 0 ]]; then
             ;;
         *)
             ShowHelp
+            exit 0
             ;;
         esac
     done
