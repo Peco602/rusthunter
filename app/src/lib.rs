@@ -27,6 +27,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
                 udp_listen::WindowsUDPListen,
                 autoruns::WindowsAutoruns,
                 yara::WindowsYara,
+                domain_users::WindowsDomainUsers,
             };
 
             // Instantiate Windows plugins
@@ -36,6 +37,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
             let windows_udp_listen = WindowsUDPListen::new();
             let windows_autoruns = WindowsAutoruns::new();
             let windows_yara = WindowsYara::new();
+            let windows_domain_users = WindowsDomainUsers::new();
             let plugins: Vec<&dyn Plugin> = vec![
                                                     // Execute Windows plugins
                                                     &windows_users,
@@ -44,6 +46,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
                                                     &windows_udp_listen,
                                                     &windows_autoruns,
                                                     &windows_yara,
+                                                    &windows_domain_users,
                                                 ];
          } else if #[cfg(target_os = "linux")] {
             use crate::plugins::linux::{

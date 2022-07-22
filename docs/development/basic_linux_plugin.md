@@ -1,6 +1,6 @@
 # How to develop a basic Linux plugin
 
-In this tutorial it will be shown how to develop a basic plugin that collects the list of `root` users on a Linux machine. It can be considered as a guideline to create a basic additional plugin for Linux.
+In this tutorial it will be shown how to develop a basic plugin that collects the list of `root` users on a Linux machine. It can be considered as a guideline to create additional plugins for Linux.
 
 ### 1. Scaffolding
 
@@ -14,6 +14,7 @@ The plugin folder contains the `mod.rs` file which provides the plugin logic:
 
 ```console
 user@master-node:~/rusthunter$ ls -al app/src/plugins/linux/root
+mod.rs
 ```
 
 ### 2. Customization
@@ -34,7 +35,7 @@ user@master-node:~/rusthunter$ sed -i 's/SamplePlugin/LinuxRoot/g' app/src/plugi
 
 5. Replace the plugin command `sample command` with `cat /etc/passwd | grep :0: |  cut -d : -f 1 | sort` (Line 22).
 
-6. Replace `Ok(())` (Line 30) with the correct output processing function. Since the output of the command will be a simple list the need function is `self._split_list(output)`.
+6. Replace `Ok(())` (Line 30) with the correct output processing function. Since the output of the command will be a simple list the needed function is `self._split_list(output)`.
 
 Finally, the code should be this:
 

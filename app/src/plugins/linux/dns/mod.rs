@@ -7,7 +7,7 @@ pub struct LinuxDns {}
 
 impl Plugin for LinuxDns {
     fn name(&self) -> &str {
-        &"dns"
+        &"linux_dns"
     }
 
     fn description(&self) -> &str {
