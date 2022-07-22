@@ -28,6 +28,7 @@ nav:
       - 'windows_autoruns': 'plugins/windows-plugins/autoruns.md'
       - 'windows_yara': 'plugins/windows-plugins/yara.md'
       - 'windows_domain_users': 'plugins/windows-plugins/domain_users.md'
+      - 'windows_domain_computers': 'plugins/windows-plugins/domain_computers.md'
     - 'Linux':
       - 'linux_crontab': 'plugins/linux-plugins/crontab.md'
       - 'linux_dns': 'plugins/linux-plugins/dns.md'

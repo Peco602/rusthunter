@@ -4,6 +4,12 @@
 - List of active crontabs
 
 
+### Notes
+!!! note
+    - Requires administrator access to get cron data from all users.
+    - Refer to [Crontab.guru](https://crontab.guru/) to easily decode cron expressions.
+
+    
 ### Requirements
 The following files are required:
 
@@ -48,12 +54,6 @@ enabled = true
 
 ### MITRE ATT&CK Mapping
 - [T1053.003 Scheduled Task/Job: Cron](https://attack.mitre.org/techniques/T1053/003/)
-
-
-### Notes
-!!! note
-    - Requires administrator access to get cron data from all users.
-    - Refer to [Crontab.guru](https://crontab.guru/) to easily decode cron expressions.
 
 
 ### Authors

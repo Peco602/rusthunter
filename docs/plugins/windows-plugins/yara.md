@@ -4,6 +4,11 @@
 - Custom YARA rule scanning
 
 
+### Notes
+!!! note
+    Requires administrator access to scan all paths.
+
+
 ### Requirements
 The following files are required:
 
@@ -35,11 +40,6 @@ scan_path = c:\
     "ExampleRule C:\Path\file2.txt"
 ]
 ```
-
-
-### Notes
-!!! note
-    Requires administrator access to scan all paths.
 
 
 ### Authors

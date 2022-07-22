@@ -3,15 +3,15 @@ use serde_json::Value;
 use crate::config::Config;
 use crate::plugins::{Plugin, OS};
 
-pub struct WindowsDomainUsers {}
+pub struct WindowsDomainComputers {}
 
-impl Plugin for WindowsDomainUsers {
+impl Plugin for WindowsDomainComputers {
     fn name(&self) -> &str {
-        &"windows_domain_users"
+        &"windows_domain_computers"
     }
 
     fn description(&self) -> &str {
-        &"Domain users and groups"
+        &"Domain computers"
     }
 
     fn os(&self) -> OS {
@@ -19,7 +19,7 @@ impl Plugin for WindowsDomainUsers {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "Get-ADUser -Filter * | Select-Object Name,ObjectClass,Enabled | Sort-Object -Property Name | ConvertTo-Json";
+        let command = "Get-ADComputer -Filter * | Select-Object Name,Enabled | Sort-Object -Property Name | ConvertTo-Json";
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
@@ -31,8 +31,8 @@ impl Plugin for WindowsDomainUsers {
     }
 }
 
-impl WindowsDomainUsers {
+impl WindowsDomainComputers {
     pub fn new() -> Self {
-        WindowsDomainUsers {}
+        WindowsDomainComputers {}
     }
 }

@@ -4,11 +4,17 @@
 - Listening TCP ports
 
 
+### Notes
+!!! note
+    Requires administrator access to get the process names.
+
+
 ### Configuration
 ```ini
 [linux_tcp_listen]
 enabled   = false
 ```
+
 
 ### Returned values
 ```json
@@ -47,9 +53,6 @@ enabled   = false
 | Port | Listening port on a specific interface  |
 | User | User running the process |
 
-### Notes
-!!! note
-    Requires administrator access to get the process name.
 
 ### Authors
 - Giovanni Pecoraro ([Peco602](https://github.com/peco602))

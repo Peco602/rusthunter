@@ -1,7 +1,7 @@
-# windows_domain_users
+# windows_domain_computers
 
 ### Description
-- Domain users and groups
+- Domain computers
 
 
 ### Notes
@@ -13,7 +13,7 @@
 
 ### Configuration
 ```ini
-[windows_domain_users]
+[windows_domain_computers]
 enabled = false
 ```
 
@@ -24,21 +24,14 @@ enabled = false
 
 ### Returned values
 ```json
-"windows_domain_users": [
+"windows_domain_computers": [
   {
-    "Enabled": true,
-    "Name": "Administrator",
-    "ObjectClass": "user"
+    "Enabled":  true,
+    "Name":  "DC"
   },
   {
-    "Enabled": false,
-    "Name": "Guest",
-    "ObjectClass": "user"
-  },
-  {
-    "Enabled": false,
-    "Name": "krbtgt",
-    "ObjectClass": "user"
+    "Enabled":  true,
+    "Name":  "WS01",
   }
 ],
 ```
@@ -46,8 +39,7 @@ enabled = false
 | Key | Description |
 | --- | ----------- |
 | Enabled | Account status |
-| Name | User or group name |
-| ObjectClass | Account type (User/Group) |
+| Name | Computer name |
 
 
 ### MITRE ATT&CK Mapping

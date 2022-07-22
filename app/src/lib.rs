@@ -28,6 +28,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
                 autoruns::WindowsAutoruns,
                 yara::WindowsYara,
                 domain_users::WindowsDomainUsers,
+                domain_computers::WindowsDomainComputers,
             };
 
             // Instantiate Windows plugins
@@ -38,6 +39,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
             let windows_autoruns = WindowsAutoruns::new();
             let windows_yara = WindowsYara::new();
             let windows_domain_users = WindowsDomainUsers::new();
+            let windows_domain_computers = WindowsDomainComputers::new();
             let plugins: Vec<&dyn Plugin> = vec![
                                                     // Execute Windows plugins
                                                     &windows_users,
@@ -47,6 +49,7 @@ pub fn execute(options: &Options) -> Result<(), String> {
                                                     &windows_autoruns,
                                                     &windows_yara,
                                                     &windows_domain_users,
+                                                    &windows_domain_computers,
                                                 ];
          } else if #[cfg(target_os = "linux")] {
             use crate::plugins::linux::{

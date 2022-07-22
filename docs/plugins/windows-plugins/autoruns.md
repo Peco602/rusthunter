@@ -4,6 +4,12 @@
 - Autorun entries
 
 
+
+### Notes
+!!! note
+    Requires administrator access to get full data.
+
+    
 ### Requirements
 The following file is required:
 
@@ -105,11 +111,6 @@ winlogon_entries    = true
 <!-- | PESHA-256 | PESHA-256 hash type. | -->
 <!-- | SHA-256 | SHA-256 hash type. | -->
 <!-- | IMP | Import hash type. | -->
-
-
-### Notes
-!!! note
-    Requires administrator access to get full data.
 
 
 ### MITRE ATT&CK Mapping

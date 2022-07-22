@@ -4,6 +4,12 @@
 - Listening TCP ports
 
 
+### Notes
+!!! note
+    - Requires administrator access to get the process names.
+    - Likely to provide false positives.
+
+
 ### Configuration
 ```ini
 [windows_tcp_listen]
@@ -46,11 +52,6 @@ enabled   = false
 | LocalAddress | Listening interface |
 | LocalPort | Listening port |
 | ProcessName | Name of the process |
-
-
-### Notes
-!!! note
-    Requires administrator access to get the process name.
 
 
 ### Authors
