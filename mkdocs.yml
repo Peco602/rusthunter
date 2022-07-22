@@ -13,12 +13,14 @@ nav:
     - 'Global snapshot': 'linux/global.md'
     - 'Compare': 'linux/compare.md'
     - 'Encryption': 'linux/encryption.md'
+    - 'Update': 'linux/update.md'
   - 'Windows':
     - 'Setup': 'windows/setup.md'
     - 'Local snapshot': 'windows/local.md'
     - 'Global snapshot': 'windows/global.md'
     - 'Compare': 'windows/compare.md'
     - 'Encryption': 'windows/encryption.md'
+    - 'Update': 'windows/update.md'
   - 'Plugins':
     - 'Windows':
       - 'windows_users': 'plugins/windows-plugins/users.md'
