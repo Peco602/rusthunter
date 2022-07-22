@@ -8,15 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [v0.0.3] - TBD
 ### Added
 - MITRE ATT&CK mapping
+- Snapshot tagging
+- Linux plugins (crontab, dns, suid, guid, promisc)
 
 ### Changed
 - Documentation updated
+- Validation testing logic
 
 ### Fixed
 - macOS executable creation issue
-
-### Security
-
+- General bugfix
 
 
 ## [v0.0.2] - 03/07/2022
@@ -34,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Windows installation bug
+- Host file encryption logic
 
 ### Security
 - Hosts inventory file encryption

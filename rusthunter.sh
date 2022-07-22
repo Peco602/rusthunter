@@ -289,12 +289,8 @@ function execute_hosts_subcommand {
         print_error "Please specify the host file"
     fi
 
-    if [ "$#" -lt 2 ]; then
-        print_error "Please specify an action on the hosts inventory file"
-    fi
-
     if [[ "$ENCRYPT_HOSTS" == "NONE" && "$REKEY_HOSTS" == "NONE" && "$VIEW_HOSTS" == "NONE" && "$EDIT_HOSTS" == "NONE" && "$DECRYPT_HOSTS" == "NONE" ]]; then
-        print_error "Please specify only one action on the hosts inventory file"
+        print_error "Please specify an action on the hosts inventory file"
     fi
 
     is_file_encrypted $HOSTS_FILE

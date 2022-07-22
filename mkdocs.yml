@@ -6,9 +6,19 @@ nav:
   - 'Introduction':
     - 'What is RustHunter?' : 'index.md'
     - 'Architecture': 'introduction/architecture.md'
-  - 'Quickstart':
-    - 'Windows': 'quickstart/windows.md'
-    - 'Linux': 'quickstart/linux.md'
+  - 'Linux':
+    - 'Setup': 'linux/setup.md'
+    - 'Configuration': 'linux/configuration.md'
+    - 'Local snapshot': 'linux/local.md'
+    - 'Global snapshot': 'linux/global.md'
+    - 'Compare': 'linux/compare.md'
+    - 'Encryption': 'linux/encryption.md'
+  - 'Windows':
+    - 'Setup': 'windows/setup.md'
+    - 'Local snapshot': 'windows/local.md'
+    - 'Global snapshot': 'windows/global.md'
+    - 'Compare': 'windows/compare.md'
+    - 'Encryption': 'windows/encryption.md'
   - 'Plugins':
     - 'Windows':
       - 'windows_users': 'plugins/windows-plugins/users.md'
