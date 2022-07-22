@@ -148,10 +148,10 @@ In order to enable/disable and configure the plugin execution, it is necessary t
 ```ini
 [windows_domain_group]
 enabled    = true
-group_name = "Domain Admins"
+group_name = Domain Admins
 ```
 
-The default group to be queried has been set to "Domain Admins".
+The default group to be queried has been set to Domain Admins (no quotes).
 
 
 ### 5. Re-building
