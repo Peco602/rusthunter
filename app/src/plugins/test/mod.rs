@@ -51,7 +51,27 @@ item3
     }
 
     #[test]
-    fn convert_json_string() {
+    fn convert_json_string_single_element() {
+        let command_output = r#"
+    {
+        "head1": "val11",
+        "head2": "val12",
+        "head3": "val13"
+    }
+"#;
+        let parsed_data = json!([
+            {
+                "head1": "val11",
+                "head2": "val12",
+                "head3": "val13"
+            }
+        ]);
+        let test_plugin = TestPlugin::new();
+        assert_eq!(parsed_data, test_plugin._convert_json_string(command_output).unwrap());
+    }
+
+    #[test]
+    fn convert_json_string_multiple_elements() {
         let command_output = r#"
 [
     {

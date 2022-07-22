@@ -94,6 +94,7 @@ The plugin folder contains the `mod.rs` file which provides the plugin logic:
 
 ```console
 user@master-node:~/rusthunter$ ls -al app/src/plugins/linux/crontab
+mod.rs
 ```
 
 ### 3. Customization
@@ -114,7 +115,7 @@ user@master-node:~/rusthunter$ sed -i 's/SamplePlugin/LinuxCrontab/g' app/src/pl
 
 5. Replace the plugin line `let command = "sample command";` with `let command = format!("{}/{}", _binary_directory, "crontab.sh");` (Line 22).
 
-6. Replace `Ok(())` (Line 30) with the correct output processing function. Since the output of the command will be a simple list the need function is `self._split_list(output)`.
+6. Replace `Ok(())` (Line 30) with the correct output processing function. Since the output of the command will be a simple list the needed function is `self._split_list(output)`.
 
 Finally, the code should be this:
 
