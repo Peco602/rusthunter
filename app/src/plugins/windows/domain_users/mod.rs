@@ -19,7 +19,7 @@ impl Plugin for WindowsDomainUsers {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "Get-ADUser -Filter * | Select-Object Name,ObjectClass,Enabled | Sort-Object -Property Name | ConvertTo-Json";
+        let command = "Get-ADUser -Filter * | Select-Object Name,ObjectClass,Enabled | Sort-Object -Property Name | ForEach-Object { ConvertTo-Json @($_) }";
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),

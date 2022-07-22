@@ -20,7 +20,7 @@ enabled = false
 | Name | Options | Default | Description |
 | ---- | ------- | ------- | ----------- |
 | enabled | true/false | false | Plugin status |
-| group_name | string | "Domain Admins" | Group to be queried for members |
+| group_name | string | Domain Admins | Group to be queried for members |
 
 
 ### Returned values

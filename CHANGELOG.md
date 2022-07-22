@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Documentation updated
 
+### Fixed
+- PowerShell ConvertTo-Json for single element issue 
 
 ## [v0.0.3] - 22/07/2022
 ### Added

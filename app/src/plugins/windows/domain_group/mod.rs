@@ -28,7 +28,7 @@ impl Plugin for WindowsDomainGroup {
                 }}, 
             None => "Domain Admins".to_string(),
         };
-        let command = format!("Get-ADGroupMember -Identity \"{}\" | Select-Object Name,ObjectClass | Sort-Object -Property Name | ConvertTo-Json", group_name);
+        let command = format!("Get-ADGroupMember -Identity \"{}\" | Select-Object Name,ObjectClass | Sort-Object -Property Name | ForEach-Object {{ ConvertTo-Json @($_) }}", group_name);
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),

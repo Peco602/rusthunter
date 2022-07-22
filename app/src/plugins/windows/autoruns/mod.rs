@@ -69,7 +69,7 @@ impl Plugin for WindowsAutoruns {
             command.push_str("w");
         }
         // http://brianvanderplaats.com/2015/10/08/generating-json-from-csv-using-powershell/
-        command.push_str(" -c -h -s -nobanner 2> $null | ConvertFrom-Csv | Select-Object Category,Enabled,Entry,'Image Path','Launch String',MD5,SHA-1,Signer,Time | Sort-Object -Property Category,Entry | ConvertTo-Json");
+        command.push_str(" -c -h -s -nobanner 2> $null | ConvertFrom-Csv | Select-Object Category,Enabled,Entry,'Image Path','Launch String',MD5,SHA-1,Signer,Time | Sort-Object -Property Category,Entry | ForEach-Object { ConvertTo-Json @($_) }");
 
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),

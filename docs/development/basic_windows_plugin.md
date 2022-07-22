@@ -33,7 +33,7 @@ user@master-node:~/rusthunter$ sed -i 's/SamplePlugin/WindowsDomainUsers/g' app/
 
 4. Replace the plugin operating system `OS::Unknown` with `OS::Windows` (Line 18).
 
-5. Replace the plugin command `sample command` with `Get-ADuser -Filter * | Select-Object Name,ObjectClass,Enabled | Sort-Object -Property Name | ConvertTo-Json` (Line 22).
+5. Replace the plugin command `sample command` with `Get-ADuser -Filter * | Select-Object Name,ObjectClass,Enabled | Sort-Object -Property Name | ForEach-Object { ConvertTo-Json @($_) }` (Line 22).
 
 6. Replace `Ok(())` (Line 30) with the correct output processing function. Since the output of the command will be already a JSON object so the needed function is `self._convert_json_string(output)`.
 
@@ -61,7 +61,7 @@ impl Plugin for WindowsDomainUsers {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "Get-ADuser -Filter * | Select-Object Name,ObjectClass,Enabled | Sort-Object -Property Name | ConvertTo-Json";
+        let command = "Get-ADuser -Filter * | Select-Object Name,ObjectClass,Enabled | Sort-Object -Property Name | ForEach-Object { ConvertTo-Json @($_) }";
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),

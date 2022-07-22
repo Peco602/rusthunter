@@ -45,7 +45,7 @@ user@master-node:~/rusthunter$ sed -i 's/SamplePlugin/WindowsDomainGroup/g' app/
             }}, 
         None => "Domain Admins".to_string(),
     };
-    let command = format!("Get-ADGroupMember -Identity \"{}\" | Select-Object Name,ObjectClass | Sort-Object -Property Name | ConvertTo-Json", group_name);
+    let command = format!("Get-ADGroupMember -Identity \"{}\" | Select-Object Name,ObjectClass | Sort-Object -Property Name | ForEach-Object { ConvertTo-Json @($_) }", group_name);
     ```
     In this way, the parameter `group_name` will be read from the plugin section from the selected config file. The function `validate_windows_sam_account_name` has been properly crafted in the file `app/src/validator.rs` to verify the validity of the group name:
 
@@ -82,7 +82,7 @@ impl Plugin for WindowsDomainGroup {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = format!("Get-ADGroupMember -Identity \"{}\" | Select-Object Name,ObjectClass | Sort-Object -Property Name | ConvertTo-Json", _config.get_string_setting(self.name(), "group_name"));
+        let command = format!("Get-ADGroupMember -Identity \"{}\" | Select-Object Name,ObjectClass | Sort-Object -Property Name | ForEach-Object {{ ConvertTo-Json @($_) }}", _config.get_string_setting(self.name(), "group_name"));
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
