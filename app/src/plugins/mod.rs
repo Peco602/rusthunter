@@ -116,9 +116,18 @@ pub trait Plugin {
     }
 
     fn _convert_json_string(&self, output: &str) -> Result<Value, String> {
-        match serde_json::from_str(output) {
-            Ok(v) => Ok(v),
-            Err(e) => Err(format!("Error during JSON parsing: {}", e)),
+        let object: Value =  match serde_json::from_str(output) {
+            Ok(v) => v,
+            Err(e) => return Err(format!("Error during JSON parsing: {}", e)),
+        };
+
+        // This is to ensure the returned value is always a list
+        if object.is_array() {
+            Ok(object)
+        } else {
+            let mut list: Vec<Value> = Vec::new();
+            list.push(object);
+            Ok(serde_json::Value::Array(list))
         }
     }
 

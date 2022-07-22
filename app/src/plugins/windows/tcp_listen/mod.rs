@@ -19,7 +19,7 @@ impl Plugin for WindowsTCPListen {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "Get-NetTCPConnection -State Listen | Select-Object -Property LocalAddress,LocalPort,@{Name='ProcessName';Expression={(Get-Process -Id $_.OwningProcess).Path}} | Sort-Object -Property LocalAddress,LocalPort | ForEach-Object { ConvertTo-Json @($_) }";
+        let command = "Get-NetTCPConnection -State Listen | Select-Object -Property LocalAddress,LocalPort,@{Name='ProcessName';Expression={(Get-Process -Id $_.OwningProcess).Path}} | Sort-Object -Property LocalAddress,LocalPort | ConvertTo-Json";
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
