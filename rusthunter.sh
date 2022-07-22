@@ -230,9 +230,9 @@ function execute_local_subcommand {
 
     print_info "Collecting data"
     if [ "$SNAPSHOT_TAG" != "NONE" ]; then
-        $EXECUTABLE_NAME run -c $CONFIG_FILE -d $LINUX_BINARIES_PATH --tag $SNAPSHOT_TAG
+        sudo $EXECUTABLE_NAME run --config $CONFIG_FILE --binary-dir $LINUX_BINARIES_PATH --tag $SNAPSHOT_TAG
     else
-        $EXECUTABLE_NAME run -c $CONFIG_FILE -d $LINUX_BINARIES_PATH
+        $EXECUTABLE_NAME run --config $CONFIG_FILE --binary-dir $LINUX_BINARIES_PATH
     fi
 }
 
@@ -395,9 +395,9 @@ function execute_global_subcommand {
 
     print_info "Merging data"
     if [ "$SNAPSHOT_TAG" != "NONE" ]; then
-        $EXECUTABLE_NAME merge -d $SNAPSHOT_PATH --tag $SNAPSHOT_TAG
+        $EXECUTABLE_NAME merge --directory $SNAPSHOT_PATH --tag $SNAPSHOT_TAG
     else
-        $EXECUTABLE_NAME merge -d $SNAPSHOT_PATH
+        $EXECUTABLE_NAME merge --directory $SNAPSHOT_PATH
     fi
 
     print_info "Cleaning up"

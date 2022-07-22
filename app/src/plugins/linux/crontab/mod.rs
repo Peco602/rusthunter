@@ -19,7 +19,7 @@ impl Plugin for LinuxCrontab {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let command = "./crontab.sh";
+        let command = format!("{}\\{}", _binary_directory, "crontab.sh");
         match self.execute_command(&command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
