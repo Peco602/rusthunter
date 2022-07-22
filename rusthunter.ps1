@@ -242,24 +242,24 @@ function Protect-Hosts {
         Show-Error "${HostsFile} is not encrypted"
     }
 
-    if ( ${EncryptHosts} -and ${isFileEncrypted} ) {
-        $Command = "encrypt"
+    if ( ${EncryptHosts} -and !${isFileEncrypted} ) {
+        ${Command} = "encrypt"
         Show-Info "Encrypting hosts file"
     } elseif ( ${RekeyHosts} ) {
-        $Command = "rekey"
+        ${Command} = "rekey"
         Show-Info "Rekeying hosts file"
     } elseif ( ${ViewHosts} ) {
-        $Command = "view"
+        ${Command} = "view"
         Show-Info "Showing hosts file"
     } elseif ( ${EditHosts} ) {
-        $Command = "edit"
+        ${Command} = "edit"
         Show-Info "Editing hosts file"
     } elseif ( ${DecryptHosts} ) {
-        $Command = "decrypt"
+        ${Command} = "decrypt"
         Show-Info "Decrypting hosts file"
     }
 
-    docker run --rm -v $PWD\${HostsFile}:/tmp/hosts -it ${LAUNCHER_IMAGE_NAME}:latest bash -c "cp /tmp/hosts /tmp/host.tmp;env EDITOR=nano ansible-vault $Command /tmp/host.tmp; cp /tmp/host.tmp /tmp/hosts"
+    docker run --rm -v $PWD\${HostsFile}:/tmp/hosts -it ${LAUNCHER_IMAGE_NAME}:latest bash -c "cp /tmp/hosts /tmp/host.tmp;env EDITOR=nano ansible-vault ${Command} /tmp/host.tmp; cp /tmp/host.tmp /tmp/hosts"
 }
 
 function Get-GlobalSnapshot {
