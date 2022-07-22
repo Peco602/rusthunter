@@ -1,4 +1,6 @@
-# Authors
+# Credits
+
+## Authors
 
 <table align="center">
 
@@ -16,7 +18,26 @@
 </table>
 
 
-# Contact us
+## Contributors
+
+<table align="center">
+
+<tr>
+	
+<td align="center" style="border: 0px !important; background-color: white;">
+<a href="https://github.com/landerover">
+<img src="https://avatars.githubusercontent.com/u/14308209?v=4?s=100" width="150px;" alt=""/><br />
+<sub><b>Andrea Vozza</b></sub>
+</a>
+</td>	
+
+</tr>
+
+</table>
+
+
+
+## Contact us
 
 <table>
 <tr>
@@ -45,7 +66,7 @@
 </tr>
 </table>
 
-# Funding
+## Funding
 
 This is a non-profit project which received neither funding nor sponsorship.
 

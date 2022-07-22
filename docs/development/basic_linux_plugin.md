@@ -1,6 +1,6 @@
-# Basic Linux plugin development
+# How to develop a basic Linux plugin
 
-In this tutorial it will be shown how to develop a basic plugin that collects the list of `root` users on a Linux machine. It can be considered as a guideline to create additional plugins for Linux.
+In this tutorial it will be shown how to develop a basic plugin that collects the list of `root` users on a Linux machine. It can be considered as a guideline to create a basic additional plugin for Linux.
 
 ### 1. Scaffolding
 
@@ -123,7 +123,7 @@ let plugins: Vec<&dyn Plugin> = vec![
 
 ### 4. Configuration
 
-In order to enable/disable the plugin execution, it is necessary to add to the `./config` INI file the following block:
+In order to enable/disable the plugin execution, it is necessary to add to the `config.ini` INI file the following block:
 
 ```ini
 [linux_root]

@@ -1,6 +1,6 @@
-# Linux :: Encryption
+# Windows :: Encryption
 
-The `hosts` file contains the credentials to access the target nodes. This file must be properly protected via encryption to avoid information leak. The `rusthunter.sh` allows to easily:
+The `hosts` file contains the credentials to access the target nodes. This file must be properly protected via encryption to avoid information leak. The `rusthunter.ps1` allows to easily:
 
 - Encrypt
 - View
@@ -12,12 +12,12 @@ every hosts file that needs to be protected.
 
 !!! note
     If the hosts file is encrypted, the tool will automatically ask for the password when taking a snapshot.
-    
+
 
 ## Encrypt
 
 ```console
-user@master-node:~/rusthunter$ sudo ./rusthunter.sh hosts -h hosts -e
+PS C:\Users\user\rusthunter-main> .\rusthunter.ps1 hosts -HostsFile hosts -EncryptHosts
 
   /#######                        /##     /##   /##                       /##                          
  | ##__  ##                      | ##    | ##  | ##                      | ##                          
@@ -69,7 +69,7 @@ $ANSIBLE_VAULT;1.1;AES256
 ## View
 
 ```console
-user@master-node:~/rusthunter$ sudo ./rusthunter.sh hosts -h hosts -v
+PS C:\Users\user\rusthunter-main> .\rusthunter.ps1 hosts -HostsFile hosts -ViewHosts
 
   /#######                        /##     /##   /##                       /##                          
  | ##__  ##                      | ##    | ##  | ##                      | ##                          
@@ -100,7 +100,7 @@ Vault password:
 ## Edit
 
 ```console
-user@master-node:~/rusthunter$ sudo ./rusthunter.sh hosts -h hosts -t
+PS C:\Users\user\rusthunter-main> .\rusthunter.ps1 hosts -HostsFile hosts -EditHosts
 
   /#######                        /##     /##   /##                       /##                          
  | ##__  ##                      | ##    | ##  | ##                      | ##                          
@@ -134,7 +134,7 @@ Vault password:
 ## Re-key
 
 ```console
-user@master-node:~/rusthunter$ sudo ./rusthunter.sh hosts -h hosts -r
+PS C:\Users\user\rusthunter-main> .\rusthunter.ps1 hosts -HostsFile hosts -RekeyHosts
 
   /#######                        /##     /##   /##                       /##                          
  | ##__  ##                      | ##    | ##  | ##                      | ##                          
@@ -156,7 +156,7 @@ Rekey successful
 ## Decrypt
 
 ```console
-user@master-node:~/rusthunter$ sudo ./rusthunter.sh hosts -h hosts -d
+PS C:\Users\user\rusthunter-main> .\rusthunter.ps1 hosts -HostsFile hosts -DecryptHosts
 
   /#######                        /##     /##   /##                       /##                          
  | ##__  ##                      | ##    | ##  | ##                      | ##                          

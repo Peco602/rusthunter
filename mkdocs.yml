@@ -40,6 +40,7 @@ nav:
       - 'macos_users': 'plugins/macos-plugins/users.md'
   - 'Development':
     - 'Basic Linux plugin': 'development/basic_linux_plugin.md'
+    - 'Linux plugin with external script': 'development/linux_plugin_script.md'
   - 'References':
     - 'Contributing': 'references/contributing.md'
     - 'Credits': 'references/credits.md'
