@@ -47,8 +47,6 @@ This major update brings RustHunter up to date with the latest Rust ecosystem:
 - 🛡️ **Improved Reliability**: Comprehensive error handling and edge case testing
 - 🚀 **Modern Rust**: Compatible with Rust 1.91+ with updated APIs
 
-See [UPGRADE_2025.md](UPGRADE_2025.md) for complete upgrade details and [TEST_IMPROVEMENTS_2025.md](TEST_IMPROVEMENTS_2025.md) for testing improvements.
-
 
 ## Changelog   
 
