@@ -57,35 +57,56 @@ pub fn execute(options: &Options) -> Result<(), String> {
          } else if #[cfg(target_os = "linux")] {
             use crate::plugins::linux::{
                 // Import Linux plugins
-                users::LinuxUsers,
-                root::LinuxRoot,
-                tcp_listen::LinuxTCPListen,
-                suid::LinuxSuid,
-                guid::LinuxGuid,
-                promisc::LinuxPromisc,
+                bashrc::LinuxBashrc,
                 crontab::LinuxCrontab,
                 dns::LinuxDns,
+                guid::LinuxGuid,
+                kernel_modules::LinuxKernelModules,
+                ld_preload::LinuxLdPreload,
+                network_connections::LinuxNetworkConnections,
+                promisc::LinuxPromisc,
+                root::LinuxRoot,
+                running_processes::LinuxRunningProcesses,
+                ssh_keys::LinuxSshKeys,
+                suid::LinuxSuid,
+                systemd_timers::LinuxSystemdTimers,
+                tcp_listen::LinuxTCPListen,
+                users::LinuxUsers,
             };
 
             // Instantiate Linux plugins
-            let linux_users = LinuxUsers::new();
-            let linux_root = LinuxRoot::new();
-            let linux_tcp_listen = LinuxTCPListen::new();
-            let linux_suid = LinuxSuid::new();
-            let linux_guid = LinuxGuid::new();
-            let linux_promisc = LinuxPromisc::new();
+            let linux_bashrc = LinuxBashrc::new();
             let linux_crontab = LinuxCrontab::new();
             let linux_dns = LinuxDns::new();
+            let linux_guid = LinuxGuid::new();
+            let linux_kernel_modules = LinuxKernelModules::new();
+            let linux_ld_preload = LinuxLdPreload::new();
+            let linux_network_connections = LinuxNetworkConnections::new();
+            let linux_promisc = LinuxPromisc::new();
+            let linux_root = LinuxRoot::new();
+            let linux_running_processes = LinuxRunningProcesses::new();
+            let linux_ssh_keys = LinuxSshKeys::new();
+            let linux_suid = LinuxSuid::new();
+            let linux_systemd_timers = LinuxSystemdTimers::new();
+            let linux_tcp_listen = LinuxTCPListen::new();
+            let linux_users = LinuxUsers::new();
             let plugins: Vec<&dyn Plugin> = vec![
                                                     // Execute Linux plugins
-                                                    &linux_users,
-                                                    &linux_root,
-                                                    &linux_tcp_listen,
-                                                    &linux_suid,
-                                                    &linux_guid,
-                                                    &linux_promisc,
+                                                    &linux_bashrc,
                                                     &linux_crontab,
                                                     &linux_dns,
+                                                    &linux_guid,
+                                                    &linux_kernel_modules,
+                                                    &linux_ld_preload,
+                                                    &linux_network_connections,
+                                                    &linux_promisc,
+                                                    &linux_root,
+                                                    &linux_running_processes,
+                                                    &linux_ssh_keys,
+                                                    &linux_suid,
+                                                    &linux_systemd_timers,
+                                                    &linux_tcp_listen,
+                                                    &linux_users,
                                                 ];
         } else if #[cfg(target_os = "macos")] {
             use crate::plugins::macos::{

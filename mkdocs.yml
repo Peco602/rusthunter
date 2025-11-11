@@ -24,13 +24,21 @@ nav:
       - 'Update': 'tutorial/windows/update.md'
   - 'Plugins':
     - 'All': 'plugins/all.md'
+    - 'MITRE ATT&CK Coverage': 'plugins/mitre_coverage.md'
     - 'Linux':
+      - 'bashrc': 'plugins/all/linux-plugins/bashrc.md'
       - 'crontab': 'plugins/all/linux-plugins/crontab.md'
       - 'dns': 'plugins/all/linux-plugins/dns.md'
       - 'guid': 'plugins/all/linux-plugins/guid.md'
+      - 'kernel_modules': 'plugins/all/linux-plugins/kernel_modules.md'
+      - 'ld_preload': 'plugins/all/linux-plugins/ld_preload.md'
+      - 'network_connections': 'plugins/all/linux-plugins/network_connections.md'
       - 'promisc': 'plugins/all/linux-plugins/promisc.md'
       - 'root': 'plugins/all/linux-plugins/root.md'
+      - 'running_processes': 'plugins/all/linux-plugins/running_processes.md'
+      - 'ssh_keys': 'plugins/all/linux-plugins/ssh_keys.md'
       - 'suid': 'plugins/all/linux-plugins/suid.md'
+      - 'systemd_timers': 'plugins/all/linux-plugins/systemd_timers.md'
       - 'tcp_listen': 'plugins/all/linux-plugins/tcp_listen.md'
       - 'users': 'plugins/all/linux-plugins/users.md'
     - 'Windows':

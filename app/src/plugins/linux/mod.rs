@@ -1,8 +1,15 @@
+pub mod bashrc;
 pub mod crontab;
 pub mod dns;
 pub mod guid;
+pub mod kernel_modules;
+pub mod ld_preload;
+pub mod network_connections;
 pub mod promisc;
 pub mod root;
+pub mod running_processes;
+pub mod ssh_keys;
 pub mod suid;
+pub mod systemd_timers;
 pub mod tcp_listen;
 pub mod users;

@@ -52,8 +52,45 @@ enabled = true
 ```
 
 
+### Security Implications
+Adversaries may use cron jobs to maintain persistence or execute malicious code at scheduled intervals. Monitoring crontab entries can help detect:
+
+- Unauthorized scheduled tasks
+- Malicious scripts scheduled for execution
+- Backdoor maintenance scripts
+- Data exfiltration scheduled tasks
+- Privilege escalation attempts via cron
+- Unusual or suspicious cron job patterns
+
+
+### Detection Strategy
+Monitor for:
+
+- New cron jobs that weren't present in previous snapshots
+- Cron jobs executing scripts from unusual locations (`/tmp`, `/dev/shm`, `/var/www`)
+- Jobs running as root with suspicious commands
+- Obfuscated or encoded commands in cron entries
+- Cron jobs downloading and executing files (curl, wget)
+- Unusual timing patterns (every minute, very frequent execution)
+- Jobs redirecting output to `/dev/null` to hide activity
+- Base64 encoded or URL-encoded commands
+- Cron jobs connecting to external IPs
+
+### Baseline Recommendations
+Establish baselines for:
+
+- Standard system maintenance cron jobs
+- Authorized application-specific scheduled tasks
+- Expected cron job timing patterns
+- Legitimate administrative scripts
+
+
 ### MITRE ATT&CK Mapping
 - [T1053.003 Scheduled Task/Job: Cron](https://attack.mitre.org/techniques/T1053/003/)
+
+
+### References
+- [Crontab.guru](https://crontab.guru/) - Cron expression decoder
 
 
 ### Authors

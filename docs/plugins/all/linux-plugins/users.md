@@ -69,8 +69,27 @@ enabled = true
 ```
 
 
+### Security Implications
+Local user accounts are a common target for adversaries seeking to establish persistence, escalate privileges, or move laterally within a network. Monitoring user accounts can help detect:
+
+- **Unauthorized Account Creation**: New user accounts created by adversaries for persistence
+- **Backdoor Accounts**: Hidden or disguised user accounts with elevated privileges
+- **Account Modification**: Changes to existing accounts (shells, home directories, UIDs)
+- **Suspicious System Accounts**: Service accounts with interactive shells or unusual configurations
+- **Dormant Account Activation**: Previously inactive accounts that suddenly become active
+
+### Detection Strategy
+Compare snapshots to identify:
+
+- New user accounts that weren't previously present
+- Changes to user account properties (shell, home directory, UID/GID)
+- Service accounts with login shells (should typically have `/usr/sbin/nologin` or `/bin/false`)
+- Accounts with UID 0 (root privileges) other than the root account
+
+
 ### MITRE ATT&CK Mapping
 - [T1136.001 Create Account: Local Account](https://attack.mitre.org/techniques/T1136/001/)
+- [T1098 Account Manipulation](https://attack.mitre.org/techniques/T1098/)
 
 
 ### Authors
