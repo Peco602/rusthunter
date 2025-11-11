@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [v0.1.1] - 11/11/2025
+### Added
+- **New Persistence Detection Plugins (4)**:
+  - `linux_ssh_keys`: Monitor SSH authorized keys for backdoor access (T1098.004)
+  - `linux_systemd_timers`: Detect systemd timer-based persistence (T1053.006)
+  - `linux_bashrc`: Monitor shell configuration files for malicious modifications (T1546.004)
+  - `linux_ld_preload`: Detect library hijacking via LD_PRELOAD (T1574.006)
+- **New Discovery Detection Plugins (3)**:
+  - `linux_kernel_modules`: Monitor loaded kernel modules for rootkits (T1082, T1014)
+  - `linux_network_connections`: Track active TCP/UDP connections for C2 detection (T1049, T1571, T1095)
+  - `linux_running_processes`: Capture running processes with full command lines (T1057)
+- **Documentation Enhancements**:
+  - Comprehensive Detection Strategy section for all 15 Linux plugins
+  - Security Implications with real-world attack scenarios
+  - Baseline Recommendations for establishing normal system state
+  - Created `mitre_coverage.md` with complete MITRE ATT&CK framework mapping
+  - Enhanced existing plugin documentation with detection patterns and red flags
+- **MITRE ATT&CK Coverage**: Now covers 18 unique techniques across 6 tactics
+  - Persistence: 5 techniques
+  - Privilege Escalation: 4 techniques
+  - Defense Evasion: 2 techniques
+  - Discovery: 4 techniques
+  - Collection: 1 technique
+  - Command and Control: 4 techniques
+
 ### Fixed
 - Eliminated all 55 clippy warnings for improved code quality
 - Replaced unnecessary references (`&String` → `&str`)
@@ -19,6 +43,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Code readability with proper indentation and spacing
 - Module organization with sorted imports
 - Function signatures for better performance
+- Total Linux plugins: 15 (increased from 8, +87.5%)
+- Documentation structure with consistent formatting across all plugins
+- Plugin descriptions aligned with MITRE ATT&CK detection capabilities
 
 ## [v0.1.0] - 11/11/2025
 ### Added
