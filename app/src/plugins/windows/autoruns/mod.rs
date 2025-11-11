@@ -1,4 +1,4 @@
-use serde_json::{Value};
+use serde_json::Value;
 
 use crate::config::Config;
 use crate::plugins::{Plugin, OS};
@@ -19,7 +19,10 @@ impl Plugin for WindowsAutoruns {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let mut command = format!("{}\\{}", _binary_directory, "autorunsc64.exe /accepteula -a ");
+        let mut command = format!(
+            "{}\\{}",
+            _binary_directory, "autorunsc64.exe /accepteula -a "
+        );
         if _config.get_boolean_setting(self.name(), "boot_execute") {
             command.push_str("b");
         }
@@ -52,7 +55,7 @@ impl Plugin for WindowsAutoruns {
         }
         if _config.get_boolean_setting(self.name(), "codecs") {
             command.push_str("o");
-        }      
+        }
         if _config.get_boolean_setting(self.name(), "printer_dlls") {
             command.push_str("p");
         }

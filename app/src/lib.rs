@@ -1,17 +1,17 @@
-pub mod constants;
-pub mod options;
+pub mod comparator;
 pub mod config;
+pub mod constants;
+pub mod merger;
+pub mod options;
 pub mod plugins;
+pub mod runner;
 pub mod utils;
 pub mod validator;
-pub mod runner;
-pub mod merger;
-pub mod comparator;
 
-use crate::options::{Options, Mode};
-use crate::runner::{list, run};
-use crate::merger::merge;
 use crate::comparator::compare;
+use crate::merger::merge;
+use crate::options::{Mode, Options};
+use crate::runner::{list, run};
 
 use crate::plugins::Plugin;
 
@@ -105,23 +105,23 @@ pub fn execute(options: &Options) -> Result<(), String> {
     match options.mode {
         Mode::List => list(&plugins),
         Mode::Run => run(
-            &plugins, 
-            &options.config, 
+            &plugins,
+            &options.config,
             &options.binary_directory,
             &options.snapshot_tag,
-            &options.verbose
+            &options.verbose,
         ),
         Mode::Merge => merge(
             &options.merging_directory,
             &options.snapshot_tag,
-            &options.verbose
+            &options.verbose,
         ),
         Mode::Compare => compare(
-            &options.initial_file, 
+            &options.initial_file,
             &options.current_file,
             &options.stats,
             &options.selected_host,
-            &options.selected_plugin
+            &options.selected_plugin,
         ),
     }
 }

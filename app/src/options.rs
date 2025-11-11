@@ -1,14 +1,12 @@
-extern crate clap;
-
 use crate::constants::*;
 
-use clap::{Arg, Command};
+use clap::{Arg, ArgAction, Command};
 
 pub enum Mode {
     Run,
     List,
     Merge,
-    Compare
+    Compare,
 }
 
 pub struct Options {
@@ -25,99 +23,117 @@ pub struct Options {
     pub current_file: String,
     pub stats: bool,
     pub selected_host: String,
-    pub selected_plugin: String
+    pub selected_plugin: String,
 }
 
 impl Options {
     pub fn new() -> Result<Options, String> {
-      
-        // https://docs.rs/clap/2.33.0/clap/index.html
+        // https://docs.rs/clap/latest/clap/index.html
         let matches = Command::new("RustHunter")
-                                .version(CURRENT_VERSION)
-                                .author("Giovanni Pecoraro <giovanni1.pecoraro@protonmail.com>")
-                                .about("Modular incident response framework to build and compare environmental baselines")
-                                .arg(Arg::new("verbose")
-                                                .short('v')
-                                                .long("verbose")
-                                                .help("Enable verbose output")
-                                                .takes_value(false))
-                                .arg_required_else_help(true)
-                                .subcommand_required(true)
-                                .subcommand(Command::new("list")
-                                            .about("List available plugins"))
-                                .subcommand(Command::new("run")
-                                            .about("Take system snapshot")
-                                            .arg(Arg::new("config")
-                                                .short('c')
-                                                .long("config")
-                                                .value_name("FILE")
-                                                .help("Config file")
-                                                .takes_value(true))
-                                            .arg(Arg::new("bin")
-                                                .short('b')
-                                                .long("binary-dir")
-                                                .value_name("DIRECTORY")
-                                                .help("Binary directory")
-                                                .takes_value(true))
-                                            .arg(Arg::new("tag")
-                                                .short('t')
-                                                .long("tag")
-                                                .value_name("TAG")
-                                                .help("Custom snapshot tag")
-                                                .takes_value(true)))
-                                .subcommand(Command::new("merge")
-                                            .about("Merge snapshot files in a directory")
-                                            .arg(Arg::new("directory")
-                                                .short('d')
-                                                .long("directory")
-                                                .value_name("DIRECTORY")
-                                                .help("Directory with snapshots to be merged")
-                                                .required(true)
-                                                .takes_value(true))
-                                            .arg(Arg::new("tag")
-                                                .short('t')
-                                                .long("tag")
-                                                .value_name("TAG")
-                                                .help("Custom snapshot tag")
-                                                .takes_value(true)))                            
-                                .subcommand(Command::new("compare")
-                                            .about("Compare two snapshot files")
-                                            .arg(Arg::new("initial")
-                                                .short('i')
-                                                .long("initial")
-                                                .required(true)
-                                                .value_name("FILE")
-                                                .help("Initial snapshot file")
-                                                .takes_value(true))
-                                            .arg(Arg::new("current")
-                                                .short('c')
-                                                .long("current")
-                                                .required(true)
-                                                .value_name("FILE")
-                                                .help("Current snapshot file")
-                                                .takes_value(true))
-                                            .arg(Arg::new("stats")
-                                                .short('s')
-                                                .long("stats")
-                                                .help("Show comparison statistics")
-                                                .takes_value(false))
-                                            .arg(Arg::new("host")
-                                                .short('H')
-                                                .long("host")
-                                                .value_name("HOST")
-                                                .help("Filter by host")
-                                                .takes_value(true))
-                                            .arg(Arg::new("plugin")
-                                                .short('P')
-                                                .long("plugin")
-                                                .value_name("PLUGIN")
-                                                .help("Filter by plugin")
-                                                .takes_value(true))
-                                            )
-                                .get_matches();
+            .version(CURRENT_VERSION)
+            .author("Giovanni Pecoraro <giovanni1.pecoraro@protonmail.com>")
+            .about(
+                "Modular incident response framework to build and compare environmental baselines",
+            )
+            .arg(
+                Arg::new("verbose")
+                    .short('v')
+                    .long("verbose")
+                    .help("Enable verbose output")
+                    .action(ArgAction::SetTrue),
+            )
+            .arg_required_else_help(true)
+            .subcommand_required(true)
+            .subcommand(Command::new("list").about("List available plugins"))
+            .subcommand(
+                Command::new("run")
+                    .about("Take system snapshot")
+                    .arg(
+                        Arg::new("config")
+                            .short('c')
+                            .long("config")
+                            .value_name("FILE")
+                            .help("Config file"),
+                    )
+                    .arg(
+                        Arg::new("bin")
+                            .short('b')
+                            .long("binary-dir")
+                            .value_name("DIRECTORY")
+                            .help("Binary directory"),
+                    )
+                    .arg(
+                        Arg::new("tag")
+                            .short('t')
+                            .long("tag")
+                            .value_name("TAG")
+                            .help("Custom snapshot tag"),
+                    ),
+            )
+            .subcommand(
+                Command::new("merge")
+                    .about("Merge snapshot files in a directory")
+                    .arg(
+                        Arg::new("directory")
+                            .short('d')
+                            .long("directory")
+                            .value_name("DIRECTORY")
+                            .help("Directory with snapshots to be merged")
+                            .required(true),
+                    )
+                    .arg(
+                        Arg::new("tag")
+                            .short('t')
+                            .long("tag")
+                            .value_name("TAG")
+                            .help("Custom snapshot tag"),
+                    ),
+            )
+            .subcommand(
+                Command::new("compare")
+                    .about("Compare two snapshot files")
+                    .arg(
+                        Arg::new("initial")
+                            .short('i')
+                            .long("initial")
+                            .required(true)
+                            .value_name("FILE")
+                            .help("Initial snapshot file"),
+                    )
+                    .arg(
+                        Arg::new("current")
+                            .short('c')
+                            .long("current")
+                            .required(true)
+                            .value_name("FILE")
+                            .help("Current snapshot file"),
+                    )
+                    .arg(
+                        Arg::new("stats")
+                            .short('s')
+                            .long("stats")
+                            .help("Show comparison statistics")
+                            .action(ArgAction::SetTrue),
+                    )
+                    .arg(
+                        Arg::new("host")
+                            .short('H')
+                            .long("host")
+                            .value_name("HOST")
+                            .help("Filter by host"),
+                    )
+                    .arg(
+                        Arg::new("plugin")
+                            .short('P')
+                            .long("plugin")
+                            .value_name("PLUGIN")
+                            .help("Filter by plugin"),
+                    ),
+            )
+            .get_matches();
 
         let mode;
-        let verbose = matches.is_present("verbose");
+        let verbose = matches.get_flag("verbose");
 
         // Run
         let mut config = String::new();
@@ -136,33 +152,68 @@ impl Options {
 
         match matches.subcommand() {
             Some(("list", _)) => {
-                 mode = Mode::List;
-            },
+                mode = Mode::List;
+            }
             Some(("run", sub_matches)) => {
-                 mode = Mode::Run;
-                 config = sub_matches.value_of("config").unwrap_or(DEFAULT_CONFIG_FILE).to_string();
-                 binary_directory = sub_matches.value_of("bin").unwrap_or(DEFAULT_BINARY_DIR).to_string();
-                 snapshot_tag = sub_matches.value_of("tag").unwrap_or(DEFAULT_SNAPSHOT_TAG).to_string();
-            },
+                mode = Mode::Run;
+                config = sub_matches
+                    .get_one::<String>("config")
+                    .map(|s| s.as_str())
+                    .unwrap_or(DEFAULT_CONFIG_FILE)
+                    .to_string();
+                binary_directory = sub_matches
+                    .get_one::<String>("bin")
+                    .map(|s| s.as_str())
+                    .unwrap_or(DEFAULT_BINARY_DIR)
+                    .to_string();
+                snapshot_tag = sub_matches
+                    .get_one::<String>("tag")
+                    .map(|s| s.as_str())
+                    .unwrap_or(DEFAULT_SNAPSHOT_TAG)
+                    .to_string();
+            }
             Some(("merge", sub_matches)) => {
-                 mode = Mode::Merge;
-                 merging_directory = sub_matches.value_of("directory").unwrap().to_string();
-                 snapshot_tag = sub_matches.value_of("tag").unwrap_or(DEFAULT_SNAPSHOT_TAG).to_string();
-            },
+                mode = Mode::Merge;
+                merging_directory = sub_matches
+                    .get_one::<String>("directory")
+                    .unwrap()
+                    .to_string();
+                snapshot_tag = sub_matches
+                    .get_one::<String>("tag")
+                    .map(|s| s.as_str())
+                    .unwrap_or(DEFAULT_SNAPSHOT_TAG)
+                    .to_string();
+            }
             Some(("compare", sub_matches)) => {
-                 mode = Mode::Compare;
-                 initial_file = sub_matches.value_of("initial").unwrap().to_string();
-                 current_file = sub_matches.value_of("current").unwrap().to_string();
+                mode = Mode::Compare;
+                initial_file = sub_matches
+                    .get_one::<String>("initial")
+                    .unwrap()
+                    .to_string();
+                current_file = sub_matches
+                    .get_one::<String>("current")
+                    .unwrap()
+                    .to_string();
 
-                 stats = sub_matches.is_present("stats");
-                 if !stats {
-                    selected_host = sub_matches.value_of("host").unwrap_or("").to_string();
-                    if selected_host != "" {
-                        selected_plugin = sub_matches.value_of("plugin").unwrap_or("").to_string();
+                stats = sub_matches.get_flag("stats");
+                if !stats {
+                    selected_host = sub_matches
+                        .get_one::<String>("host")
+                        .map(|s| s.as_str())
+                        .unwrap_or("")
+                        .to_string();
+                    if !selected_host.is_empty() {
+                        selected_plugin = sub_matches
+                            .get_one::<String>("plugin")
+                            .map(|s| s.as_str())
+                            .unwrap_or("")
+                            .to_string();
                     }
-                 }
-            },
-            _ => unreachable!("Exhausted list of subcommands and subcommand_required prevents `None`"),
+                }
+            }
+            _ => unreachable!(
+                "Exhausted list of subcommands and subcommand_required prevents `None`"
+            ),
         };
 
         Ok(Options {
@@ -176,7 +227,7 @@ impl Options {
             current_file,
             stats,
             selected_host,
-            selected_plugin
+            selected_plugin,
         })
     }
 }

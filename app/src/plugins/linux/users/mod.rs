@@ -7,11 +7,11 @@ pub struct LinuxUsers {}
 
 impl Plugin for LinuxUsers {
     fn name(&self) -> &str {
-        &"linux_users"
+        "linux_users"
     }
 
     fn description(&self) -> &str {
-        &"Local users"
+        "Local users"
     }
 
     fn os(&self) -> OS {
@@ -20,7 +20,7 @@ impl Plugin for LinuxUsers {
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
         let command = "cat /etc/passwd | cut -d: -f1 | sort";
-        match self.execute_command(&command) {
+        match self.execute_command(command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
         }
@@ -28,6 +28,12 @@ impl Plugin for LinuxUsers {
 
     fn process(&self, output: &str) -> Result<Value, String> {
         self._split_list(output)
+    }
+}
+
+impl Default for LinuxUsers {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

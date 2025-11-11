@@ -1,9 +1,8 @@
-
 use std::process;
 
+use rusthunter::execute;
 use rusthunter::options::Options;
 use rusthunter::utils::print_error;
-use rusthunter::execute;
 
 fn main() {
     let options = Options::new().unwrap_or_else(|err| {

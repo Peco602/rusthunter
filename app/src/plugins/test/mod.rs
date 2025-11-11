@@ -7,11 +7,11 @@ pub struct TestPlugin {}
 
 impl Plugin for TestPlugin {
     fn name(&self) -> &str {
-        &"test_plugin"
+        "test_plugin"
     }
 
     fn description(&self) -> &str {
-        &"Test plugin"
+        "Test plugin"
     }
 
     fn os(&self) -> OS {
@@ -27,6 +27,12 @@ impl Plugin for TestPlugin {
     }
 }
 
+impl Default for TestPlugin {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl TestPlugin {
     pub fn new() -> Self {
         TestPlugin {}
@@ -35,8 +41,8 @@ impl TestPlugin {
 
 #[cfg(test)]
 mod tests {
-    use serde_json::json;
     use super::*;
+    use serde_json::json;
 
     #[test]
     fn split_list() {
@@ -47,7 +53,10 @@ item3
 ";
         let parsed_data = json!(["item1", "item2", "item3"]);
         let test_plugin = TestPlugin::new();
-        assert_eq!(parsed_data, test_plugin._split_list(command_output).unwrap());
+        assert_eq!(
+            parsed_data,
+            test_plugin._split_list(command_output).unwrap()
+        );
     }
 
     #[test]
@@ -67,7 +76,10 @@ item3
             }
         ]);
         let test_plugin = TestPlugin::new();
-        assert_eq!(parsed_data, test_plugin._convert_json_string(command_output).unwrap());
+        assert_eq!(
+            parsed_data,
+            test_plugin._convert_json_string(command_output).unwrap()
+        );
     }
 
     #[test]
@@ -109,7 +121,10 @@ item3
             }
         ]);
         let test_plugin = TestPlugin::new();
-        assert_eq!(parsed_data, test_plugin._convert_json_string(command_output).unwrap());
+        assert_eq!(
+            parsed_data,
+            test_plugin._convert_json_string(command_output).unwrap()
+        );
     }
 
     #[test]
@@ -137,7 +152,16 @@ val31 val32 val33
             }
         ]);
         let test_plugin = TestPlugin::new();
-        assert_eq!(parsed_data, test_plugin._convert_csv_string_no_header(command_output, &vec!["head1", "head2", "head3"], &" ").unwrap());
+        assert_eq!(
+            parsed_data,
+            test_plugin
+                ._convert_csv_string_no_header(
+                    command_output,
+                    &vec!["head1", "head2", "head3"],
+                    &" "
+                )
+                .unwrap()
+        );
     }
 
     #[test]
@@ -166,6 +190,11 @@ val31 val32 val33
             }
         ]);
         let test_plugin = TestPlugin::new();
-        assert_eq!(parsed_data, test_plugin._convert_csv_string_with_header(command_output, &" ").unwrap());
+        assert_eq!(
+            parsed_data,
+            test_plugin
+                ._convert_csv_string_with_header(command_output, &" ")
+                .unwrap()
+        );
     }
 }

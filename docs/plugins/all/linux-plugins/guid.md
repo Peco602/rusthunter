@@ -37,4 +37,4 @@ enabled = true
 - [T1548.001 Abuse Elevation Control Mechanism: Setuid and Setgid](https://attack.mitre.org/techniques/T1548/001/)
 
 ### Authors
-- Andrea Vozza ([landerover](https://github.com/landerover))
+- theRedCount ([theRedCount](https://github.com/theRedCount))

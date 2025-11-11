@@ -29,6 +29,27 @@ RustHunter is a modular incident response framework to build and compare environ
 Take a look at the RustHunter [documentation](https://rusthunter.readthedocs.io) for instructions on how to get started with the framework.
 
 
+## Version 0.1.1 (November 2025)
+
+**Quality & Code Improvements Release**
+
+- 🧹 **Code Quality**: Eliminated all 55 clippy warnings
+- 📝 **Code Style**: Applied consistent formatting across all modules
+- ⚡ **Performance**: Optimized function signatures and data structures
+- 🎯 **Best Practices**: Improved error handling and idiomatic Rust patterns
+
+## Version 0.1.0 (November 2025)
+
+This major update brings RustHunter up to date with the latest Rust ecosystem:
+
+- 🔄 **Updated Dependencies**: All dependencies upgraded to 2025 versions
+- 🧪 **Enhanced Testing**: Test suite expanded from 15 to 55 tests (+267% coverage)
+- 🛡️ **Improved Reliability**: Comprehensive error handling and edge case testing
+- 🚀 **Modern Rust**: Compatible with Rust 1.91+ with updated APIs
+
+See [UPGRADE_2025.md](UPGRADE_2025.md) for complete upgrade details and [TEST_IMPROVEMENTS_2025.md](TEST_IMPROVEMENTS_2025.md) for testing improvements.
+
+
 ## Changelog   
 
 Go to [CHANGELOG](CHANGELOG.md) to see all the version changes.

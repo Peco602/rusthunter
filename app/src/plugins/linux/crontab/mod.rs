@@ -7,11 +7,11 @@ pub struct LinuxCrontab {}
 
 impl Plugin for LinuxCrontab {
     fn name(&self) -> &str {
-        &"linux_crontab"
+        "linux_crontab"
     }
 
     fn description(&self) -> &str {
-        &"Crontab jobs"
+        "Crontab jobs"
     }
 
     fn os(&self) -> OS {
@@ -28,6 +28,12 @@ impl Plugin for LinuxCrontab {
 
     fn process(&self, output: &str) -> Result<Value, String> {
         self._split_list(output)
+    }
+}
+
+impl Default for LinuxCrontab {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

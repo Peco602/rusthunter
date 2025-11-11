@@ -5,7 +5,10 @@ fn check_regex(regex: &str, text: &str) -> bool {
 }
 
 pub fn validate_windows_path(text: &str) -> bool {
-    check_regex(r"^([a-z]:)?((?:[\\]?(?:[\w !#()-]+|[.]{1,2})+)*[\\])?$", text)
+    check_regex(
+        r"^([a-z]:)?((?:[\\]?(?:[\w !#()-]+|[.]{1,2})+)*[\\])?$",
+        text,
+    )
 }
 
 pub fn validate_windows_sam_account_name(text: &str) -> bool {
@@ -34,7 +37,10 @@ mod tests {
     #[test]
     fn windows_sam_account_name() {
         assert_eq!(validate_windows_sam_account_name(r"domain admins"), true);
-        assert_eq!(validate_windows_sam_account_name(r"enterprise admins"), true);
+        assert_eq!(
+            validate_windows_sam_account_name(r"enterprise admins"),
+            true
+        );
         assert_eq!(validate_windows_sam_account_name(r"management-users"), true);
         assert_eq!(validate_windows_sam_account_name(r"[group]"), false);
         assert_eq!(validate_windows_sam_account_name(r"users+groups"), false);

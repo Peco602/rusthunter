@@ -18,9 +18,9 @@ use serde_json::Map;
 #[cfg(target_os = "windows")]
 use powershell_script;
 
-use std::process::Command;
-use std::{env};
 use serde_json::Value;
+use std::env;
+use std::process::Command;
 
 use crate::config::Config;
 
@@ -30,47 +30,42 @@ pub trait Plugin {
     fn os(&self) -> OS;
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String>;
     fn process(&self, output: &str) -> Result<Value, String>;
-    
+
     fn show(&self) {
-        println!("{: <32} {: <50} {:?}", self.name(), self.description(), self.os());
+        println!(
+            "{: <32} {: <50} {:?}",
+            self.name(),
+            self.description(),
+            self.os()
+        );
     }
 
-    fn _linux_command(&self, command: &str) -> Result<String, String>  {
-        let output = Command::new("sh")
-                            .arg("-c")
-                            .arg(command)
-                            .output();
+    fn _linux_command(&self, command: &str) -> Result<String, String> {
+        let output = Command::new("sh").arg("-c").arg(command).output();
 
         match output {
-            Ok(o) => {
-                match String::from_utf8(o.stdout) {
-                    Ok(s) => Ok(s),
-                    Err(e) =>  Err(format!("Error during shell command output parsing: {}", e)),
-                }
+            Ok(o) => match String::from_utf8(o.stdout) {
+                Ok(s) => Ok(s),
+                Err(e) => Err(format!("Error during shell command output parsing: {}", e)),
             },
             Err(e) => Err(format!("Error during shell command execution: {}", e)),
         }
     }
 
-    fn _macos_command(&self, command: &str) -> Result<String, String>  {
-        let output = Command::new("zsh")
-                            .arg("-c")
-                            .arg(command)
-                            .output();
+    fn _macos_command(&self, command: &str) -> Result<String, String> {
+        let output = Command::new("zsh").arg("-c").arg(command).output();
 
         match output {
-            Ok(o) => {
-                match String::from_utf8(o.stdout) {
-                    Ok(s) => Ok(s),
-                    Err(e) =>  Err(format!("Error during shell command output parsing: {}", e)),
-                }
+            Ok(o) => match String::from_utf8(o.stdout) {
+                Ok(s) => Ok(s),
+                Err(e) => Err(format!("Error during shell command output parsing: {}", e)),
             },
             Err(e) => Err(format!("Error during shell command execution: {}", e)),
         }
     }
 
     fn _windows_powershell_command(&self, command: &str) -> Result<String, String> {
-        match powershell_script::run(command, false) {
+        match powershell_script::run(command) {
             Ok(o) => Ok(o.to_string()),
             Err(e) => Err(format!("Error during powershell command execution: {}", e)),
         }
@@ -96,7 +91,7 @@ pub trait Plugin {
             OS::Windows => self._windows_powershell_command(command),
             OS::Linux => self._linux_command(command),
             OS::MacOS => self._macos_command(command),
-            _ => Err(format!("Operating System not defined")),
+            _ => Err("Operating System not defined".to_string()),
         }
     }
 
@@ -116,7 +111,7 @@ pub trait Plugin {
     }
 
     fn _convert_json_string(&self, output: &str) -> Result<Value, String> {
-        let object: Value =  match serde_json::from_str(output) {
+        let object: Value = match serde_json::from_str(output) {
             Ok(v) => v,
             Err(e) => return Err(format!("Error during JSON parsing: {}", e)),
         };
@@ -125,36 +120,46 @@ pub trait Plugin {
         if object.is_array() {
             Ok(object)
         } else {
-            let mut list: Vec<Value> = Vec::new();
-            list.push(object);
+            let list: Vec<Value> = vec![object];
             Ok(serde_json::Value::Array(list))
         }
     }
 
-    fn _convert_csv_string_no_header(&self, output: &str, headers: &Vec<&str>, separator: &str) -> Result<Value, String> {
+    fn _convert_csv_string_no_header(
+        &self,
+        output: &str,
+        headers: &Vec<&str>,
+        separator: &str,
+    ) -> Result<Value, String> {
         let mut list: Vec<Value> = Vec::new();
-        let mut map: Map::<String, Value>;
+        let mut map: Map<String, Value>;
         let mut items;
         for line in output.trim().split(self._get_splitter()) {
             if !line.is_empty() {
                 map = Map::new();
                 items = line.split(separator);
                 for header in headers {
-                    map.insert(header.to_string(), serde_json::Value::String(items.next().unwrap().to_string()));
+                    map.insert(
+                        header.to_string(),
+                        serde_json::Value::String(items.next().unwrap().to_string()),
+                    );
                 }
                 list.push(Value::Object(map));
             }
         }
-        Ok(serde_json::Value::Array(list))   
+        Ok(serde_json::Value::Array(list))
     }
-        
-    fn _convert_csv_string_with_header(&self, output: &str, separator: &str) -> Result<Value, String> {
+
+    fn _convert_csv_string_with_header(
+        &self,
+        output: &str,
+        separator: &str,
+    ) -> Result<Value, String> {
         let mut lines = output.trim().split(self._get_splitter());
-        let headers: Vec<&str>  = lines.nth(0).unwrap().split(separator).collect(); 
+        let headers: Vec<&str> = lines.nth(0).unwrap().split(separator).collect();
         let _output: Vec<&str> = lines.collect();
         self._convert_csv_string_no_header(&_output.join(self._get_splitter()), &headers, separator)
     }
-
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -162,7 +167,7 @@ pub enum OS {
     Windows,
     Linux,
     MacOS,
-    Unknown
+    Unknown,
 }
 
 pub fn os() -> OS {

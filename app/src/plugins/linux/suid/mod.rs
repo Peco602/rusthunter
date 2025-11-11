@@ -7,11 +7,11 @@ pub struct LinuxSuid {}
 
 impl Plugin for LinuxSuid {
     fn name(&self) -> &str {
-        &"linux_suid"
+        "linux_suid"
     }
 
     fn description(&self) -> &str {
-        &"Files with setuid permission"
+        "Files with setuid permission"
     }
 
     fn os(&self) -> OS {
@@ -20,7 +20,7 @@ impl Plugin for LinuxSuid {
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
         let command = "sudo -u $(whoami) find / -uid 0 -perm -4000 -print 2>/dev/null";
-        match self.execute_command(&command) {
+        match self.execute_command(command) {
             Ok(output) => self.process(&output),
             Err(e) => Err(e),
         }
@@ -28,6 +28,12 @@ impl Plugin for LinuxSuid {
 
     fn process(&self, output: &str) -> Result<Value, String> {
         self._split_list(output)
+    }
+}
+
+impl Default for LinuxSuid {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

@@ -20,12 +20,14 @@ impl Plugin for WindowsDomainGroup {
     }
 
     fn run(&self, _config: &Config, _binary_directory: &str) -> Result<Value, String> {
-        let group_name =  match _config.get_string_setting(self.name(), &"group_name") {
-            Some(v) => { if validate_windows_sam_account_name(&v) {
+        let group_name = match _config.get_string_setting(self.name(), &"group_name") {
+            Some(v) => {
+                if validate_windows_sam_account_name(&v) {
                     v
                 } else {
                     return Err(format!("Not valid group_name setting: {}", v));
-                }}, 
+                }
+            }
             None => "Domain Admins".to_string(),
         };
         let command = format!("Get-ADGroupMember -Identity \"{}\" | Select-Object Name,ObjectClass | Sort-Object -Property Name | ConvertTo-Json", group_name);
